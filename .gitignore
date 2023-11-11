@@ -23,3 +23,5 @@ tmp
 
 # docker-compose database directory
 docker-db-data
+
+/config/credentials/
