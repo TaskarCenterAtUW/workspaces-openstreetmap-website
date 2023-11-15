@@ -55,7 +55,7 @@ class Changeset < ApplicationRecord
   before_save :update_closed_at
 
   # maximum number of elements allowed in a changeset
-  MAX_ELEMENTS = 10000
+  MAX_ELEMENTS = 10000000
 
   # maximum time a changeset is allowed to be open for.
   MAX_TIME_OPEN = 1.day
