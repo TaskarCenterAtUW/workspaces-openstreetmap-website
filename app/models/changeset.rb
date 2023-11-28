@@ -58,7 +58,7 @@ class Changeset < ApplicationRecord
   MAX_ELEMENTS = 10000000
 
   # maximum time a changeset is allowed to be open for.
-  MAX_TIME_OPEN = 1.day
+  MAX_TIME_OPEN = 7.day
 
   # idle timeout increment, one hour seems reasonable.
   IDLE_TIMEOUT = 1.hour
