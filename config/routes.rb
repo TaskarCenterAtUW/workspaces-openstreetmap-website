@@ -133,6 +133,11 @@ OpenStreetMap::Application.routes.draw do
     namespace :user_blocks, :path => "user/blocks" do
       resource :active_list, :path => "active", :only => :show
     end
+
+    # TDEI Workspaces
+    put "workspaces/:id" => "workspaces#create", :id => /\d+/
+    put "workspaces/:id/switch" => "workspaces#switch", :id => /\d+/
+    delete "workspaces/:id" => "workspaces#destroy", :id => /\d+/
   end
 
   # Data browsing

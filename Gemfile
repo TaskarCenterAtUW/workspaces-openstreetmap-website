@@ -135,6 +135,9 @@ gem "inline_svg"
 # Used to validate widths
 gem "unicode-display_width"
 
+# TDEI Workspaces: supports multi-tenancy
+gem "ros-apartment", :require => "apartment"
+
 # Gems useful for development
 group :development do
   gem "better_errors"
