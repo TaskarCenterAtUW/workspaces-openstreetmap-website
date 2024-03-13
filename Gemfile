@@ -141,6 +141,11 @@ gem "image_processing"
 # Used to validate widths
 gem "unicode-display_width"
 
+# TDEI Workspaces: supports multi-tenancy
+# The latest stable release doesn't support Rails 7.1, yet. Use dev for now:
+gem "ros-apartment", github: 'rails-on-services/apartment', branch: 'development', :require => "apartment"
+#gem "ros-apartment", :require => "apartment"
+
 # Gems useful for development
 group :development do
   gem "better_errors"

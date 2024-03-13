@@ -1,4 +1,5 @@
 require_relative "boot"
+require_relative "../app/middleware/workspaces_elevator.rb"
 
 require "rails/all"
 
@@ -45,5 +46,8 @@ module OpenStreetMap
       config.logstasher.logger_path = Settings.logstash_path
       config.logstasher.log_controller_parameters = true
     end
+
+    # TDEI Workspaces tenant partitioning:
+    config.middleware.use WorkspacesElevator
   end
 end
