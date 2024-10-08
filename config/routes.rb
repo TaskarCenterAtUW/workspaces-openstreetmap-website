@@ -113,6 +113,12 @@ OpenStreetMap::Application.routes.draw do
     end
 
     resources :user_blocks, :only => :show, :id => /\d+/, :controller => "user_blocks"
+
+    # TDEI Workspaces
+    put "user/:auth_uid" => "users#provision"
+    put "workspaces/:id" => "workspaces#create", :id => /\d+/
+    put "workspaces/:id/switch" => "workspaces#switch", :id => /\d+/
+    delete "workspaces/:id" => "workspaces#destroy", :id => /\d+/
   end
 
   # Data browsing
