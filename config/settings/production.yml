@@ -1,0 +1,14 @@
+server_protocol: "https"
+server_url: <%= ENV['WS_OSM_HOST'] %>
+
+support_email: <%= ENV['WS_MAIL_CONTACT'] %>
+email_from: <%= ENV['WS_MAIL_NAME'] %> <<%= ENV['WS_MAIL_FROM'] %>>
+email_return_path: <%= ENV['WS_MAIL_RETURN_PATH'] %>
+
+smtp_address: <%= ENV['WS_SMTP_HOST'] %>
+smtp_port: <%= ENV['WS_SMTP_PORT'] %>
+smtp_domain: <%= ENV['WS_SMTP_DOMAIN'] %>
+smtp_user_name: <%= ENV['WS_SMTP_USER'] %>
+smtp_password: <%= ENV['WS_SMTP_PASS'] %>
+smtp_authentication: "plain"
+smtp_enable_starttls_auto: true

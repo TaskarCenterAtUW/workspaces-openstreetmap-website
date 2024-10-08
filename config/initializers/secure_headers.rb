@@ -28,7 +28,8 @@ csp_policy[:img_src] << Settings.trace_image_storage_url if Settings.key?(:trace
 csp_policy[:report_uri] << Settings.csp_report_url if Settings.key?(:csp_report_url)
 
 cookie_policy = {
-  :httponly => { :only => %w[_osm_session _osm_totp_token] }
+  :httponly => { :only => %w[_osm_session _osm_totp_token] },
+  :samesite => { :none => true }
 }
 
 SecureHeaders::Configuration.default do |config|

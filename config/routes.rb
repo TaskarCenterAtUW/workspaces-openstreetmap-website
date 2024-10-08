@@ -106,6 +106,12 @@ OpenStreetMap::Application.routes.draw do
     get "notes/getRSSfeed" => "notes#feed", :format => "rss"
 
     resources :user_blocks, :only => [:show], :constraints => { :id => /\d+/ }, :controller => "user_blocks", :as => :api_user_blocks
+
+    # TDEI Workspaces
+    put "user/:auth_uid" => "users#provision"
+    put "workspaces/:id" => "workspaces#create", :id => /\d+/
+    put "workspaces/:id/switch" => "workspaces#switch", :id => /\d+/
+    delete "workspaces/:id" => "workspaces#destroy", :id => /\d+/
   end
 
   # Data browsing
