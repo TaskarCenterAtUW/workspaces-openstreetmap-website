@@ -34,6 +34,27 @@ module Api
     def destroy
       Apartment::Tenant.drop("workspace-#{params[:id]}")
     end
+
+    def bbox
+      workspace_schema = "workspace-#{params[:id]}"
+      Apartment::Tenant.switch!(workspace_schema)
+
+      out = Node
+            .select("MAX(latitude) AS max_lat,
+                  MAX(longitude) AS max_lon,
+                  MIN(latitude) AS min_lat,
+                  MIN(longitude) AS min_lon")
+            .take
+
+      return head :no_content if out.min_lat.nil? # Workspace is empty (no nodes)
+
+      @bbox = BoundingBox.new(out.min_lon, out.min_lat, out.max_lon, out.max_lat)
+
+      respond_to do |format|
+        format.xml
+        format.json
+      end
+    end
   end
 end
 
