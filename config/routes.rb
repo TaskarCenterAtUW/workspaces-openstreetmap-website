@@ -137,8 +137,8 @@ OpenStreetMap::Application.routes.draw do
     # TDEI Workspaces
     put "user/:auth_uid" => "users#provision"
     put "workspaces/:id" => "workspaces#create", :id => /\d+/
-    put "workspaces/:id/switch" => "workspaces#switch", :id => /\d+/
     delete "workspaces/:id" => "workspaces#destroy", :id => /\d+/
+    get "workspaces/:id/bbox" => "workspaces#bbox", :id => /\d+/
   end
 
   # Data browsing
