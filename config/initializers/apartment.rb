@@ -19,9 +19,7 @@ Apartment.configure do |config|
   # A typical example would be a Customer or Tenant model that stores each Tenant's information.
   #
   config.excluded_models = [
-    "AccessToken",
     "Acl",
-    "ClientApplication",
     "DiaryComment",
     "DiaryEntry",
     "DiaryEntrySubscription",
@@ -34,12 +32,7 @@ Apartment.configure do |config|
     "Language",
     "Message",
     "Oauth2Application",
-    "Oauth2Token",
-    "Oauth2Verifier",
-    "OauthNonce",
-    "OauthToken",
     "Report",
-    "RequestToken",
     "User",
     "UserBlock",
     "UserMute",

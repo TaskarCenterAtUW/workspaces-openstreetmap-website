@@ -98,7 +98,7 @@ module Api
 
       user.data_public = true
       user.description = '' if user.description.nil?
-      user.creation_ip = request.remote_ip
+      user.creation_address = request.remote_ip
       user.languages = http_accept_language.user_preferred_languages
       user.terms_agreed = Time.now.utc
       user.tou_agreed = Time.now.utc
