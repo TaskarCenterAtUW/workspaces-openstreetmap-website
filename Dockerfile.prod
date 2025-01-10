@@ -30,8 +30,16 @@ RUN apt-get update \
   npm \
   osmosis \
   ca-certificates \
-  firefox-esr
-
+  firefox-esr \ 
+  optipng \ 
+  pngcrush \ 
+  advancecomp \ 
+  pngquant \ 
+  jhead \ 
+  jpegoptim \
+  libjpeg-turbo-progs \
+  gifsicle
+  
 # Install yarn globally
 RUN npm install --global yarn
 
@@ -44,6 +52,9 @@ RUN apt-get install --no-install-recommends -y postgresql-common \
 RUN mkdir -p /app
 WORKDIR /app
 COPY . .
+
+# https://help.openstreetmap.org/questions/69887/actionviewtemplateerror-couldnt-find-file-settingslocalyml
+RUN touch config/settings.local.yml  
 
 # Install Ruby packages
 RUN bundle install
