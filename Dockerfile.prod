@@ -55,7 +55,7 @@ COPY . .
 
 # Database template for Docker
 COPY config/docker.database.yml config/database.yml
-RUN awk '{gsub(/development/,"production");}' config/database.yml 
+RUN sed -i'.bak' 's/development/production/g' config/database.yml 
 
 # https://help.openstreetmap.org/questions/69887/actionviewtemplateerror-couldnt-find-file-settingslocalyml
 RUN touch config/settings.local.yml  
