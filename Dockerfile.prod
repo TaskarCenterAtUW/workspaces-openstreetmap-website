@@ -57,6 +57,8 @@ COPY . .
 COPY config/docker.database.yml config/database.yml
 RUN sed -i'.bak' 's/development/production/g' config/database.yml 
 
+COPY config/example.storage.yml config/storage.yml
+
 # https://help.openstreetmap.org/questions/69887/actionviewtemplateerror-couldnt-find-file-settingslocalyml
 RUN touch config/settings.local.yml  
 
