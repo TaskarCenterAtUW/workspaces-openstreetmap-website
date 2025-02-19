@@ -43,6 +43,11 @@ RUN mkdir -p /app
 WORKDIR /app
 COPY . .
 
+COPY config/example.storage.yml config/storage.yml
+
+# https://help.openstreetmap.org/questions/69887/actionviewtemplateerror-couldnt-find-file-settingslocalyml
+RUN touch config/settings.local.yml
+
 # Install Ruby packages
 RUN bundle install
 
