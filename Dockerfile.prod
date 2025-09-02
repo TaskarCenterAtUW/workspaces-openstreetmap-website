@@ -1,0 +1,54 @@
+FROM ruby:3.2-bookworm
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system packages then clean up to minimize image size
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y \
+  build-essential \
+  curl \
+  default-jre-headless \
+  file \
+  git-core \
+  gpg-agent \
+  libarchive-dev \
+  libffi-dev \
+  libgd-dev \
+  libpq-dev \
+  libsasl2-dev \
+  libvips-dev \
+  libxml2-dev \
+  libxslt1-dev \
+  libyaml-dev \
+  locales \
+  postgresql-client \
+  tzdata \
+  unzip \
+  nodejs \
+  npm \
+  osmosis \
+  ca-certificates \
+  firefox-esr
+
+# Install yarn globally
+RUN npm install --global yarn
+
+# Add support for Postgres 16
+RUN apt-get install --no-install-recommends -y postgresql-common \
+ && /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y \
+ && apt-get install --no-install-recommends -y postgresql-client-16
+
+# Setup app location
+RUN mkdir -p /app
+WORKDIR /app
+COPY . .
+
+# Install Ruby packages
+RUN bundle install
+
+# Install NodeJS packages using yarn
+RUN bundle exec bin/yarn install
+
+# Build frontend assets
+RUN RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec i18n export
+RUN RAILS_ENV=production SECRET_KEY_BASE=dummy rails assets:precompile
