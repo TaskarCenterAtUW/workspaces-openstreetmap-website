@@ -1,0 +1,8 @@
+<%= ENV['RAILS_ENV'] %>:
+  adapter: postgresql
+  host: <%= ENV['WS_OSM_DB_HOST'] %>
+  username: <%= ENV['WS_OSM_DB_USER'] %>
+  password: <%= ENV['WS_OSM_DB_PASS'] %>
+  database: <%= ENV['WS_OSM_DB_NAME'] %>
+  encoding: utf8
+

@@ -7,12 +7,12 @@
 # such as X-Requested-By to requests.)
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "*"
+    origins { |source, env| true }
     resource "/oauth/*", :headers => :any, :methods => [:get, :post]
     resource "/oauth2/token", :headers => :any, :methods => [:post]
     resource "/oauth2/revoke", :headers => :any, :methods => [:post]
     resource "/oauth2/introspect", :headers => :any, :methods => [:post]
-    resource "/api/*", :headers => :any, :methods => [:get, :post, :put, :delete]
+    resource "/api/*", :headers => :any, :methods => [:get, :post, :put, :delete], :credentials => true
     resource "/diary/rss", :headers => :any, :methods => [:get]
     resource "/diary/*/rss", :headers => :any, :methods => [:get]
     resource "/trace/*/data", :headers => :any, :methods => [:get]

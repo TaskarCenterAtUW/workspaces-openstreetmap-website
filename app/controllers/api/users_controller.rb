@@ -3,7 +3,8 @@ module Api
     before_action :setup_user_auth, :only => [:show, :index]
     before_action -> { authorize(:skip_terms => true) }, :only => [:details]
 
-    authorize_resource
+    authorize_resource :except => [:provision]
+    skip_authorization_check :only => [:provision]
 
     load_resource :only => :show
 
@@ -45,5 +46,64 @@ module Api
         format.json { render :show }
       end
     end
+
+    def provision
+      user = User.find_by(:auth_provider => "TDEI", :auth_uid => params[:auth_uid])
+
+      if user
+        user.email = params[:email]
+        user.display_name = params[:display_name]
+
+        if user.status != "active"
+          user.activate
+        end
+
+        user.save
+        return head :no_content
+      end
+
+      # TODO: temporary for TDEI auth transition:
+      user = User.find_by(:email => params[:email])
+
+      if user
+        user.auth_provider = 'TDEI'
+        user.auth_uid = params[:auth_uid]
+        user.display_name = params[:display_name]
+
+        if user.status != "active"
+          user.activate
+        end
+
+        user.save
+        return head :no_content
+      end
+
+      puts 'Create user'
+      user = User.new()
+      user.email = params[:email]
+      user.email_valid = true
+      user.display_name = params[:display_name]
+
+      user.auth_provider = 'TDEI'
+      user.auth_uid = params[:auth_uid]
+
+      # Set a random password--TDEI identity services manage the password:
+      user.pass_crypt = SecureRandom.base64(16)
+
+      user.data_public = true
+      user.description = '' if user.description.nil?
+      user.creation_address = request.remote_ip
+      user.languages = http_accept_language.user_preferred_languages
+      user.terms_agreed = Time.now.utc
+      user.tou_agreed = Time.now.utc
+      user.terms_seen = true
+      user.auth_provider = nil
+      user.auth_uid = nil
+      user.activate
+      user.save
+
+      head :no_content
+    end
+
   end
 end
