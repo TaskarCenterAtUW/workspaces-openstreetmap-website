@@ -2,6 +2,18 @@ FROM ruby:3.2-bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# these are used to connect to the DB during the FE asset build process 
+# DO NOT REMOVE
+ARG WS_OSM_DB_HOST=opensidewalks-dev.postgres.database.azure.com
+ARG WS_OSM_DB_USER=workspaces-osm-dev
+ARG WS_OSM_DB_PASS=setme
+ARG WS_OSM_DB_NAME=workspaces-osm-dev
+
+ENV WS_OSM_DB_HOST=$WS_OSM_DB_HOST
+ENV WS_OSM_DB_USER=$WS_OSM_DB_USER
+ENV WS_OSM_DB_PASS=$WS_OSM_DB_PASS
+ENV WS_OSM_DB_NAME=$WS_OSM_DB_NAME
+
 # Install system packages then clean up to minimize image size
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
