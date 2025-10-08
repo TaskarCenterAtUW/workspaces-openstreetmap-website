@@ -67,5 +67,5 @@ RUN bundle install
 RUN bundle exec bin/yarn install
 
 # Build frontend assets
-RUN RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec i18n export
-RUN RAILS_ENV=production SECRET_KEY_BASE=dummy rails assets:precompile
+#RUN RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec i18n export
+#RUN RAILS_ENV=production SECRET_KEY_BASE=dummy rails assets:precompile
