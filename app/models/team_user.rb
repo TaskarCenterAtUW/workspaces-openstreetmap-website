@@ -14,7 +14,7 @@
 #  team_id_fkey  (team_id => teams.id)
 #  user_id_fkey  (user_id => users.id)
 #
-class UserToken < ApplicationRecord
+class TeamUser < ApplicationRecord
     belongs_to :team
     belongs_to :user
 end
