@@ -1,5 +1,5 @@
 class CreateTeam < ActiveRecord::Migration[7.1]
-  def self.up
+  def up
     create_table :teams, primary_key: :id do |t|
       t.integer :id
       t.string :name
@@ -17,7 +17,7 @@ class CreateTeam < ActiveRecord::Migration[7.1]
     add_foreign_key :team_user, :users, column: :user_id
   end
   
-  def self.down
+  def down
     drop_table :team_user
     drop_table :teams
   end
