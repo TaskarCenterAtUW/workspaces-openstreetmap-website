@@ -2,10 +2,12 @@ class CreateTeam < ActiveRecord::Migration[7.1]
   def up
     create_table :teams, primary_key: :id do |t|
       t.integer :id
+      t.integer :workspace_id
       t.string :name
     end
 
-    add_index :teams, :name, unique: true
+    add_index :teams, [:name, :workspace_id], unique: true
+    add_index :teams, :workspace_id
 
     create_table :team_user do |t|
       t.integer :team_id, null: false
