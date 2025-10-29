@@ -6,8 +6,7 @@ class CreateTeam < ActiveRecord::Migration[7.1]
       t.string :name
     end
 
-    add_index :teams, [:name, :workspace_id], unique: true
-    add_index :teams, :workspace_id
+    add_index :teams, [:workspace_id, :name], unique: true
 
     create_table :team_user do |t|
       t.integer :team_id, null: false
