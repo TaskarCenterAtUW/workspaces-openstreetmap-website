@@ -28,6 +28,8 @@ module Api
       # tables references from the "public" schema instead:
       #
       connection = ActiveRecord::Base.connection
+      connection.execute("DROP TABLE \"#{workspace_schema}\".team_user CASCADE")
+      connection.execute("DROP TABLE \"#{workspace_schema}\".teams CASCADE")
       connection.execute("DROP TABLE \"#{workspace_schema}\".users CASCADE")
     end
 

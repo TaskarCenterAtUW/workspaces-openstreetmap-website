@@ -32,6 +32,8 @@ Apartment.configure do |config|
     "Message",
     "Oauth2Application",
     "Report",
+    "Team",
+    "TeamUser",
     "User",
     "UserBlock",
     "UserMute",
