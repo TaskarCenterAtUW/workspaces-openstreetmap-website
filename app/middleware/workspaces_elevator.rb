@@ -9,7 +9,7 @@ class WorkspacesElevator < Apartment::Elevators::Generic
     return nil if workspace_id.blank?
     return nil unless workspace_id.match?(/^\d+$/)
 
-    logger.info("Selecting workspace #{workspace_id}")
+    Rails.logger.info("Selecting workspace #{workspace_id}")
 
     "workspace-#{workspace_id}"
   end
