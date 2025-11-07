@@ -1,5 +1,9 @@
 class AddNotesAndDiaryCommentsCounterCaches < ActiveRecord::Migration[7.1]
   def self.up
+    if connection.current_schema.start_with?("workspace-")
+      return # Ignore this migration in workspace tenant schemas
+    end
+
     add_column :users, :diary_comments_count, :integer, :default => 0
     add_column :users, :note_comments_count, :integer, :default => 0
 
