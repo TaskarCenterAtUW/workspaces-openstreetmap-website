@@ -73,11 +73,11 @@ Apartment.configure do |config|
   # end
   #
   # Executed after the creation of a new Tenant. This is useful for creating extensions or running setup specific to a Tenant.
-  config.before_create = lambda do |tenant_name|
-    ActiveRecord::Base.connection.execute(<<-SQL)
-      SELECT deploy_postgis();
-    SQL
-  end
+  # config.before_create = lambda do |tenant_name|
+  #   ActiveRecord::Base.connection.execute(<<-SQL)
+  #     SELECT deploy_postgis();
+  #   SQL
+  # end
 
   config.tenant_names = lambda do
     ActiveRecord::Base.connection
