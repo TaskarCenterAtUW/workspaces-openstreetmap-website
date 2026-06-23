@@ -7,7 +7,6 @@ development:
   password: <%= ENV['WS_OSM_DB_PASS'] %>
   database: <%= ENV['WS_OSM_DB_NAME'] %>
   encoding: utf8
-  schema_search_path: 'public'
   
 # Warning: The database defined as 'test' will be erased and
 # re-generated from your development database when you run 'rake'.
