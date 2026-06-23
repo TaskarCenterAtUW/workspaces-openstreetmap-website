@@ -131,7 +131,7 @@ Apartment.configure do |config|
   # items in the schema dump that should *not* have their namespace replaced by
   # the new tenant
   #
-  # config.pg_excluded_names = ["uuid_generate_v4"]
+  config.pg_excluded_names = ["geometry","geography","box2d","box3d"]
 
   # Specifies whether the database and schema (when using PostgreSQL schemas) will prepend in ActiveRecord log.
   # Uncomment the line below if you want to enable this behavior.
