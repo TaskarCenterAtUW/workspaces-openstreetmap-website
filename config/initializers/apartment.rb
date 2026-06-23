@@ -103,7 +103,7 @@ Apartment.configure do |config|
   # schema.rb, like materialized views etc. (only applies with use_schemas set to true).
   # (Note: this option doesn't use db/structure.sql, it creates SQL dump by executing pg_dump)
   #
-  config.use_sql = false
+  config.use_sql = true
 
   # There are cases where you might want some schemas to always be in your search_path
   # e.g when using a PostgreSQL extension like hstore.
@@ -111,7 +111,7 @@ Apartment.configure do |config|
   #
   # config.persistent_schemas = %w{ hstore }
   # Ensure postgis is always in the search path, so that we can use PostGIS functions in our queries
-  # config.persistent_schemas = %w{ postgis, public }
+  config.persistent_schemas = %w{ public, shared_extensions }
 
   # <== PostgreSQL only options
   #
