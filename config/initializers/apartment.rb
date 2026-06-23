@@ -111,7 +111,7 @@ Apartment.configure do |config|
   #
   # config.persistent_schemas = %w{ hstore }
   # Ensure postgis is always in the search path, so that we can use PostGIS functions in our queries
-  config.persistent_schemas = %w{ public, shared_extensions }
+  # config.persistent_schemas = %w{ public, shared_extensions }
 
   # <== PostgreSQL only options
   #
