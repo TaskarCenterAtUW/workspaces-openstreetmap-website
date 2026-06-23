@@ -110,6 +110,8 @@ Apartment.configure do |config|
   # Any schemas added here will be available along with your selected Tenant.
   #
   # config.persistent_schemas = %w{ hstore }
+  # Ensure postgis is always in the search path, so that we can use PostGIS functions in our queries
+  config.persistent_schemas = %w{ postgis }
 
   # <== PostgreSQL only options
   #
