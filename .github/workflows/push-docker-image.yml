@@ -34,9 +34,9 @@ jobs:
               if: ${{ needs.setup-github-environment.outputs.DEPLOY_ENV != '' }}
               uses: azure/docker-login@v1
               with:
-                login-server: ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}
-                username: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
-                password: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+                login-server: ${{ vars.DOCKERHUB_REGISTRY }}
+                username: ${{ vars.DOCKERHUB_USERNAME }}
+                password: ${{ secrets.DOCKERHUB_TOKEN }}
             - name: Build and Push Docker Image
               if: ${{ needs.setup-github-environment.outputs.DEPLOY_ENV != '' }}
               run: |
