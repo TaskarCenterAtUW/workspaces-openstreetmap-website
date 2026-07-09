@@ -1,5 +1,9 @@
 class CreateTeam < ActiveRecord::Migration[7.1]
   def up
+    if connection.current_schema.start_with?("workspace-")
+      return # Ignore this migration in workspace tenant schemas
+    end
+
     create_table :teams do |t|
       t.bigint :workspace_id
       t.string :name
@@ -17,7 +21,7 @@ class CreateTeam < ActiveRecord::Migration[7.1]
     add_foreign_key :team_user, :teams, column: :team_id,  validate: false
     add_foreign_key :team_user, :users, column: :user_id,  validate: false
   end
-  
+
   def down
     drop_table :team_user
     drop_table :teams
