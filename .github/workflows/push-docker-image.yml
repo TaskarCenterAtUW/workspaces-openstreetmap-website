@@ -40,6 +40,6 @@ jobs:
             - name: Build and Push Docker Image
               if: ${{ needs.setup-github-environment.outputs.DEPLOY_ENV != '' }}
               run: |
-                docker build -t ${{ vars.DOCKERHUB_REGISTRY }}/${{ vars.DOCKERHUB_REPOSITORY }}:${{ github.sha }} -t ${{ vars.DOCKERHUB_REGISTRY }}/${{ vars.DOCKERHUB_REPOSITORY }}:${{ needs.setup-github-environment.outputs.DEPLOY_ENV }} -f Dockerfile.prod .
+                docker build -f Dockerfile.prod -t ${{ vars.DOCKERHUB_REGISTRY }}/${{ vars.DOCKERHUB_REPOSITORY }}:${{ github.sha }} -t ${{ vars.DOCKERHUB_REGISTRY }}/${{ vars.DOCKERHUB_REPOSITORY }}:${{ needs.setup-github-environment.outputs.DEPLOY_ENV }} .
                 docker push ${{ vars.DOCKERHUB_REGISTRY }}/${{ vars.DOCKERHUB_REPOSITORY }} --all-tags
     
