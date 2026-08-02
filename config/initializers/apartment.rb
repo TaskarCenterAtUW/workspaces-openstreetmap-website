@@ -72,6 +72,13 @@ Apartment.configure do |config|
   #   end
   # end
   #
+  # Executed after the creation of a new Tenant. This is useful for creating extensions or running setup specific to a Tenant.
+  # config.before_create = lambda do |tenant_name|
+  #   ActiveRecord::Base.connection.execute(<<-SQL)
+  #     SELECT deploy_postgis();
+  #   SQL
+  # end
+
   config.tenant_names = lambda do
     ActiveRecord::Base.connection
                       .execute("SELECT schema_name FROM information_schema.schemata WHERE schema_name LIKE 'workspace-%';")
@@ -103,6 +110,8 @@ Apartment.configure do |config|
   # Any schemas added here will be available along with your selected Tenant.
   #
   # config.persistent_schemas = %w{ hstore }
+  # Ensure postgis is always in the search path, so that we can use PostGIS functions in our queries
+  # config.persistent_schemas = %w{ public, shared_extensions }
 
   # <== PostgreSQL only options
   #
@@ -122,7 +131,7 @@ Apartment.configure do |config|
   # items in the schema dump that should *not* have their namespace replaced by
   # the new tenant
   #
-  # config.pg_excluded_names = ["uuid_generate_v4"]
+  config.pg_excluded_names = ["geometry","geography","box2d","box3d"]
 
   # Specifies whether the database and schema (when using PostgreSQL schemas) will prepend in ActiveRecord log.
   # Uncomment the line below if you want to enable this behavior.
