@@ -78,8 +78,8 @@ module Api
       user.terms_agreed = Time.now.utc
       user.tou_agreed = Time.now.utc
       user.terms_seen = true
-      user.auth_provider = nil
-      user.auth_uid = nil
+      # user.auth_provider = nil
+      # user.auth_uid = nil
       user.activate
       user.save
 
