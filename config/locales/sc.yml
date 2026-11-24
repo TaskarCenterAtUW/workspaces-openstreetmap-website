@@ -52,6 +52,7 @@ sc:
       message: Messàgiu
       node: Nodu
       node_tag: Etichetta de su nodu
+      note: Nota
       old_node: Nodu betzu
       old_node_tag: Etichetta betza de su nodu
       old_relation: Relata betza
@@ -75,18 +76,6 @@ sc:
       way_node: Nodu de su caminu
       way_tag: Eticheta de sa lìnia
     attributes:
-      client_application:
-        name: Nùmene (obligatòriu)
-        url: URL printzipale de s'aplicatzione (obligatòriu)
-        callback_url: URL de torrada
-        support_url: URL de s'assistèntzia
-        allow_read_prefs: lèghere sas preferèntzias tuas de utente
-        allow_write_prefs: modificare sas preferèntzias tuas de utente.
-        allow_write_diary: creare intradas de su diàriu, cummentos e fàghere amistades.
-        allow_write_api: modìfica sa mapa
-        allow_read_gpx: lèghere sas rastas GPS privadas issoro
-        allow_write_gpx: carrigare rastas GPS
-        allow_write_notes: modificare sas notas
       diary_comment:
         body: Corpus
       diary_entry:
@@ -113,7 +102,7 @@ sc:
         longitude: Longitùdine
         public: Pùblicu
         description: Descritzione
-        gpx_file: Càrriga un'archìviu GPX
+        gpx_file: Issèbera un'archìviu de rasta GPX
         visibility: Visibilidade
         tagstring: Etichetas
       message:
@@ -135,6 +124,7 @@ sc:
         active: Ativu
         display_name: Nùmene ammustradu
         description: Descritzione de su profilu
+        company: Azienda
         home_lat: Latitùdine
         home_lon: Longitùdine
         languages: Limbas preferidas
@@ -213,6 +203,7 @@ sc:
     providers:
       none: Niunu
       google: Google
+      apple: Apple
       facebook: Facebook
       microsoft: Microsoft
       github: GitHub
@@ -249,9 +240,17 @@ sc:
       external auth: Autenticatzione esterna
       contributor_terms:
         heading: Règulas po contribuire
-        agreed: As atzetadu sos tèrmines noos de collaboratzione.
+        agreed: As atzetadu sos tèrmines de collaboratzione su %{date}.
+        not_agreed: No as galu atzetadu sos tèrmines de collaboratzione.
         agreed_with_pd: As fintzas decraradu chi cunsìderas sas modìficas tuas de
           domìniu pùblicu.
+        not_agreed_with_pd: No as decraradu chi cunsìderas sas modìficas tuas de domìniu
+          pùblicu.
+        review: Revisiona sas cunditziones
+        review_and_accept: Revisiona e atzeta sas cunditziones
+        consider_pd: Cunsìdera de domìniu pùblicu
+      terms_of_use:
+        heading: Cunditziones de impreu
       save changes button: Sarva sas modìficas
       delete_account: Iscantzella su contu...
     go_public:
@@ -324,6 +323,7 @@ sc:
         readable_summary: resumu chi un'èssere umanu podet lèghere
         informal_translations: tradutziones informales
         continue: Sighi
+        cancel: Annulla
         you need to accept or decline: Pro pòdere sighire leghe e a pustis atzeta
           o refuda sos tèrmines noos de collaboratzione.
         legale_select: 'Paisu de residèntzia:'
@@ -338,6 +338,9 @@ sc:
         terms_declined_html: Nos dipraghet chi apas isseberadu de no atzetare sos
           tèrmines de contributzione noos. Pro àteras informatziones pòmpia·ti %{terms_declined_link}.
         terms_declined_link: custa pàgina wiki
+    pd_declarations:
+      show:
+        confirm: Cunfirma
   browse:
     deleted_ago_by_html: Iscantzelladu %{time_ago} dae %{user}
     edited_ago_by_html: Modificadu %{time_ago} dae %{user}
@@ -417,6 +420,13 @@ sc:
       telephone_link: Muti a su %{phone_number}
       colour_preview: Anteprima de su colore %{colour_value}
       email_link: Posta eletrònica %{email}
+    versions_navigation:
+      node: Nodu
+      way: Lìnia
+      relation: Relata
+      history: Cronologia
+      version: 'Versione #%{version}'
+      versions_label: 'Versiones:'
   feature_queries:
     show:
       title: Chirca de elementos
@@ -431,6 +441,8 @@ sc:
         title_html: 'Istòria de sa lìnia: %{name}'
       relation:
         title_html: 'Istòria de sa relatzione: %{name}'
+      older_versions: Versiones prus betzas
+      newer_versions: Versiones prus noas
   changeset_comments:
     feeds:
       comment:
@@ -480,9 +492,13 @@ sc:
       changesetxml: XML de s'annantu de modìficas
       osmchangexml: XML in formadu osmChange
     paging_nav:
+      nodes_title: Nodos
       nodes_paginated: Nodos (%{x}-%{y} de %{count})
+      ways_title: Lìnias
       ways_paginated: Lìnias (%{x}-%{y} de %{count})
+      relations_title: Relatas
       relations_paginated: Relatziones (%{x}-%{y} de %{count})
+      range: '%{x}-%{y} de %{count}'
     timeout:
       sorry: S'elencu de annantos de modìficas chi as pedidu at bisongiadu de tropu
         tempus pro lu recuperare.
@@ -496,11 +512,13 @@ sc:
     popup:
       your location: Sa positzione tua
       nearby mapper: Mapadore a curtzu
+      following: Sighende
     show:
       title: Su pannellu de controllu meu
       no_home_location_html: '%{edit_profile_link} e imposta sa positzione de domo
         tua pro bìdere sos utentes a curtzu.'
       edit_your_profile: Modìfica su profilu tuo
+      followings: Utentes chi sighis
       nearby users: Àteros utentes a curtzu
       no nearby users: Non b'at perunu àteru utente chi ammitat de mapare a curtzu
         a inoghe.
@@ -526,6 +544,9 @@ sc:
     show:
       title: Diàriu de %{user} | %{title}
       user_title: Diàriu de %{user}
+      discussion: Arresonu
+      subscribe: Sutaiscrie·ti
+      unsubscribe: Annulla s'iscritzione
       leave_a_comment: Lassa unu cummentu
       login_to_leave_a_comment_html: '%{login_link} pro lassare unu cummentu'
       login: Intra
@@ -571,6 +592,8 @@ sc:
       my_diary: Diàriu meu
       new: Intrada de diàriu noa
       new_title: Cumpone un'intrada noa in su diàriu de utente meu
+    profile_diaries:
+      title_label: Intrada in su diàriu
   doorkeeper:
     errors:
       messages:
@@ -953,6 +976,9 @@ sc:
           wayside_shrine: Tabernàculu istòricu
           wreck: Relitu
           "yes": Giassu istòricu
+        information:
+          map: Mapa
+          office: Ufìtziu turìsticu
         junction:
           "yes": Giuntura de su caminu
         landuse:
@@ -1365,6 +1391,8 @@ sc:
           building_passage: Coladòrgiu peri unu fràigu
           culvert: Canale suta terra
           "yes": Galleria
+        water:
+          lake: Lagu
         waterway:
           artificial: Cursu de abba artifitziale
           boatyard: Cantiere navale
@@ -1453,14 +1481,13 @@ sc:
       other_issues_against_this_user: Àteras sinnalatziones contra a custu utente
       no_other_issues: Non b'at perunu àteru problema chi pertochet a custu utente.
       comments_on_this_issue: Cummentos subra de custu problema
+      comment_from_html: Cummentu de %{user_link} de su %{comment_created_at}
     resolve:
       resolved: S'istadu de su problema est istadu impostadu comente ‘Risoltu'
     ignore:
       ignored: S'istadu de su problema est istadu impostadu comente ‘Ignoradu'
     reopen:
       reopened: S'istadu de su problema est istadu impostadu comente ‘Abertu'
-    comments:
-      comment_from_html: Cummentu de %{user_link} de su %{comment_created_at}
     reports:
       reported_by_html: Sinnaladu comente %{category} dae %{user} su %{updated_at}
     helper:
@@ -1508,32 +1535,137 @@ sc:
     create:
       successful_report: Sa sinnalatzione tua est istada registrada
       provide_details: Fruni sos detàllios pedidos
+  languages_panes:
+    select_language_list:
+      search_language: Chirca…
+      languages:
+        af: Afrikaans
+        gsw: Alemànnicu
+        frp: Arpitanu
+        ast: Asturianu
+        az: Azeru
+        id: Indonesianu
+        ms: Malesu
+        bs: Bosnìacu
+        br: Brètone
+        ca: Catalanu
+        cs: Tzecu
+        cy: Gallesu
+        da: Danesu
+        de: Tedescu
+        et: Èstone
+        en: Inglesu
+        en-GB: Inglesu (Rennu Unidu)
+        es: Ispagnolu
+        eo: Esperanto
+        eu: Bascu
+        fr: Frantzesu
+        fy: Frisone otzidentale
+        fur: Friulanu
+        ga: Irlandesu
+        gd: Gaèlicu iscotzesu
+        gl: Galitzianu
+        hr: Croatu
+        ia: Interlingua
+        is: Islandesu
+        it: Italianu
+        ku-Latn: Curdu (latinu)
+        lv: Lètone
+        lb: Lussemburghesu
+        lt: Lituanu
+        hu: Ungheresu
+        nl: Olandesu
+        nb: Norvegesu Bokmål
+        nn: Norvegesu Nynorsk
+        oc: Otzitanu
+        pl: Polacu
+        pt-PT: Portoghesu
+        pt: Portoghesu (Brasile)
+        ro: Rumenu
+        sc: Sardu
+        sco: Iscotzesu
+        sq: Albanesu
+        scn: Sitzilianu
+        sk: Islovacu
+        sl: Islovenu
+        sr-Latn: Serbu (latinu)
+        sh: Serbo-croatu (latinu)
+        fi: Finlandesu
+        sv: Isvedesu
+        tl: Tagalog
+        kab: Cabilu
+        vi: Vietnamita
+        tr: Turcu
+        yo: Yoruba
+        diq: Dimli
+        el: Grecu
+        ba: Baschiru
+        be: Bielorussu
+        be-Tarask: Bielorussu (Tarašk.)
+        bg: Bùlgaru
+        mk: Matzèdone
+        mo: Moldavu
+        ce: Tzetzenu
+        ru: Russu
+        sr: Serbu (tzirìllicu)
+        tt: Tàtaru (tzirìllicu)
+        uk: Ucrainu
+        kk-cyrl: Kazacu (tzirìllicu)
+        yi: Yiddish
+        he: Ebràicu
+        ar: Àrabu
+        skr-arab: Saraiki
+        fa: Persianu
+        arz: Àrabu egitzianu
+        nqo: N’Ko
+        ne: Nepalesu
+        mr: Marathi
+        hi: Hindi
+        bn: Bengalesu
+        pa: Punjabi
+        gu: Gujarati
+        ta: Tamil
+        te: Telugu
+        kn: Kannada
+        th: Tailandesu
+        my: Birmanu
+        ka: Georgianu
+        km: Khmer
+        zh-CN: Tzinesu (semplificadu)
+        zh-TW: Tzinesu (traditzionale)
+        zh-HK: Tzinesu (Hong Kong)
+        ja: Giaponesu
+        ko: Coreanu
   layouts:
     logo:
       alt_text: Logotipu de OpenStreetMap
-    home: Bae a sa positzione de incumintzu
-    logout: Essi
-    log_in: Intra
-    sign_up: Iscrie·ti
     start_mapping: Incumintza a mapare
-    edit: Modìfica
-    history: Cronologia
-    export: Esporta
-    issues: Problemas
-    gps_traces: Rastas GPS
-    user_diaries: Diàrios de sos utentes
-    edit_with: Modìfica cun %{editor}
     intro_header: Bene bènnidu in OpenStreetMap!
     intro_text: OpenStreetMap est una mapa de su mundu, creada dae persones che a
       tie e de impreu lìberu suta de una litzèntzia aberta.
     partners_partners: sòtzios
     tou: Conditziones de impreu
-    help: Agiudu
-    about: Informatziones
-    copyright: Deretu de autore
-    communities: Comunidades
     learn_more: Leghe àteru
-    more: Àteru
+    header:
+      about: Informatziones
+      communities: Comunidades
+      copyright: Deretu de autore
+      edit: Modìfica
+      edit_with: Modìfica cun %{editor}
+      export: Esporta
+      gps_traces: Rastas GPS
+      help: Agiudu
+      history: Cronologia
+      home: Bae a sa positzione de incumintzu
+      issues: Problemas
+      log_out: Essi
+      log_in: Intra
+      more: Àteru
+      select_language: Issèbera sa limba
+      sign_up: Iscrie·ti
+      user_diaries: Diàrios de sos utentes
+    select_language_button:
+      title: Issèbera sa limba
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} at cummentadu un''intrada de su diàriu'
@@ -1561,6 +1693,12 @@ sc:
       hi: Salude %{to_user},
       see_their_profile: Podes bìdere su profilu suo in %{userurl}.
       see_their_profile_html: Podes bìdere su profilu suo in %{userurl}.
+    gpx_details:
+      url: URL
+      description: Descritzione
+      tags: Etichetas
+      total_points: Nùmeru totale de puntos
+      imported_points: Nùmeru de puntos importados
     gpx_failure:
       hi: Salude %{to_user},
       failed_to_import: 'non si podet importare. Sa faddina est istada:'
@@ -1730,6 +1868,7 @@ sc:
         to: Cara a
         subject: 'Sugetu:'
         date: Data
+        actions: Atziones
       message:
         unread_button: Sinna comente no lèghidu
         read_button: Sinna comente lèghidu
@@ -1792,7 +1931,10 @@ sc:
   profiles:
     profile_sections:
       navigation:
+        links: Ligàmenes
         image: Immàgine
+        company: Azienda
+        location: Logu
     descriptions:
       show:
         title: Modìfica su profilu
@@ -1801,6 +1943,9 @@ sc:
     links:
       show:
         title: Modìfica su profilu
+        cancel: Annulla
+        social_links:
+          remove: Boga
     images:
       show:
         gravatar:
@@ -1810,8 +1955,6 @@ sc:
         keep image: Mantene s'immàgine atuale
         delete image: Boga s'immàgine atuale
         replace image: Remplasa s'immàgine atuale
-        image size hint: (sas immàgines cuadradas de a su nessi 100x100 funtzionant
-          mègius)
     locations:
       show:
         no home location: No as insertadu sa positzione de incumintzu tua.
@@ -1840,34 +1983,6 @@ sc:
       contact_support_html: Pro praghere cuntata a s'%{support_link} si cheres dibatere
         custa cosa.
       support: assistèntzia
-  shared:
-    markdown_help:
-      heading_html: Analizadu cun %{kramdown_link}
-      headings: Intestatziones
-      heading: Intestatzione
-      subheading: Sutatìtulu
-      unordered: Lista no ordinada
-      ordered: Lista ordinada
-      first: Primu elementu
-      second: Segundu elementu
-      link: Ligàmene
-      text: Testu
-      image: Immàgine
-      alt: Testu alternativu
-      url: URL
-    richtext_field:
-      edit: Modìfica
-      preview: Antiprima
-    pagination:
-      diary_comments:
-        older: Cummentos prus betzos
-        newer: Cummentos prus noos
-      diary_entries:
-        older: Intradas prus antigas
-        newer: Intradas prus noas
-      traces:
-        older: Rastas prus betzas
-        newer: Rastas prus noas
   site:
     about:
       heading_html: '%{copyright}Contribuidores%{br} de OpenStreetMap'
@@ -1914,6 +2029,10 @@ sc:
       legal_1_1_terms_of_use: Cunditziones de impreu
       legal_1_1_aup: Polìticas de impreu atzetàbile
       legal_1_1_privacy_policy: Polìtica de riservadesa
+      legal_attribution_example_film_title: Film
+      legal_attribution_example_film_url: https://wiki.openstreetmap.org/wiki/Films
+      legal_attribution_example_tv_title: TV
+      legal_attribution_example_tv_url: https://wiki.openstreetmap.org/wiki/TV_series
       legal_2_1_html: Pro praghere %{contact_the_osmf_link} si tenes dimandas in contu
         de sa litzèntzia, de su deretu de autore o de àteras chistiones legales.
       legal_2_1_contact_the_osmf: cuntata s'OSMF
@@ -1936,6 +2055,7 @@ sc:
         native_link: versione in sardu
         mapping_link: incumintzare a mapare
       legal_babble:
+        lead_2_osm_foundation: Fundatzione OSM
         licensing_1_odc_odbl: Litzèntzia de sa base de datos abertos Open Data Commons
           (ODbL)
         licensing_1_osm_foundation: Fundatzione OpenStreetMap
@@ -2010,8 +2130,6 @@ sc:
           %{france}: Cuntenet datos pigados dae sa
           Diretzione Generale de sas Impostas.
         contributors_fr_france: Frantza
-        contributors_nl_credit_html: '%{netherlands}: Cuntenet &copy; AND datos, 2007
-          (%{and_link})'
         contributors_nl_netherlands: Paisos Bassos
         contributors_nz_credit_html: |-
           %{new_zealand}: Cuntenet datos pigados dae su %{linz_data_service_link}
@@ -2354,6 +2472,7 @@ sc:
       image_dimensions_html: S'immàgine at a mustrare s'istratu %{layer} in %{width}
         x %{height}
       download: Iscàrriga
+      downloading: Iscarrighende...
   traces:
     visibility:
       private: Privadu (cumpartzidu petzi comente puntos anònimos no ordinados)
@@ -2423,6 +2542,8 @@ sc:
       identifiable: IDENTIFICÀBILE
       private: PRIVADU
       trackable: ARRASTÀBILE
+      details_with_tags_html: '%{time_ago} dae %{user} in %{tags}'
+      details_without_tags_html: '%{time_ago} dae %{user}'
     index:
       public_traces: Rastas GPS pùblicas
       my_gps_traces: Rastas GPS meas
@@ -2477,6 +2598,8 @@ sc:
       google:
         title: Intra cun Google
         alt: Logotipu de Google
+      apple:
+        title: Intra cun Apple
       facebook:
         title: Intra cun Facebook
         alt: Logotipu de Facebook
@@ -2489,6 +2612,40 @@ sc:
       wikipedia:
         title: Intra cun Wikipedia
         alt: Logotipu de Wikipedia
+    share:
+      share:
+        title: Cumpartzi
+        alt: Icona de cumpartzidura
+      mastodon:
+        title: Cumpartzi in Mastodon
+        alt: Icona de Mastodon
+      telegram:
+        title: Cumpartzi in Telegram
+        alt: Icona de Telegram
+      x:
+        title: Cumpartzi in X
+        alt: Icona de X
+    markdown_help:
+      heading_html: Analizadu cun %{kramdown_link}
+      headings: Intestatziones
+      heading: Intestatzione
+      subheading: Sutatìtulu
+      unordered: Lista no ordinada
+      first: Primu elementu
+      second: Segundu elementu
+      link: Ligàmene
+      text: Testu
+      image: Immàgine
+      url: URL
+    richtext_field:
+      preview: Antiprima
+    pagination:
+      diary_comments:
+        older: Cummentos prus betzos
+      diary_entries:
+        newer: Intradas prus noas
+      traces:
+        newer: Rastas prus noas
   oauth:
     permissions:
       missing: No as cuntzèdidu s'atzessu a custa caraterìstica  a s'aplicatzione
@@ -2496,7 +2653,7 @@ sc:
       openid: Intra impreende OpenStreetMap
       read_prefs: Leghe sas preferèntzias de utente
       write_prefs: Modìfica sas preferèntzias de utente
-      write_diary: Crea intradas de su diàriu, cummentos e faghe amistades
+      write_diary: Crea intradas de su diàriu e cummentos
       write_api: Modìfica sa mapa
       read_gpx: Leghe sas rastas GPS privadas
       write_gpx: Càrriga rastas GPS
@@ -2582,8 +2739,10 @@ sc:
           OSM chi incluet sa setzione subra de sos indiritzos de posta eletrònica
       continue: Iscrie·ti
       email_help:
+        privacy_policy: polìtica de riservadesa
         html: S'indiritzu tuo no est ammustradu in manera pùblica, consulta sa %{privacy_policy_link}
           pro àteras informatziones.
+      or: o
       use external auth: o registra·ti impreende unu servìtziu esternu
     no_such_user:
       title: Custu utente no esistet
@@ -2626,11 +2785,24 @@ sc:
       confirm_user: Cunfirma custu utente
       unconfirm_user: Boga sa cunfirma a custu utente
       unsuspend_user: Boga sa suspensione de s'utente
-      hide_user: Cua custu utente
-      unhide_user: Non cues custu utente
-      delete_user: Iscantzella custu utente
       confirm: Cunfirma
       report: Sinnala custu utente
+      title:
+        administrator: Custu utente est un'amministradore
+        moderator: Custu utente est unu moderadore
+        importer: Custu impitadore est un'importadore
+      grant:
+        administrator: Cuntzede s'atzessu comente amministradore
+        moderator: Cuntzede s'atzessu comente moderadore
+        importer: Cuntzede s'atzessu comente importadore
+        are_you_sure: Ses seguru de bòlere cuntzèdere su ruolu '%{role}' a s'utente
+          '%{name}'?
+      revoke:
+        administrator: Rèvoca s'atzessu comente amministradore
+        moderator: Rèvoca s'atzessu comente moderadore
+        importer: Rèvoca s'atzessu comente importadore
+        are_you_sure: Ses seguru de bòlere revocare su ruolu '%{role}' de s'utente
+          '%{name}'?
     go_public:
       flash success: Totu sas modìficas tuas como sunt pùblicas, e tenes su permissu
         de modificare.
@@ -2650,7 +2822,6 @@ sc:
         heading: Utentes
       page:
         confirm: Cunfirma sos utentes seletzionados
-        hide: Cua sos utentes seletzionados
         empty: Non b'at perunu utente chi currispondat
       user:
         summary_html: '%{name} creadu dae %{ip_address} su %{date}'
@@ -2664,6 +2835,8 @@ sc:
         title: Cummentos de su diàriu annantos dae %{user}
       page:
         post: Publicatzione
+        when: Cando
+        comment: Cummentu
     suspended:
       title: Contu suspesu
       heading: Contu suspesu
@@ -2688,23 +2861,6 @@ sc:
         Si tenes giai unu contu bi podes intrare
         impreende su nùmene utente tuo e sa crae tua e a pustis assotziende su contu
         cun s'ID tuo in sas impostatziones de utente tuas.
-    role_icons:
-      title:
-        administrator: Custu utente est un'amministradore
-        moderator: Custu utente est unu moderadore
-        importer: Custu impitadore est un'importadore
-      grant:
-        administrator: Cuntzede s'atzessu comente amministradore
-        moderator: Cuntzede s'atzessu comente moderadore
-        importer: Cuntzede s'atzessu comente importadore
-        are_you_sure: Ses seguru de bòlere cuntzèdere su ruolu '%{role}' a s'utente
-          '%{name}'?
-      revoke:
-        administrator: Rèvoca s'atzessu comente amministradore
-        moderator: Rèvoca s'atzessu comente moderadore
-        importer: Rèvoca s'atzessu comente importadore
-        are_you_sure: Ses seguru de bòlere revocare su ruolu '%{role}' de s'utente
-          '%{name}'?
   user_role:
     filter:
       not_a_role: S'istringa '%{role}' no est unu ruolu vàlidu.
@@ -2856,11 +3012,11 @@ sc:
       tooltip: Legenda
       tooltip_disabled: Sa legenda no est a disponimentu pro custu istratu
     map:
-      zoom:
-        in: Ismànnia
-        out: Mìnima
-      locate:
-        title: Ammustra sa positzione mea
+      NavigationControl:
+        ZoomIn: Ismànnia
+        ZoomOut: Mìnima
+      GeolocateControl:
+        FindMyLocation: Ammustra sa positzione mea
         metersPopup:
           one: Ses a %{count} metru dae custu puntu
           other: Ses a %{count} metros dae custu puntu
@@ -2906,6 +3062,8 @@ sc:
         km: '%{distance} km'
       errors:
         no_route: No at fatu a agatare un'àndala intre custos duos logos.
+        no_place:
+          title: Chirca fallida
       instructions:
         continue_without_exit: Sighi in %{name}
         slight_right_without_exit: Gira de pagu a dereta in %{name}

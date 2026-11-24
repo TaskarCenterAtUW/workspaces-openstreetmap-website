@@ -55,9 +55,6 @@ arz:
       way_node: عقده طريق
       way_tag: سمه طريق
     attributes:
-      client_application:
-        callback_url: رابط الرد
-        support_url: رابط الدعم
       diary_comment:
         body: نص الرسالة
       diary_entry:
@@ -383,7 +380,7 @@ arz:
           sports_centre: مركز رياضي
           stadium: مدرج ألعاب رياضية
           swimming_pool: بركه سباحة
-          track: مضمار سباق
+          track: حلبة سباق (غير مخصصة لرياضة السيارات)
           water_park: منتزه ألعاب مائية
         natural:
           bay: خليج
@@ -545,15 +542,16 @@ arz:
   layouts:
     logo:
       alt_text: شعار خريطه الشارع المفتوحة
-    home: روح للصفحه الرئيسيه
-    logout: خروج
-    log_in: تسجيل الدخول
-    sign_up: اعمل حساب
-    edit: عدّل هذه الخريطة
-    history: تاريخ
-    export: صدِّر
-    gps_traces: آثار جى بى أس
-    user_diaries: يوميات المستخدمين
+    header:
+      edit: عدّل هذه الخريطة
+      export: صدِّر
+      gps_traces: آثار جى بى أس
+      history: تاريخ
+      home: روح للصفحه الرئيسيه
+      log_out: خروج
+      log_in: تسجيل الدخول
+      sign_up: اعمل حساب
+      user_diaries: يوميات المستخدمين
   user_mailer:
     diary_comment_notification:
       subject: '[خريطه الشارع المفتوحة] %{user} أضاف تعليقًا على مدخلتك فى اليومية'
@@ -672,11 +670,6 @@ arz:
       lost password link: أنسيت كلمه المرور؟
       login_button: دخول
       auth failure: آسف، لا يمكن الدخول بتلك التفاصيل.
-  shared:
-    pagination:
-      diary_entries:
-        older: المدخلات الأقدم
-        newer: المدخلات الأحدث
   site:
     index:
       js_1: أنت إما تستخدم متصفح لا يدعم جافا سكريبت، أو أنك عطلت استعمال جافا سكريبت.
@@ -770,13 +763,13 @@ arz:
       uploaded: 'تم الرفع في:'
       points: 'النقاط:'
       start_coordinates: 'إحداثيات البدء:'
-      map: خريطة
-      edit: عدّل
+      map: عرض الموقع على الخريطة
+      edit: افتح في المحرر
       owner: 'المالك:'
       description: 'الوصف:'
       tags: 'الوسوم:'
       none: لا يوجد
-      edit_trace: عدّل هذا الأثر
+      edit_trace: تعديل تفاصيل التتبع
       delete_trace: احذف هذا الأثر
       trace_not_found: لم يتم العثور على الأثر!
       visibility: 'الرؤية:'
@@ -785,8 +778,8 @@ arz:
       count_points: '%{count} نقطة'
       more: المزيد
       trace_details: اعرض تفاصيل الأثر
-      view_map: اعرض الخريطة
-      edit_map: عدّل الخريطة
+      view_map: عرض الموقع على الخريطة
+      edit_map: افتح في المحرر
       public: عام
       private: خاص
     index:
@@ -807,6 +800,9 @@ arz:
     setup_user_auth:
       blocked: تم حظر وصولك إلى واجهة برمجة التطبيقات. يُرجى تسجيل الدخول إلى واجهة
         الويب لمعرفة المزيد.
+    pagination:
+      diary_entries:
+        newer: المدخلات الأحدث
   users:
     new:
       title: اعمل حساب
@@ -836,10 +832,18 @@ arz:
       moderator_history: اعرض العرقلات المعطات
       create_block: منع هذا المستخدم
       activate_user: نشّط هذا المستخدم
-      hide_user: اخفِ هذا المستخدم
-      unhide_user: أظهر هذا المستخدم
-      delete_user: احذف هذا المستخدم
       confirm: أكّد
+      title:
+        administrator: هذا المستخدم إداري
+        moderator: هذا المستخدم وسيط
+      grant:
+        administrator: منح وصول إداري
+        moderator: منح وصول وسيط
+        are_you_sure: هل أنت متأكد من أنك تريد منح الدور `%{role}' إلى المستخدم `%{name}'؟
+      revoke:
+        administrator: ابطل وصول إداري
+        moderator: ابطل وصول وسيط
+        are_you_sure: أكنت متأكد انك بتريد إلغاء الدور '%{role}' من المستخدم '%{name}'?
     go_public:
       flash success: جميع تعديلاتك الآن عامه، ومسموح لك بالتعديل الآن.
     issued_blocks:
@@ -852,18 +856,6 @@ arz:
         title: العرقلات على %{name}
         heading_html: لائحه العرقلات على %{name}
         empty: '%{name} لم يتم عرقلته بعد.'
-    role_icons:
-      title:
-        administrator: هذا المستخدم إداري
-        moderator: هذا المستخدم وسيط
-      grant:
-        administrator: منح وصول إداري
-        moderator: منح وصول وسيط
-        are_you_sure: هل أنت متأكد من أنك تريد منح الدور `%{role}' إلى المستخدم `%{name}'؟
-      revoke:
-        administrator: ابطل وصول إداري
-        moderator: ابطل وصول وسيط
-        are_you_sure: أكنت متأكد انك بتريد إلغاء الدور '%{role}' من المستخدم '%{name}'?
   user_role:
     filter:
       not_a_role: السطر '%{role}' مش دور صالح.

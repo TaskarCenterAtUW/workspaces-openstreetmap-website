@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   class TracesController < ApiController
     before_action :check_api_writable, :only => [:create, :update, :destroy]
@@ -11,7 +13,7 @@ module Api
     skip_around_action :api_call_timeout, :only => :create
 
     def show
-      @trace = Trace.visible.find(params[:id])
+      @trace = Trace.visible.find(params.expect(:id))
 
       return head :forbidden unless @trace.public? || @trace.user == current_user
 
@@ -26,15 +28,7 @@ module Api
       description = params[:description] || ""
       visibility = params[:visibility]
 
-      if visibility.nil?
-        visibility = if params[:public]&.to_i&.nonzero?
-                       "public"
-                     else
-                       "private"
-                     end
-      end
-
-      if params[:file].respond_to?(:read)
+      if params.expect(:file).respond_to?(:read)
         trace = do_create(params[:file], tags, description, visibility)
 
         if trace.id
@@ -51,11 +45,13 @@ module Api
     end
 
     def update
-      trace = Trace.visible.find(params[:id])
+      trace = Trace.visible.find(params.expect(:id))
 
       if trace.user == current_user
-        trace.update_from_xml(request.raw_post)
-        trace.save!
+        Trace.transaction do
+          trace.update_from_xml(request.raw_post)
+          trace.save!
+        end
 
         head :ok
       else
@@ -64,7 +60,7 @@ module Api
     end
 
     def destroy
-      trace = Trace.visible.find(params[:id])
+      trace = Trace.visible.find(params.expect(:id))
 
       if trace.user == current_user
         trace.visible = false

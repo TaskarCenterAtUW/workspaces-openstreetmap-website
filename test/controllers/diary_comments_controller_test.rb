@@ -1,12 +1,8 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class DiaryCommentsControllerTest < ActionDispatch::IntegrationTest
-  def setup
-    super
-    # Create the default language for diary entries
-    create(:language, :code => "en")
-  end
-
   def test_routes
     assert_routing(
       { :path => "/user/username/diary/1/comments", :method => :post },

@@ -10,9 +10,6 @@
 # Author: Умар
 ---
 ce:
-  date:
-    formats:
-      heatmap: '%B %-d'
   time:
     formats:
       friendly: '%e %B %Y %H:%M'
@@ -89,19 +86,6 @@ ce:
       way_node: Сизан тӀадам
       way_tag: Сизан тег
     attributes:
-      client_application:
-        name: ЦIе (схьадоьхург)
-        url: Приложенена URL (схьадоьхург)
-        callback_url: URL йухакхайкха
-        support_url: URL гӀо дар
-        allow_read_prefs: йеша лелорчера лаамаш
-        allow_write_prefs: хийца лелорчера лаамаш
-        allow_write_diary: тептар тIехь йаздарш кхолла а, комментареш йа а
-        allow_write_api: карта нисдар
-        allow_write_changeset_comments: хийцаран пакеташна тӀехь комментарий йе
-        allow_read_gpx: долахь йолу GPS-трекаш йеша
-        allow_write_gpx: GPS-трекаш чуйаха
-        allow_write_notes: заметкаш нисайар
       diary_comment:
         body: Текст
       diary_entry:
@@ -436,6 +420,9 @@ ce:
         key: Вики агӀонгахь гойту, тег %{key}
         tag: Вики агӀонгахь гойту, тег %{key}=%{value}
       wikidata_link: Элемент %{page} Викихаамашкахь
+      wikidata_preview:
+        one: Викихаамийн объекте хьалххе хьажар
+        other: Викихаамийн объекташка хьалххе хьажар
       wikipedia_link: АгӀо %{page} Википедин чохь
       wikimedia_commons_link: Викиларми тIера элемент %{page}
       telephone_link: Телпо тоха %{phone_number}
@@ -526,8 +513,8 @@ ce:
       join_discussion: Дийцарехь дакъалаца системин чугӀо
       still_open: Хийцамийн пакет хӀинца а йиллина йу - дискусси схьайоьллур йу хийцамийн
         пакет дӀакъевлича.
-      subscribe: Йаздала
-      unsubscribe: Йаздалар дӀадаккха
+      subscribe: ТӀейазло
+      unsubscribe: ТӀейаздалар дӀадаккха
       comment_by_html: Комментари йина %{user} %{time_ago}
       hidden_comment_by_html: Къайлаха комментари йина %{user} %{time_ago}
       hide_comment: къайлайаккха
@@ -607,8 +594,8 @@ ce:
       title: Декъашхочун тептар %{user} | %{title}
       user_title: Декъашхочун тептар %{user}
       discussion: Дийцар
-      subscribe: Йаздала
-      unsubscribe: Йаздалар дӀадаккха
+      subscribe: ТӀейазло
+      unsubscribe: ТӀейаздалар дӀадаккха
       leave_a_comment: Йитта коммент
       login_to_leave_a_comment_html: '%{login_link}, коммент йитарна'
       login: ЧугӀо
@@ -1569,14 +1556,13 @@ ce:
       other_issues_against_this_user: Кхин йолу проблемаш оцу декъашхочунца
       no_other_issues: Кхин проблемаш йац оцу декъашхочунца
       comments_on_this_issue: Эца проблемах лаьцна комментари
+      comment_from_html: Декъашхочуна коммент %{user_link} йина %{comment_created_at}
     resolve:
       resolved: Проблеман статус гIотайира 'ДӀадерзийна' чу.
     ignore:
       ignored: Проблеман статус гIотайира 'Таьргал ца йина' чу
     reopen:
       reopened: Проблеман статус гIотайира 'Хьайилина' чу
-    comments:
-      comment_from_html: Декъашхочуна коммент %{user_link} йина %{comment_created_at}
     reports:
       reported_by_html: Иштта гайта йу %{category} дакъашхочу %{user}кхучохь %{updated_at}
     helper:
@@ -1592,7 +1578,7 @@ ce:
       title_html: Хаам %{link}
       disclaimer:
         intro: 'Дехар ду, хьайн рапорт сайтан модераторшка дӀахьажайале, хьажа:'
-        not_just_mistake: Хьо тешна вуй, проблема еккъа цхьа гӀалат ца хиларх.
+        not_just_mistake: Бакъалла а, проблема деккъа цхьа гӀалат дуй.
         unable_to_fix: Хьан аьтто бац хьайна йа хьайн юкъараллин декъашхойн гӀоьнца
           и проблема нисъян
         resolve_with_user: Хьо хӀинцале а хьаьжна цу декъашкочунгар проблема дӀаяккха
@@ -1624,18 +1610,7 @@ ce:
   layouts:
     logo:
       alt_text: OpenStreetMap-ан логотип
-    home: ЦӀа дӀагӀо
-    logout: Болх дӀаберзор
-    log_in: ЧугӀо
-    sign_up: ДӀайаздалар
     start_mapping: Карт дила волаво
-    edit: Нисдар
-    history: Истори
-    export: Экспорт
-    issues: Проблемаш
-    gps_traces: GPS-трекаш
-    user_diaries: Декъашхочун дневник
-    edit_with: Нисйе кхуьнца %{editor}
     intro_header: Марша вогӀийла хьо OpenStreetMap!
     intro_text: OpenStreetMap — дуьненан карта ду, хьо санна болчу наха кхоьллина,
       ткъа хIара маьрша лело йиш йу йиллина лицензица.
@@ -1645,12 +1620,24 @@ ce:
     partners_partners: Партнёраш
     tou: Лелоран биллам
     nothing_to_preview: Хьалххе хьажа хӀумма а дац.
-    help: ГӀо
-    about: Проектах лаьцна
-    copyright: Авторийн бакъонаш
-    communities: Тобаш
     learn_more: Цул совнаха хаа
-    more: Кхин а
+    header:
+      about: Проектах лаьцна
+      communities: Тобаш
+      copyright: Авторийн бакъонаш
+      edit: Нисдар
+      edit_with: Нисйе кхуьнца %{editor}
+      export: Экспорт
+      gps_traces: GPS-трекаш
+      help: ГӀо
+      history: Истори
+      home: ЦӀа дӀагӀо
+      issues: Проблемаш
+      log_out: Ара
+      log_in: ЧугӀо
+      more: Кхин а
+      sign_up: ДӀайаздалар
+      user_diaries: Декъашхочун дневник
   user_mailer:
     diary_comment_notification:
       description: 'OpenStreetMap Тептар Чувалар #%{id}'
@@ -1967,7 +1954,6 @@ ce:
         keep image: ХӀинцалера сурт дита
         delete image: ХӀинцалера сурт дӀадаккха
         replace image: ХӀинцалера сурт хийца
-        image size hint: (квадратан суьрташ лаххара а 100x100 дика болх беш ду)
     companies:
       show:
         title: Профиль нисйан
@@ -1996,60 +1982,15 @@ ce:
       or: йа
       auth failure: Бехк ма билла, цу цIарца йе парольца чувала аьтто ца баьлла.
     destroy:
-      title: Болх дӀаберзор
+      title: Ара
       heading: OpenStreetMap чуьра болх дӀаберзор
-      logout_button: Болх дӀаберзор
+      logout_button: Ара
     suspended_flash:
       suspended: Бехк ма билла, хьан аккаунт сацийна шеконе гӀуллакх дина бахьана
         долуш.
       contact_support_html: Дехар ду %{support_link} зӀене вала, нагахь хьайна хӀара
         къасто лаахь.
       support: гӀо
-  shared:
-    markdown_help:
-      heading_html: '%{kramdown_link} лелош анализ йина'
-      headings: Кортош
-      heading: Корта
-      subheading: Корталг
-      unordered: Низам боцу къепйоза
-      ordered: Низам болу къепйоза
-      first: Хьалхара элемент
-      second: ШолгIа элемент
-      link: Хьажорг
-      text: Текст
-      image: Сурт
-      alt: Кхин текст
-      url: URL
-      codeblock: Кодан блок
-    richtext_field:
-      edit: Нисйан
-      preview: Хьажа
-      help: ГӀо
-    pagination:
-      changeset_comments:
-        older: Шира комменташ
-        newer: Керла комменташ
-        oldest: Уггаре а шира комментареш
-        newest: Керла комментареш
-      diary_comments:
-        older: Шира комменташ
-        newer: Керла комменташ
-        oldest: Уггаре а шира комментареш
-      diary_entries:
-        older: Шира дӀайаздарш
-        newer: Керла аккаунташ
-      issues:
-        older: Шира арахецнарш
-        newer: Керла арахецнарш
-      traces:
-        older: Шира трекаш
-        newer: Керла трекаш
-      user_blocks:
-        older: Шира блокаш
-        newer: Керла блокаш
-      users:
-        older: Зедела декъашхой
-        newer: Керла декъашхой
   site:
     about:
       heading_html: '%{copyright}OpenStreetMap %{br} декъашхой'
@@ -2180,8 +2121,6 @@ ce:
         contributors_hr_croatia: Хорвати
         contributors_hr_dgu: Хорватин пачхьалкхан геодезин урхалла
         contributors_hr_open_data_portal: Къоман йиллина хаамийн портал
-        contributors_nl_credit_html: '%{netherlands}: Чохь йу &copy; хIара хаамаш,
-          2007 шо (%{and_link})'
         contributors_nl_netherlands: Нидерландаш
         contributors_nz_credit_html: |-
           %{new_zealand}: Цу чохь хьастан хаамаш бу %{linz_data_service_link}
@@ -2294,7 +2233,7 @@ ce:
       mailing_lists:
         title: Почтан тептарш
         description: Хаттар ло йа дийцаре де оьшуш долу хаттарш, шуьйрачу актуалан
-          йа регионан дIасатасаршкахь.
+          йа регионан дӀасатасаршкахь.
       irc:
         title: IRC
         description: Интерактивни чат тайп-тайпанчу меттанашкахь а, дуккха а теманашца
@@ -2653,6 +2592,38 @@ ce:
       wikipedia:
         title: Чувала Википеди чухула
         alt: Википеди логотип
+    markdown_help:
+      heading_html: '%{kramdown_link} лелош анализ йина'
+      headings: Кортош
+      heading: Корта
+      subheading: Корталг
+      unordered: Низам боцу къепйоза
+      first: Хьалхара элемент
+      second: ШолгIа элемент
+      link: Хьажорг
+      text: Текст
+      image: Сурт
+      url: URL
+      codeblock: Кодан блок
+    richtext_field:
+      preview: Хьажа
+    pagination:
+      changeset_comments:
+        newest: Керла комментареш
+      diary_comments:
+        older: Шира комменташ
+        oldest: Уггаре а шира комментареш
+      diary_entries:
+        newer: Керла аккаунташ
+      issues:
+        newer: Керла арахецнарш
+      traces:
+        newer: Керла трекаш
+      user_blocks:
+        newer: Керла блокаш
+      users:
+        older: Зедела декъашхой
+        newer: Керла декъашхой
   oauth:
     permissions:
       missing: Ахь бакъо ца елла цу приложенина хӀокху объекте кхача
@@ -2804,11 +2775,23 @@ ce:
       confirm_user: ХӀара декъашхо тӀечӀагӀве
       unconfirm_user: ХӀара декъашхо дӀавакха
       unsuspend_user: ХӀара декъашхо блокер дIаваккха
-      hide_user: ХӀара декъашхо къейлаваккха
-      unhide_user: ХӀара декъашхо схьагайта
-      delete_user: ХӀара декъашхо дӀаваккха
       confirm: Бакъдан
       report: Хаамбе хӀокху декъашхох
+      title:
+        administrator: ХӀара лелош верг администратор ву
+        moderator: ХӀара лелош верг модератор ву
+        importer: ХӀара лелош верг импортер ву
+      grant:
+        administrator: Администраторна бакъо ло
+        moderator: Модераторна бакъо ло
+        importer: Импортерна бакъо ло
+        are_you_sure: Бакъалла а лаьий хьуна '%{role}' роль дӀайала, декъашхочунна
+          '%{name}'?
+      revoke:
+        administrator: Администраторан бакъо йухайаккха
+        moderator: Модераторан бакъо йухайаккха
+        importer: Импортеран бакъо йухайаккха
+        are_you_sure: Бакъалла а лаьий хьуна '%{role}' роль дӀайаккха '%{name}' декъашхочуьнгара?
     go_public:
       flash success: Хьан берриге а хийцамаш хӀинца массо а агӀор хьажа мегаш бу,
         хӀинца хийцамаш бан йиш йу хьан.
@@ -2826,7 +2809,7 @@ ce:
         title: '%{block_on} тӀера ерриг блокаш йухаяхар'
         heading_html: '%{block_on} тӀера ерриг блокаш йухаяхар'
         empty: '%{name} жигара блокаш йац.'
-        confirm: Хьо тешна вуй хьайна %{active_blocks} йухаяккха лаьий?
+        confirm: Бакъалла а лаьий хьуна хӀара %{active_blocks} йухайаккха?
         active_blocks:
           one: '%{count} жигара блок'
           other: '%{count} жигара блокаш'
@@ -2842,7 +2825,6 @@ ce:
           one: '%{count} декъашхо карийна'
           other: '%{count} декъашхоша карийна'
         confirm: Хаьржина декъашхой тӀечӀагӀбе
-        hide: Хаьржина декъашхой къейлабаха
         empty: ЦхьаьнабогӀуш болу декъашхой ца карийна
       user:
         summary_html: '%{name} кхоьллина %{date}, %{ip_address} адрес чуьра'
@@ -2879,23 +2861,6 @@ ce:
       option_2: |-
         Нагахь санна хьан хӀинцале а аккаунт елахь, хьайн аккаунте чувала йиш йу хьан
         хьайн лелоран цӀе а, пароль а лелош, тӀаккха хьайн ID-ца хьайн аккаунт лелоран настройкашкахь зIай йе.
-    role_icons:
-      title:
-        administrator: ХӀара лелош верг администратор ву
-        moderator: ХӀара лелош верг модератор ву
-        importer: ХӀара лелош верг импортер ву
-      grant:
-        administrator: Администраторна бакъо ло
-        moderator: Модераторна бакъо ло
-        importer: Импортерна бакъо ло
-        are_you_sure: Хьо тешна вуй хьайна `%{role}' роль дӀаяла лаьий, декъашхочунна
-          `%{name}'?
-      revoke:
-        administrator: Администраторан бакъо йухаяккха
-        moderator: Модераторан бакъо йухайаккха
-        importer: Импортеран бакъо йухайаккха
-        are_you_sure: Хьо тешна вуй хьайна `%{role}' роль дӀаяккха лаьий `%{name}'
-          декъашхочуьнгара?
   user_role:
     filter:
       not_a_role: '`%{role}'' могӀа нийса роль йац.'
@@ -3080,11 +3045,11 @@ ce:
       tooltip: Картан догIа
       tooltip_disabled: Картан догIа мегаш дац цу чкъоьран
     map:
-      zoom:
-        in: Йоккха йе
-        out: Жима йе
-      locate:
-        title: Со волу меттиг гайта
+      NavigationControl:
+        ZoomIn: Йоккха йе
+        ZoomOut: Жима йе
+      GeolocateControl:
+        FindMyLocation: Со волу меттиг гайта
         metersPopup:
           one: Хьо лаьтташ ву %{count} метр цу точкан
           other: Хьо лаьтташ ву %{count} метр цу точкан
@@ -3132,20 +3097,20 @@ ce:
       instructions:
         continue_without_exit: ДӀа гIо а %{name}
         slight_right_without_exit: Жимма аьтту агӀор %{name} тӀе ваьрза
-        offramp_right: Аьтту агӀора аравала
-        offramp_right_with_exit: Аьтту агӀор аравала %{exit}
-        offramp_right_with_exit_name: Аьтту агӀор аравала %{exit} %{name} тӀехь
-        offramp_right_with_exit_directions: Аьтту агӀор аравала %{exit} %{directions}
+        offramp_right: Аьтту агӀор дӀахьовза
+        offramp_right_with_exit: Аьтту агӀор дӀахьовза %{exit} тӀе
+        offramp_right_with_exit_name: Аьтту агӀор дӀахьовза %{exit} %{name} тӀехь
+        offramp_right_with_exit_directions: Аьтту агӀор дӀахьовза %{exit} %{directions}
           агӀора
-        offramp_right_with_exit_name_directions: Аьтту агӀор аравала %{exit} %{name}
+        offramp_right_with_exit_name_directions: Аьтту агӀор дӀахьовза %{exit} %{name}
           тӀехь %{directions} агӀора
-        offramp_right_with_name: Аьтту агӀор аравала %{name}
-        offramp_right_with_directions: Аьтту агӀор аравала %{directions} агӀора
-        offramp_right_with_name_directions: Аьтту агӀор аравала %{name} тӀе %{directions}
+        offramp_right_with_name: Аьтту агӀор дӀахьовза %{name} тӀе
+        offramp_right_with_directions: Аьтту агӀор дӀахьовза %{directions} агӀора
+        offramp_right_with_name_directions: Аьтту агӀор дӀахьовза %{name} тӀе %{directions}
           агӀора
         onramp_right_without_exit: Аьтту агӀор ваьрза %{name} тIе.
         onramp_right_with_directions: Аьтту агӀор  вала  %{directions} агӀор дӀагӀо.
-        onramp_right_with_name_directions: Аьтту агӀор аравала %{name} тӀе %{directions}
+        onramp_right_with_name_directions: Аьтту агӀор дӀахьовза %{name} тӀе %{directions}
           агӀора
         onramp_right_without_directions: Аьтту агӀор дӀаверза
         onramp_right: Аьтту агӀор дӀаверза
@@ -3158,20 +3123,20 @@ ce:
         uturn_without_exit: Йухаверза %{name} тIе
         sharp_left_without_exit: Сиха аьрру агӀор дӀаверза %{name} тӀе
         turn_left_without_exit: Аьрру агӀор дӀаверза %{name} тӀе
-        offramp_left: Аьрру агӀор аравала
-        offramp_left_with_exit: Аьрру агӀор аравала %{exit} тIе
-        offramp_left_with_exit_name: Аьрру агӀор аравала %{exit} %{name} тIе
-        offramp_left_with_exit_directions: Аьрру агӀор аравала %{exit} %{directions}
-          агӀора дӀагIо
-        offramp_left_with_exit_name_directions: Аьрру агӀор аравала %{exit} %{name}
-          тӀе %%{directions} агӀора дӀагIо
-        offramp_left_with_name: Аьрру агӀор аравала  %{name}
-        offramp_left_with_directions: Аьрру агӀор аравала %{directions} агӀора
-        offramp_left_with_name_directions: Аьрру агӀор аравала %{name} тӀе %{directions}
+        offramp_left: Аьрру агӀор дӀахьовза
+        offramp_left_with_exit: Аьрру агӀор дӀахьовза %{exit} тӀе
+        offramp_left_with_exit_name: Аьрру агӀор дӀахьовза %{exit} %{name} тӀе
+        offramp_left_with_exit_directions: Аьрру агӀор дӀахьовза %{exit} %{directions}
+          агӀора дӀагӀо
+        offramp_left_with_exit_name_directions: Аьрру агӀор дӀахьовза %{exit} %{name}
+          тӀе %%{directions} агӀора дӀагӀо
+        offramp_left_with_name: Аьрру агӀор дӀахьовза %{name} тӀе
+        offramp_left_with_directions: Аьрру агӀор дӀахьовза %{directions} агӀора
+        offramp_left_with_name_directions: Аьрру агӀор дӀахьовза %{name} тӀе %{directions}
           агӀора
         onramp_left_without_exit: Аьрру агӀор ваьрза %{name} тӀе.
         onramp_left_with_directions: Аьрру агӀор  вала  %{directions} агӀора дӀагӀо.
-        onramp_left_with_name_directions: Аьрру агӀор аравала %{name} тӀе %{directions}
+        onramp_left_with_name_directions: Аьрру агӀор дӀахьовза %{name} тӀе %{directions}
           агӀора
         onramp_left_without_directions: Аьрру агӀор дӀаверза
         onramp_left: Аьрру агӀор дӀаверза
@@ -3190,9 +3155,10 @@ ce:
         against_oneway_without_exit: Цхьана агӀор дӀасалелачу некъан дуьхьал лела
           %{name}
         end_oneway_without_exit: Цхьана агӀор дӀасалеларан чаккхе %{name}
-        roundabout_with_exit: Горгачу новкъахь аравала %{exit} %{name} тӀе
-        roundabout_with_exit_ordinal: Горгачу меттигехь %{exit} аравала %{name} тӀе
-        exit_roundabout: Го тIера аравала  %{name} тӀе
+        roundabout_with_exit: Горгачу новкъахь дӀахьовза %{exit} %{name} тӀе
+        roundabout_with_exit_ordinal: Горгачу меттигехь %{exit} дӀахьовза %{name}
+          тӀе
+        exit_roundabout: '%{name} тӀе дӀахьовза'
         unnamed: некъ
         exit_counts:
           first: хьалхара
@@ -3240,7 +3206,7 @@ ce:
       user: 'Кхоьллина:'
       edit: ХӀара редакци хийца
       destroy: ДӀаяккха хӀара редакци
-      confirm: Хьо тешна вуй?
+      confirm: Бакъалла а лаьий хьуна?
     create:
       flash: Редакци кхоьллина.
     update:
@@ -3253,6 +3219,6 @@ ce:
   validations:
     leading_whitespace: хьалхахь меттиг йу
     trailing_whitespace: тӀехьахь меттиг йу
-    invalid_characters: нийса йоцу хьаьркаш йу
-    url_characters: леррина хьаьркаш йу URL чохь (%{characters})
+    invalid_characters: нийса йоцу символаш йу
+    url_characters: леррина символаш йу URL чохь (%{characters})
 ...

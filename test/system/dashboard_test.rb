@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class DashboardSystemTest < ApplicationSystemTestCase
@@ -60,7 +62,7 @@ class DashboardSystemTest < ApplicationSystemTestCase
       assert_no_text "Your location"
       assert_no_link "Fred Tester"
 
-      find(".leaflet-marker-icon").click
+      find(".maplibre-gl-marker").click
 
       assert_text "Your location"
       assert_link "Fred Tester"

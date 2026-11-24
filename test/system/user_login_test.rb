@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class UserLoginTest < ApplicationSystemTestCase
@@ -15,7 +17,7 @@ class UserLoginTest < ApplicationSystemTestCase
     end
 
     fill_in "username", :with => user2.email
-    fill_in "password", :with => "test"
+    fill_in "password", :with => "s3cr3t"
     click_on "Log in"
 
     assert_button "Second User"

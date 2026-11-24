@@ -8,6 +8,7 @@
 # Author: Fanjiayi
 # Author: Gravitystorm
 # Author: GretaDoci
+# Author: INNERLMNT
 # Author: Kosovastar
 # Author: Liridon
 # Author: Macofe
@@ -96,16 +97,6 @@ sq:
       way_node: Nyjë Rruge
       way_tag: Etiketë Rruge
     attributes:
-      client_application:
-        name: Emri (i detyrueshëm)
-        support_url: URL-ja e mbështetjes
-        allow_read_prefs: lexo parapëlqimet e tyre të përdoruesit
-        allow_write_prefs: modifiko parapëlqimet e tyre të përdoruesit
-        allow_write_diary: krijo shënime dhe komente ditari
-        allow_write_api: modifiko hartën
-        allow_read_gpx: lexo gjurmët e tyre private të GPS-it
-        allow_write_gpx: ngarko gjurmët GPS
-        allow_write_notes: modifiko shënimet
       diary_comment:
         body: Trupi i Mesazhit
       diary_entry:
@@ -521,8 +512,6 @@ sq:
     profile_diaries:
       latest_diaries: Ditarët më të fundit
       title_label: Shënim ditari
-      comments_label: Komentet
-      date_label: Data
   diary_comments:
     new:
       heading: Të shtohet komenti te diskutimi i mëposhtëm i shënimeve të ditarit?
@@ -1267,30 +1256,29 @@ sq:
   layouts:
     logo:
       alt_text: Logoja e OpenStreetMap
-    logout: Dil
-    log_in: Hyr
-    sign_up: Krijo llogari
     start_mapping: Fillo hartografimin
-    edit: Redakto
-    history: Historia
-    export: Eksporto
-    issues: Problemet
-    gps_traces: Gjurmët GPS
-    user_diaries: Ditarët e përdoruesit
-    edit_with: Redakto me %{editor}
     intro_header: Mirësevjen në OpenStreetMap!
     intro_text: OpenStreetMap është hartë e botës, e krijuar nga njerëz si ti dhe
       për përdorim të lirshëm në kuadrin e një licence të hapur.
     partners_partners: partnerët
-    help: Ndihma
-    about: Rreth
-    copyright: Të drejtat e autorit
-    communities: Komunitetet
     learn_more: Mëso më shumë
-    more: Më shumë
     header:
-      ok: Në rregull
+      about: Rreth
+      communities: Komunitetet
+      copyright: Të drejtat e autorit
+      edit: Redakto
+      edit_with: Redakto me %{editor}
+      export: Eksporto
+      gps_traces: Gjurmët GPS
+      help: Ndihma
+      history: Historia
+      issues: Problemet
+      log_out: Dil
+      log_in: Hyr
+      more: Më shumë
       select_language: Zgjidh gjuhën
+      sign_up: Krijo llogari
+      user_diaries: Ditarët e përdoruesit
     select_language_button:
       title: Zgjidh gjuhën
     offline_flash:
@@ -1526,7 +1514,6 @@ sq:
         keep image: Mbaj imazhin e tanishëm
         delete image: Hiq imazhin e tanishëm
         replace image: Zëvendëso imazhin e tanishëm
-        image size hint: (imazhet katror të paktën 100x100 duken më mirë)
       update:
         success: Imazhi i profilit u përditësua.
         failure: Imazhi i profilit nuk mund të përditësohej.
@@ -1574,54 +1561,6 @@ sq:
       contact_support_html: Të lutem, kontakto %{support_link} nëse dëshiron ta diskutosh
         këtë.
       support: mbështetjen
-  shared:
-    markdown_help:
-      link: Lidhja
-      text: Teksti
-      image: Imazhi
-      alt: Teksti alternativ
-      url: URL-ja
-      codeblock: Bloku i kodit
-    richtext_field:
-      edit: Redakto
-      preview: Parashfaq
-      help: Ndihma
-    pagination:
-      changeset_comments:
-        older: Komente më të vjetra
-        newer: Komente më të reja
-        oldest: Komentet më të vjetra
-        newest: Komentet më të reja
-      diary_comments:
-        older: Komentet e vjetra
-        newer: Komentet më të fundit
-        oldest: Komentet më të vjetra
-        newest: Komentet më të reja
-      diary_entries:
-        older: Shënime më të vjetra
-        newer: Shënime më të reja
-        oldest: Shënimet më të vjetra
-        newest: Shënimet më të reja
-      issues:
-        older: Probleme më të vjetra
-        newer: Probleme më të reja
-        oldest: Problemet më të vjetra
-        newest: Problemet më të reja
-      traces:
-        older: Gjurmë më të vjetra
-        newer: Gjurmë më të reja
-        oldest: Gjurmët më të vjetra
-        newest: Gjurmët më të reja
-      user_blocks:
-        older: Bllokime më të vjetra
-        newer: Bllokime më të reja
-        oldest: Bllokimet më të vjetra
-        newest: Bllokimet më të reja
-      users:
-        older: Përdorues më të vjetër
-        newer: Përdorues më të rinj
-        oldest: Përdoruesit më të vjetër
-        newest: Përdoruesit më të rinj
   site:
     about_section:
       partners_title: Partnerët
@@ -1663,6 +1602,8 @@ sq:
         contributors_footer_2_html: "  Përfshirja e të dhënave në OpenStreetMap nuk
           thekson se të ofruesi origjinal i të \n  dhënave përdor OpenStreetMap, ofron
           garancion, apo\n  pranon çfarëdo anekse."
+    not_public_flash:
+      user_page_link: faqja e përdoruesit
     export:
       title: Eksporto
       manually_select: Zgjidh me dorë një zonë tjetër
@@ -1881,6 +1822,41 @@ sq:
       wikipedia:
         title: Hyr me Wikipedia
         alt: Logoja e Wikipedia-s
+    markdown_help:
+      link: Lidhja
+      text: Teksti
+      image: Imazhi
+      url: URL-ja
+      codeblock: Bloku i kodit
+    richtext_field:
+      preview: Parashfaq
+    pagination:
+      changeset_comments:
+        newest: Komentet më të reja
+      diary_comments:
+        older: Komentet e vjetra
+        oldest: Komentet më të vjetra
+        newest: Komentet më të reja
+      diary_entries:
+        newer: Shënime më të reja
+        oldest: Shënimet më të vjetra
+        newest: Shënimet më të reja
+      issues:
+        newer: Probleme më të reja
+        oldest: Problemet më të vjetra
+        newest: Problemet më të reja
+      traces:
+        newer: Gjurmë më të reja
+        oldest: Gjurmët më të vjetra
+        newest: Gjurmët më të reja
+      user_blocks:
+        newer: Bllokime më të reja
+        oldest: Bllokimet më të vjetra
+      users:
+        older: Përdorues më të vjetër
+        newer: Përdorues më të rinj
+        oldest: Përdoruesit më të vjetër
+        newest: Përdoruesit më të rinj
   oauth:
     scopes:
       write_diary: Krijo shënime dhe komente ditari
@@ -1947,11 +1923,21 @@ sq:
       create_block: blloko këtë përdorues
       activate_user: aktivizo këtë përdorues
       confirm_user: konfirmo këtë përdorues
-      hide_user: fsheh këtë përdorues
-      unhide_user: zbulo këtë përdorues
-      delete_user: Fshi këtë përdorues
       confirm: Konfirmo
       report: Raporto ķëtë përdorues
+      title:
+        administrator: Ky përdorues është një administrator
+        moderator: Ky përdorues është një moderator
+      grant:
+        administrator: Mundëso qasje administratori
+        moderator: Mundëso qasje moderatori
+        are_you_sure: A je i sigurtë që dëshiron t'i japësh rolin '%{role}' përdoruesit
+          '%{name}'?
+      revoke:
+        administrator: Revoko qasjen e administratorit
+        moderator: Revoko qasjen e moderatorit
+        are_you_sure: A je i sigurtë që dëshiron t'ia heqësh rolin '%{role}' përdoruesit
+          '%{name}'?
     go_public:
       flash success: Të gjitha redaktimet e tua tani janë publike dhe tani të lejohet
         t'i redaktosh ato.
@@ -1968,7 +1954,6 @@ sq:
           deleted: Fshirë
       page:
         confirm: Konfirmo përdoruesit e zgjedhur
-        hide: Fshih përdoruesit e zgjedhur
         empty: Asnjë përdorues që përputhet nuk u gjet
       user:
         summary_html: '%{name} krijuar nga %{ip_address} më %{date}'
@@ -1991,20 +1976,6 @@ sq:
       page:
         post: Posto
         comment: Komenti
-    role_icons:
-      title:
-        administrator: Ky përdorues është një administrator
-        moderator: Ky përdorues është një moderator
-      grant:
-        administrator: Mundëso qasje administratori
-        moderator: Mundëso qasje moderatori
-        are_you_sure: A je i sigurtë që dëshiron t'i japësh rolin '%{role}' përdoruesit
-          '%{name}'?
-      revoke:
-        administrator: Revoko qasjen e administratorit
-        moderator: Revoko qasjen e moderatorit
-        are_you_sure: A je i sigurtë që dëshiron t'ia heqësh rolin '%{role}' përdoruesit
-          '%{name}'?
   user_role:
     filter:
       not_a_role: Fjala '%{role}' nuk është një rol i vlefshëm.
@@ -2048,6 +2019,12 @@ sq:
       showing_page: Faqe %{page}
   javascripts:
     map:
+      Map:
+        Title: Harta
+      Marker:
+        Title: Shënues i hartës
+      AttributionControl:
+        ToggleAttribution: Aktivizo atribuimin
       layers:
         gps: Gjurmët publike GPS
     site:

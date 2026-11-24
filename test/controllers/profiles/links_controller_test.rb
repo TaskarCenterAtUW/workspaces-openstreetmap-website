@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Profiles
@@ -43,6 +45,19 @@ module Profiles
       assert_template :show
       assert_dom ".alert-success", :text => "Profile links updated."
       assert_dom "a[href*='test.com/test'] span", "test.com/test"
+    end
+
+    def test_update_no_links
+      user = create(:user)
+      session_for(user)
+
+      put profile_links_path
+
+      assert_redirected_to user_path(user)
+      follow_redirect!
+      assert_response :success
+      assert_template :show
+      assert_dom ".alert-success", :text => "Profile links updated."
     end
 
     def test_update_empty_social_link

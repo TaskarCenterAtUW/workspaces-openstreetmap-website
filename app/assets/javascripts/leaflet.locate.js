@@ -2,10 +2,15 @@
 
 L.OSM.locate = function (options) {
   const control = L.control.locate({
+    clickBehavior: {
+      inView: "stop",
+      outOfView: "stop",
+      inViewNotFollowing: "stop"
+    },
     strings: {
-      title: OSM.i18n.t("javascripts.map.locate.title"),
+      title: OSM.i18n.t("javascripts.map.GeolocateControl.FindMyLocation"),
       popup: function (options) {
-        return OSM.i18n.t("javascripts.map.locate." + options.unit + "Popup", { count: options.distance });
+        return OSM.i18n.t("javascripts.map.GeolocateControl." + options.unit + "Popup", { count: options.distance });
       }
     },
     ...options
@@ -21,12 +26,7 @@ L.OSM.locate = function (options) {
       .removeClass("leaflet-bar-part leaflet-bar-part-single")
       .addClass("control-button")
       .empty()
-      .append(
-        $(L.SVG.create("svg"))
-          .attr("class", "h-100 w-100")
-          .append(
-            $(L.SVG.create("use"))
-              .attr("href", "#icon-geolocate")));
+      .append($("<i>").addClass("fs-5 bi bi-cursor-fill"));
     return container;
   };
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SiteController < ApplicationController
   layout :site_layout
   layout :map_layout, :only => [:index, :export]
@@ -42,13 +44,13 @@ class SiteController < ApplicationController
 
     options = new_params.to_unsafe_h.to_options
 
-    path = if params.key? :node
+    path = if valid_id?(params[:node])
              node_path(params[:node], options)
-           elsif params.key? :way
+           elsif valid_id?(params[:way])
              way_path(params[:way], options)
-           elsif params.key? :relation
+           elsif valid_id?(params[:relation])
              relation_path(params[:relation], options)
-           elsif params.key? :changeset
+           elsif valid_id?(params[:changeset])
              changeset_path(params[:changeset], options)
            else
              root_url(options)
@@ -58,6 +60,8 @@ class SiteController < ApplicationController
   end
 
   def edit
+    param! :editor, String, :in => Editors::ALL_EDITORS
+
     editor = preferred_editor
 
     if editor == "remote"
@@ -70,22 +74,22 @@ class SiteController < ApplicationController
 
     begin
       if params[:node]
-        bbox = Node.visible.find(params[:node]).bbox.to_unscaled
+        bbox = Node.visible.find(params.expect(:node)).bbox.to_unscaled
         @lat = bbox.centre_lat
         @lon = bbox.centre_lon
         @zoom = 18
       elsif params[:way]
-        bbox = Way.visible.find(params[:way]).bbox.to_unscaled
+        bbox = Way.visible.find(params.expect(:way)).bbox.to_unscaled
         @lat = bbox.centre_lat
         @lon = bbox.centre_lon
         @zoom = 17
       elsif params[:note]
-        note = Note.visible.find(params[:note])
+        note = Note.visible.find(params.expect(:note))
         @lat = note.lat
         @lon = note.lon
         @zoom = 17
       elsif params[:gpx] && current_user
-        trace = Trace.visible_to(current_user).find(params[:gpx])
+        trace = Trace.visible_to(current_user).find(params.expect(:gpx))
         @lat = trace.latitude
         @lon = trace.longitude
         @zoom = 16
@@ -143,13 +147,13 @@ class SiteController < ApplicationController
   private
 
   def redirect_browse_params
-    if params[:node]
+    if valid_id?(params[:node])
       redirect_to node_path(params[:node])
-    elsif params[:way]
+    elsif valid_id?(params[:way])
       redirect_to way_path(params[:way])
-    elsif params[:relation]
+    elsif valid_id?(params[:relation])
       redirect_to relation_path(params[:relation])
-    elsif params[:note]
+    elsif valid_id?(params[:note])
       redirect_to note_path(params[:note])
     elsif params[:query]
       redirect_to search_path(:query => params[:query])
@@ -168,5 +172,9 @@ class SiteController < ApplicationController
     end
 
     redirect_to params.to_unsafe_h.merge(:only_path => true, :anchor => anchor.join("&")) if anchor.present?
+  end
+
+  def valid_id?(candidate)
+    candidate&.match?(/\A\d+\Z/)
   end
 end

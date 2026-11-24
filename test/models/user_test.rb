@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
@@ -40,18 +42,35 @@ class UserTest < ActiveSupport::TestCase
     ok = %w[a@s.com test@shaunmcdonald.me.uk hello_local@ping-d.ng
             test_local@openstreetmap.org test-local@example.com]
     bad = %w[hi ht@ n@ @.com help@.me.uk help"hi.me.uk も対@応します
-             輕觸搖晃的遊戲@ah.com も対応します@s.name]
+             輕觸搖晃的遊戲@ah.com も対応します@s.name a!b@example.com]
 
-    ok.each do |name|
+    ok.each do |email|
       user = build(:user)
-      user.email = name
-      assert user.valid?(:save), "#{name} isn't valid when it should be"
+      user.email = email
+      assert user.valid?(:save), "#{email} isn't valid when it should be"
     end
 
-    bad.each do |name|
+    bad.each do |email|
       user = build(:user)
-      user.email = name
-      assert user.invalid?(:save), "#{name} is valid when it shouldn't be"
+      user.email = email
+      assert user.invalid?(:save), "#{email} is valid when it shouldn't be"
+    end
+  end
+
+  def test_new_email_valid
+    ok = %w[a@s.com]
+    bad = %w[help@.me.uk a!b@example.com]
+
+    ok.each do |email|
+      user = build(:user)
+      user.new_email = email
+      assert user.valid?(:save), "#{email} isn't valid when it should be"
+    end
+
+    bad.each do |email|
+      user = build(:user)
+      user.new_email = email
+      assert user.invalid?(:save), "#{email} is valid when it shouldn't be"
     end
   end
 
@@ -77,6 +96,38 @@ class UserTest < ActiveSupport::TestCase
     assert_not_predicate user, :valid?, "should not allow 2 column name"
     user.display_name = "\u{200B}\u{200B}\u{200B}"
     assert_not_predicate user, :valid?, "should not allow 0 column name"
+    user.display_name = "\u{202E}" * 7
+    assert_not_predicate user, :valid?, "should not allow right-to-left overrides"
+    user.display_name = "\u{2800}\u{2800}\u{2800}"
+    assert_not_predicate user, :valid?, "should not allow blank braille patterns"
+    user.display_name = "\u{AD}\u{AD}\u{AD}"
+    assert_not_predicate user, :valid?, "should not allow soft hyphens"
+    user.display_name = "\u{81}\u{81}\u{81}"
+    assert_not_predicate user, :valid?, "should not allow C1 control codes"
+    user.display_name = "\u{E000}\u{E000}\u{E000}"
+    assert_not_predicate user, :valid?, "should not allow private use codepoints"
+    user.display_name = "\u{50000}\u{50000}\u{50000}"
+    assert_not_predicate user, :valid?, "should not allow unassigned codepoints"
+    user.display_name = "\u{1D159}\u{1D159}\u{1D159}"
+    assert_not_predicate user, :valid?, "should not allow null noteheads"
+    user.display_name = "1 2"
+    assert_not_predicate user, :valid?, "should not count spaces"
+    user.display_name = "王伟"
+    assert_predicate user, :valid?, "should allow 2 wide codepoints"
+    user.display_name = "田中"
+    assert_predicate user, :valid?, "should allow 2 wide codepoints"
+    user.display_name = "기호"
+    assert_predicate user, :valid?, "should allow 2 wide codepoints"
+    user.display_name = "می\u{200C}خواهم"
+    assert_predicate user, :valid?, "should allow zero width non-joiners"
+  end
+
+  def test_display_name_width_unchanged_is_valid
+    user = build(:user, :display_name => "\u{2800}\u{2800}\u{2800}")
+    user.save(:validate => false)
+    user.reload
+
+    assert_predicate user, :valid?, "blank display_name is invalid but it hasn't been changed"
   end
 
   def test_display_name_valid
@@ -148,6 +199,25 @@ class UserTest < ActiveSupport::TestCase
     assert_predicate user, :valid?, "should allow nil value"
   end
 
+  def test_spam_score
+    user = build(:user, :description => "foo [bar](http://example.com/) baz")
+    assert_equal 12, user.spam_score
+  end
+
+  def test_suspend_if_possible
+    active = create(:user, :active)
+    active.suspend_if_possible!
+    assert_equal "suspended", active.reload.status
+
+    confirmed = create(:user, :confirmed)
+    confirmed.suspend_if_possible!
+    assert_equal "suspended", confirmed.reload.status
+
+    suspended = create(:user, :suspended)
+    suspended.suspend_if_possible!
+    assert_equal "suspended", suspended.reload.status
+  end
+
   def test_follows
     alice = create(:user, :active)
     bob = create(:user, :active)
@@ -204,6 +274,17 @@ class UserTest < ActiveSupport::TestCase
 
     user.preferred_editor = "invalid_editor"
     assert_raise(ActiveRecord::RecordInvalid) { user.save! }
+  end
+
+  def test_heatmap_public_by_default
+    # A bit roundabout, but want to make sure that
+    # the factory doesn't betray us here by setting
+    # a default value.
+    attrs = attributes_for(:user)
+    attrs.delete(:public_heatmap)
+    user = User.new(attrs)
+    user.save!
+    assert_predicate user, :public_heatmap?
   end
 
   def test_visible
@@ -263,6 +344,42 @@ class UserTest < ActiveSupport::TestCase
     assert_equal %w[fr de sl], user.preferred_languages.map(&:to_s)
     user = create(:user, :languages => %w[en de])
     assert_equal %w[en de], user.languages
+  end
+
+  def test_preferred_color_scheme_nil_if_nothing_selected
+    user = create(:user)
+    assert_nil user.preferred_color_scheme(:map, :site)
+  end
+
+  def test_preferred_color_scheme_as_selected
+    preferences = [
+      create(:user_preference, :k => "map.color_scheme", :v => "dark"),
+      create(:user_preference, :k => "site.color_scheme", :v => "light")
+    ]
+    user = create(:user, :preferences => preferences)
+
+    assert_equal "dark", user.preferred_color_scheme(:map, :site)
+  end
+
+  def test_preferred_color_scheme_fallback_if_auto
+    preferences = [
+      create(:user_preference, :k => "map.color_scheme", :v => "auto"),
+      create(:user_preference, :k => "site.color_scheme", :v => "light")
+    ]
+    user = create(:user, :preferences => preferences)
+
+    assert_nil user.preferred_color_scheme(:map)
+    assert_equal "light", user.preferred_color_scheme(:map, :site)
+  end
+
+  def test_preferred_color_scheme_fallback_if_missing
+    preferences = [
+      create(:user_preference, :k => "site.color_scheme", :v => "light")
+    ]
+    user = create(:user, :preferences => preferences)
+
+    assert_nil user.preferred_color_scheme(:map)
+    assert_equal "light", user.preferred_color_scheme(:map, :site)
   end
 
   def test_default_diary_language_undefined
@@ -328,6 +445,23 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "fr", preference.v
   end
 
+  def test_default_trace_visibility_undefined
+    user = create(:user)
+    assert_equal "trackable", user.default_trace_visibility
+  end
+
+  def test_default_trace_visibility_known
+    user = create(:user)
+    create(:user_preference, :user => user, :k => "gps.trace.visibility", :v => "identifiable")
+    assert_equal "identifiable", user.default_trace_visibility
+  end
+
+  def test_default_trace_visibility_unsupported
+    user = create(:user)
+    create(:user_preference, :user => user, :k => "gps.trace.visibility", :v => "public")
+    assert_equal "trackable", user.default_trace_visibility
+  end
+
   def test_visible?
     assert_predicate build(:user, :pending), :visible?
     assert_predicate build(:user, :active), :visible?
@@ -361,6 +495,191 @@ class UserTest < ActiveSupport::TestCase
     assert create(:moderator_user).role?("moderator")
   end
 
+  def test_suspend
+    user = create(:user)
+    user.suspend
+    assert_equal "suspended", user.status
+  end
+
+  def test_suspend_closes_issues
+    user = create(:user)
+    issue = create(:issue, :reportable => user)
+    user.suspend
+    assert_equal "suspended", user.status
+    assert_equal "resolved", issue.reload.status
+  end
+
+  def test_avatar_supported_types
+    %w[.png .jpg .gif .webp .tif].each do |extension|
+      user = build(:user)
+      user.avatar = { :io => StringIO.new(Vips::Image.black(1, 1).write_to_buffer(extension)), :filename => "avatar#{extension}" }
+      assert_predicate user, :valid?, "#{extension} avatar should be accepted"
+    end
+  end
+
+  def test_avatar_unsupported_types
+    {
+      "avatar.bmp" => ["BM", 58, 0, 0, 54, 40, 1, 1, 1, 24, 0, 4, 2835, 2835, 0, 0].pack("a2Vv2V4v2V6") + ("\0" * 4),
+      "avatar.ico" => "\0\0\1\0\1\0#{"\0" * 40}",
+      "avatar.psd" => "8BPS\0\1#{"\0" * 40}",
+      "avatar.svg" => '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>'
+    }.each do |filename, data|
+      user = build(:user)
+      user.avatar = { :io => StringIO.new(data), :filename => filename }
+      assert_not_predicate user, :valid?, "#{filename} should be rejected"
+      assert_includes user.errors.details[:avatar].pluck(:error), :content_type_invalid
+    end
+  end
+
+  # libvips loads these with libheif, whose decoder plugins aren't always
+  # installed (e.g. there's no HEIC decoder on Ubuntu by default), so only
+  # check that the content type is accepted
+  def test_avatar_heif_types
+    {
+      "avatar.heic" => "\0\0\0\x18ftypheic\0\0\0\0mif1heic#{"\0" * 20}",
+      "avatar.heif" => "\0\0\0\x18ftypmif1\0\0\0\0mif1heic#{"\0" * 20}",
+      "avatar.avif" => "\0\0\0\x1cftypavif\0\0\0\0avifmif1miaf#{"\0" * 20}"
+    }.each do |filename, data|
+      user = build(:user)
+      user.avatar = { :io => StringIO.new(data), :filename => filename }
+      user.validate
+      assert_not_includes user.errors.details[:avatar].pluck(:error), :content_type_invalid, "#{filename} should be accepted"
+    end
+  end
+
+  def test_avatar_size_limit
+    user = build(:user)
+    user.avatar = { :io => StringIO.new(Vips::Image.black(100, 100).write_to_buffer(".png")), :filename => "avatar.png" }
+    assert_predicate user, :valid?
+
+    with_settings(:max_avatar_size => user.avatar.blob.byte_size - 1) do
+      assert_not_predicate user, :valid?
+      assert_includes user.errors.details[:avatar].pluck(:error), :file_size_not_less_than_or_equal_to
+    end
+  end
+
+  def test_avatar_unsupported_type_already_attached
+    user = create(:user)
+    blob = ActiveStorage::Blob.create_and_upload!(:io => StringIO.new('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>'), :filename => "avatar.svg")
+    ActiveStorage::Attachment.create!(:name => "avatar", :record => user, :blob => blob)
+    user.reload
+
+    assert_predicate user, :valid?
+  end
+
+  def test_avatar_normalised_strips_metadata
+    image = Vips::Image.black(20, 10, :bands => 3).copy
+    image.set_type(GObject::GSTR_TYPE, "exif-ifd0-ImageDescription", "Somewhere secret")
+    image.set_type(GObject::GINT_TYPE, "orientation", 6)
+    data = image.write_to_buffer(".jpg")
+    assert_includes Vips::Image.new_from_buffer(data, "").get_fields, "exif-data"
+
+    user = create(:user)
+    user.avatar.attach(:io => StringIO.new(data), :filename => "IMG_1234.jpg")
+
+    stored = Vips::Image.new_from_buffer(user.avatar.blob.download, "")
+    assert_empty stored.get_fields.grep(/exif|xmp|iptc|icc|orientation/)
+    assert_equal [10, 20], [stored.width, stored.height], "should be rotated upright before orientation is stripped"
+    assert_equal "image/jpeg", user.avatar.content_type
+    assert_equal "avatar.jpg", user.avatar.filename.to_s
+    assert_equal 1, ActiveStorage::Blob.count, "should not store the original image"
+  end
+
+  def test_avatar_normalised_colour_profile
+    srgb_green = Vips::Image.black(10, 10).new_from_image([0, 128, 0])
+    # Converting to Display P3 changes the pixel values, and embeds the P3 profile
+    p3_green = srgb_green.icc_transform("p3", :input_profile => "srgb")
+    data = p3_green.write_to_buffer(".png")
+    loaded = Vips::Image.new_from_buffer(data, "")
+    assert_includes loaded.get_fields, "icc-profile-data"
+    [55, 126, 34].zip(loaded.getpoint(0, 0)).each do |expected, actual|
+      assert_in_delta expected, actual, 2, "should be stored as P3 values"
+    end
+
+    user = create(:user)
+    user.avatar.attach(:io => StringIO.new(data), :filename => "avatar.png")
+
+    stored = Vips::Image.new_from_buffer(user.avatar.blob.download, "")
+    assert_not_includes stored.get_fields, "icc-profile-data"
+    [0, 128, 0].zip(stored.getpoint(0, 0)).each do |expected, actual|
+      assert_in_delta expected, actual, 2, "should be converted back to sRGB values"
+    end
+  end
+
+  def test_avatar_normalised_size
+    data = Vips::Image.black(1000, 600).write_to_buffer(".png")
+
+    user = create(:user)
+    user.avatar.attach(:io => StringIO.new(data), :filename => "avatar.png")
+
+    stored = Vips::Image.new_from_buffer(user.avatar.blob.download, "")
+    assert_equal [512, 307], [stored.width, stored.height]
+    assert_equal "image/png", user.avatar.content_type
+  end
+
+  def test_avatar_normalised_small_image_not_enlarged
+    data = Vips::Image.black(30, 40).write_to_buffer(".png")
+
+    user = create(:user)
+    user.avatar.attach(:io => StringIO.new(data), :filename => "avatar.png")
+
+    stored = Vips::Image.new_from_buffer(user.avatar.blob.download, "")
+    assert_equal [30, 40], [stored.width, stored.height]
+  end
+
+  def test_avatar_normalised_first_frame_only
+    # libvips represents an animation as its frames stacked vertically, so tell
+    # the saver how tall each frame is
+    black = Vips::Image.black(10, 10)
+    white = black.new_from_image(255)
+    data = black.join(white, :vertical).write_to_buffer(".gif", :page_height => 10)
+    assert_equal 2, Vips::Image.new_from_buffer(data, "").get("n-pages")
+
+    user = create(:user)
+    user.avatar.attach(:io => StringIO.new(data), :filename => "avatar.gif")
+
+    stored = Vips::Image.new_from_buffer(user.avatar.blob.download, "")
+    assert_equal 1, stored.get("n-pages"), "should only store one frame"
+    assert_equal [10, 10], [stored.width, stored.height]
+    assert_equal [0, 0, 0, 255], stored.getpoint(0, 0), "should be the first frame (opaque black)"
+    assert_equal "image/gif", user.avatar.content_type
+  end
+
+  def test_avatar_normalised_non_web_type_converted_to_png
+    data = Vips::Image.black(10, 10).write_to_buffer(".tif")
+
+    user = create(:user)
+    user.avatar.attach(:io => StringIO.new(data), :filename => "avatar.tif")
+
+    assert_equal "image/png", user.avatar.content_type
+    assert_equal "avatar.png", user.avatar.filename.to_s
+    assert_equal "image/png", Marcel::MimeType.for(StringIO.new(user.avatar.blob.download)), "should store PNG data"
+  end
+
+  def test_avatar_normalisation_failure
+    data = Vips::Image.black(10, 10).write_to_buffer(".png")
+
+    user = create(:user)
+
+    Vips::Image.stub(:new_from_buffer, ->(*) { raise Vips::Error, "decode failed" }) do
+      user.avatar = { :io => StringIO.new(data), :filename => "avatar.png" }
+      assert_not user.save
+    end
+
+    assert_includes user.errors.details[:avatar].pluck(:error), :file_not_processable
+    assert_not_predicate user.reload.avatar, :attached?
+    assert_equal 0, ActiveStorage::Blob.count
+  end
+
+  def test_avatar_unsupported_attachable
+    data = Vips::Image.black(10, 10).write_to_buffer(".png")
+    blob = ActiveStorage::Blob.create_and_upload!(:io => StringIO.new(data), :filename => "avatar.png")
+    user = create(:user)
+
+    assert_raises(ArgumentError) { user.avatar.attach(blob) }
+    assert_not_predicate user.reload.avatar, :attached?
+  end
+
   def test_soft_destroy
     user = create(:user, :with_home_location, :description => "foo")
     user.soft_destroy
@@ -372,6 +691,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "deleted", user.status
     assert_not_predicate user, :visible?
     assert_not_predicate user, :active?
+  end
+
+  def test_soft_destroy_closes_issues
+    user = create(:user)
+    issue = create(:issue, :reportable => user)
+    user.soft_destroy
+    assert_equal "deleted", user.status
+    assert_equal "resolved", issue.reload.status
   end
 
   def test_soft_destroy_revokes_oauth2_tokens

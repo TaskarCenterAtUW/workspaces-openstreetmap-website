@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Profiles
@@ -31,12 +33,11 @@ module Profiles
       assert_redirected_to login_path(:referer => profile_image_path)
     end
 
-    def test_update_replace
-      image = Rack::Test::UploadedFile.new("test/gpx/fixtures/a.gif", "image/gif")
+    def test_update_no_selection
       user = create(:user)
       session_for(user)
 
-      put profile_image_path, :params => { :avatar_action => "new", :user => { :avatar => image, :description => user.description } }
+      put profile_image_path
 
       assert_redirected_to user_path(user)
       follow_redirect!
@@ -46,7 +47,66 @@ module Profiles
 
       get profile_image_path
 
+      assert_dom "form > div > div.col-sm-10 > div > input[name=avatar_action][checked]", false
+      assert_dom "form > div > div.col-sm-10 > div > div.form-check > input[name=avatar_action][checked]", false
+    end
+
+    def test_update_replace
+      image = Rack::Test::UploadedFile.new("test/gpx/fixtures/a.gif", "image/gif")
+      user = create(:user)
+      session_for(user)
+
+      put profile_image_path, :params => { :avatar_action => "new", :user => { :avatar => image } }
+
+      assert_redirected_to user_path(user)
+      follow_redirect!
+      assert_response :success
+      assert_template :show
+      assert_dom ".alert-success", :text => "Profile image updated."
+
+      user.reload
+      assert_equal "avatar.gif", user.avatar.filename.to_s, "should store the normalised image"
+      assert_equal 1, ActiveStorage::Blob.count, "should not store the original image"
+
+      get profile_image_path
+
       assert_dom "form > div > div.col-sm-10 > div.form-check > input[name=avatar_action][checked][value=?]", "keep"
+    end
+
+    def test_update_replace_no_image
+      user = create(:user)
+      session_for(user)
+
+      put profile_image_path, :params => { :avatar_action => "new" }
+
+      assert_response :success
+      assert_template :show
+      assert_equal "Couldn't update profile image.", flash[:error]
+    end
+
+    def test_update_replace_invalid_image
+      image = Rack::Test::UploadedFile.new("test/fixtures/lorem_ipsum.txt", "image/gif")
+      user = create(:user)
+      session_for(user)
+
+      put profile_image_path, :params => { :avatar_action => "new", :user => { :avatar => image } }
+
+      assert_response :success
+      assert_template :show
+      assert_equal "Couldn't update profile image.", flash[:error]
+    end
+
+    def test_update_replace_unsupported_image
+      image = Rack::Test::UploadedFile.new(StringIO.new('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>'), "image/svg+xml", :original_filename => "avatar.svg")
+      user = create(:user)
+      session_for(user)
+
+      put profile_image_path, :params => { :avatar_action => "new", :user => { :avatar => image } }
+
+      assert_response :success
+      assert_template :show
+      assert_equal "Couldn't update profile image.", flash[:error]
+      assert_not_predicate user.reload.avatar, :attached?
     end
 
     def test_update_gravatar

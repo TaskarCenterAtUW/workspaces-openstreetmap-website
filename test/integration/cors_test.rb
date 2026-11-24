@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class CORSTest < ActionDispatch::IntegrationTest
@@ -7,8 +9,11 @@ class CORSTest < ActionDispatch::IntegrationTest
       "Access-Control-Request-Method" => "GET"
     }
 
+    # TDEI Workspaces (config/initializers/cors.rb): any origin, with
+    # credentials, so the origin is echoed back instead of "*".
     assert_response :success
-    assert_equal "*", response.headers["Access-Control-Allow-Origin"]
+    assert_equal "http://www.example.com", response.headers["Access-Control-Allow-Origin"]
+    assert_equal "true", response.headers["Access-Control-Allow-Credentials"]
     assert_nil response.headers["Vary"]
     assert_nil response.media_type
     assert_equal "", response.body
@@ -19,7 +24,8 @@ class CORSTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :success
-    assert_equal "*", response.headers["Access-Control-Allow-Origin"]
+    assert_equal "http://www.example.com", response.headers["Access-Control-Allow-Origin"]
+    assert_equal "true", response.headers["Access-Control-Allow-Credentials"]
     assert_equal "Origin", response.headers["Vary"]
     assert_equal "application/xml", response.media_type
   end

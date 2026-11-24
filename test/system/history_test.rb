@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class HistoryTest < ApplicationSystemTestCase
@@ -15,7 +17,7 @@ class HistoryTest < ApplicationSystemTestCase
       assert_text "first-changeset-in-history"
     end
 
-    assert_css "link[type='application/atom+xml'][href$='#{user_path(user)}/history/feed']", :visible => false
+    assert_css "link[type='application/atom+xml'][href$='#{user_path(user)}/history/feed']", :visible => :hidden
   end
 
   test "have only one list element on user's changesets page" do

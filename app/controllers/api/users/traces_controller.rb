@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module Users
     class TracesController < ApiController
@@ -7,7 +9,7 @@ module Api
       authorize_resource :trace
 
       def index
-        @traces = current_user.traces.reload
+        @traces = current_user.traces.preload(:tags)
         respond_to do |format|
           format.xml
           format.json

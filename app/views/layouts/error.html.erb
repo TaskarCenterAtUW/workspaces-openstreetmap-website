@@ -2,9 +2,9 @@
 <html lang="<%= I18n.locale %>" dir="<%= dir %>">
   <head>
     <meta charset="utf-8">
-    <title>OpenStreetMap</title>
+    <title><%= t "layouts.project_name.title" %></title>
     <%= stylesheet_link_tag "errors", :media => "screen" %>
-    <%= render :partial => "layouts/meta" %>
+    <%= render "layouts/meta", :title => @title, :opengraph_properties => @opengraph_properties %>
   </head>
   <body>
     <main>

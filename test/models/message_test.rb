@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class MessageTest < ActiveSupport::TestCase
-  EURO = "\xe2\x82\xac".freeze # euro symbol
+  EURO = "\xe2\x82\xac" # euro symbol
 
   def test_check_empty_message_fails
     message = build(:message, :title => nil, :body => nil, :sent_on => nil)
@@ -55,7 +57,7 @@ class MessageTest < ActiveSupport::TestCase
     invalid_sequences.each do |char|
       # create a message and save to the database
       msg = make_message(char, 1)
-      # if the save throws, thats fine and the test should pass, as we're
+      # if the save throws, that's fine and the test should pass, as we're
       # only testing invalid sequences anyway.
       msg.save!
 

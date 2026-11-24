@@ -1,3 +1,7 @@
+//= require @maptiler/maplibre-gl-omt-language
+//= require maplibre/map
+//= require maplibre/i18n
+
 L.OSM.layers = function (options) {
   const control = L.OSM.sidebarPane(options, "layers", "javascripts.map.layers.title", "javascripts.map.layers.header");
 
@@ -16,34 +20,51 @@ L.OSM.layers = function (options) {
       input.checked = map.hasLayer(layer);
 
       map.whenReady(function () {
-        const miniMap = L.map(container, { attributionControl: false, zoomControl: false, keyboard: false })
-          .addLayer(new layer.constructor(layer.options));
-
-        miniMap.dragging.disable();
-        miniMap.touchZoom.disable();
-        miniMap.doubleClickZoom.disable();
-        miniMap.scrollWheelZoom.disable();
-
+        let miniMap;
         $ui
           .on("show", shown)
           .on("hide", hide);
 
         function shown() {
-          miniMap.invalidateSize();
-          setView({ animate: false });
+          const center = map.getCenter();
+          try {
+            miniMap = new OSM.MapLibre.Map({
+              container,
+              style: layer.options.style,
+              interactive: false,
+              attributionControl: false,
+              fadeDuration: 0,
+              zoomSnap: layer.options.isVectorStyle ? 0 : 1,
+              center: [center.lng, center.lat],
+              zoom: getZoomForMiniMap()
+            });
+          } catch (error) {
+            return;
+          }
+
+          if (layer.options.layerId === "openmaptiles_osm") {
+            OSM.MapLibre.setOMTMapLanguage(miniMap);
+          }
+
           map.on("moveend", moved);
         }
 
         function hide() {
-          map.off("moveend", moved);
+          // miniMap can be falsy if webgl is not supported
+          if (miniMap) {
+            map.off("moveend", moved);
+            miniMap.remove();
+          }
         }
 
         function moved() {
-          setView();
+          const center = map.getCenter();
+          const zoom = getZoomForMiniMap();
+          miniMap.easeTo({ center: [center.lng, center.lat], zoom });
         }
 
-        function setView(options) {
-          miniMap.setView(map.getCenter(), Math.max(map.getZoom() - 2, 0), options);
+        function getZoomForMiniMap() {
+          return Math.max(Math.floor(map.getZoom() - 3), -1);
         }
       });
 
@@ -70,15 +91,18 @@ L.OSM.layers = function (options) {
         const input = this.firstElementChild.firstElementChild;
         $(item).tooltip("disable");
 
-        let checked = map.hasLayer(layer);
+        function updateOverlay() {
+          input.checked = map.hasLayer(layer);
+          input.disabled = map.getBounds().getSize() >= item.dataset.maxArea && !input.checked;
 
-        input.checked = checked;
+          item.classList.toggle("disabled", input.disabled);
+          $(item).tooltip(input.disabled ? "enable" : "disable");
+        }
 
         $(input).on("change", function () {
-          checked = input.checked;
           layer.cancelLoading?.();
 
-          if (checked) {
+          if (input.checked) {
             map.addLayer(layer);
           } else {
             map.removeLayer(layer);
@@ -86,24 +110,8 @@ L.OSM.layers = function (options) {
           }
         });
 
-        map.on("overlayadd overlayremove", function () {
-          input.checked = map.hasLayer(layer);
-        });
-
-        map.on("zoomend", function () {
-          const disabled = map.getBounds().getSize() >= item.dataset.maxArea;
-          input.disabled = disabled;
-
-          if (disabled && input.checked) {
-            input.click();
-            checked = true;
-          } else if (!disabled && !input.checked && checked) {
-            input.click();
-          }
-
-          item.classList.toggle("disabled", disabled);
-          $(item).tooltip(disabled ? "enable" : "disable");
-        });
+        map.on("zoomend overlayadd overlayremove", updateOverlay);
+        updateOverlay();
       });
     }
   };

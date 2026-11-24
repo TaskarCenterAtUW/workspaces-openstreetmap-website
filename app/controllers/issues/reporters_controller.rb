@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Issues
   class ReportersController < ApplicationController
     layout :site_layout
@@ -9,7 +11,7 @@ module Issues
     authorize_resource :issue
 
     def index
-      @issue = Issue.visible_to(current_user).find(params[:issue_id])
+      @issue = Issue.visible_to(current_user).find(params.expect(:issue_id))
 
       user_ids = @issue.reports.reorder(:created_at => :desc).pluck(:user_id).uniq
       @unique_reporters = {
@@ -19,7 +21,7 @@ module Issues
         }
       }
 
-      render :partial => "reporters", :locals => { :issue => @issue } if turbo_frame_request?
+      render :partial => "reporters", :locals => { :issue => @issue, :unique_reporters => @unique_reporters } if turbo_frame_request?
     rescue ActiveRecord::RecordNotFound
       redirect_to :controller => "/errors", :action => "not_found"
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NotesController < ApplicationController
   include UserMethods
 
@@ -19,6 +21,7 @@ class NotesController < ApplicationController
   # Display a list of notes by a specified user
   def index
     param! :page, Integer, :min => 1
+    param! :status, String, :in => %w[all open closed hidden]
 
     @params = params.permit(:display_name, :status)
     @title = t ".title", :user => @user.display_name
@@ -40,10 +43,10 @@ class NotesController < ApplicationController
     @type = "note"
 
     if current_user&.moderator?
-      @note = Note.find(params[:id])
+      @note = Note.find(params.expect(:id))
       @note_comments = @note.comments.unscope(:where => :visible)
     else
-      @note = Note.visible.find(params[:id])
+      @note = Note.visible.find(params.expect(:id))
       @note_comments = @note.comments
     end
 

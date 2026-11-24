@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
+require "time"
+require "rexml/parsers/sax2parser"
+require "rexml/text"
+
 # The OSM module provides support functions for OSM.
 module OSM
-  require "time"
-  require "rexml/parsers/sax2parser"
-  require "rexml/text"
-  require "xml/libxml"
-
   # The base class for API Errors.
   class APIError < RuntimeError
     def initialize(message = "Generic API Error")
@@ -18,8 +19,18 @@ module OSM
 
   # Raised when access is denied.
   class APIAccessDenied < APIError
-    def initialize
-      super("Access denied")
+    def initialize(message = "Access denied")
+      super
+    end
+
+    def status
+      :forbidden
+    end
+  end
+
+  class APIModerationZoneError < APIAccessDenied
+    def initialize(message = "You don't have permissions to make changes here. Please either sign in or create an OpenStreetMap account")
+      super
     end
 
     def status
@@ -468,9 +479,9 @@ module OSM
 
   class API
     def xml_doc
-      doc = XML::Document.new
-      doc.encoding = XML::Encoding::UTF_8
-      root = XML::Node.new "osm"
+      doc = LibXML::XML::Document.new
+      doc.encoding = LibXML::XML::Encoding::UTF_8
+      root = LibXML::XML::Node.new "osm"
       xml_root_attributes.each do |k, v|
         root[k] = v
       end
@@ -526,11 +537,14 @@ module OSM
       "AND #{prefix}longitude BETWEEN #{bbox.min_lon} AND #{bbox.max_lon}"
   end
 
+  # The jurisdictions for which we have contributor terms
+  LEGALES = Rails.root.glob("config/legales/*.yml").map { |path| path.basename(".yml").to_s }.freeze
+
   # Return the terms and conditions text for a given country
   def self.legal_text_for_country(country_code)
-    file_name = Rails.root.join("config", "legales", "#{country_code}.yml")
-    file_name = Rails.root.join("config", "legales", "#{Settings.default_legale}.yml") unless File.exist? file_name
-    YAML.load_file(file_name).transform_values!(&:html_safe)
+    country_code = Settings.default_legale unless LEGALES.include?(country_code)
+
+    YAML.load_file(Rails.root.join("config/legales/#{country_code}.yml")).transform_values(&:html_safe)
   end
 
   # Return the HTTP client to use

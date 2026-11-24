@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BrowseHelper
   def element_icon(type, object)
     selected_icon_data = { :filename => "#{type}.svg", :priority => 1 }
@@ -60,7 +62,7 @@ module BrowseHelper
 
   def element_strikethrough(object, &)
     if object.redacted? || !object.visible?
-      tag.s(&)
+      tag.del(&)
     else
       yield
     end
@@ -68,6 +70,23 @@ module BrowseHelper
 
   def link_follow(object)
     "nofollow" if object.tags.empty?
+  end
+
+  def format_key(key)
+    render_link(TagParser.parse_key(key))
+  end
+
+  def format_value(key, value, render_widgets: false)
+    html = TagParser.parse_value(key, value).filter_map do |hash|
+      if hash[:widget]
+        render_widget(hash[:widget], **hash.except(:text, :url, :type, :widget)) if render_widgets
+      else
+        [render_link(hash), ";"]
+      end
+    end.flatten
+
+    html.pop if html.last == ";"
+    safe_join(html)
   end
 
   private
@@ -80,9 +99,42 @@ module BrowseHelper
     (locale_keys + %w[name ref addr:housename]).each do |key|
       return tags[key] if tags[key]
     end
-    # TODO: Localize format to country of address
     return "#{tags['addr:housenumber']} #{tags['addr:street']}" if tags["addr:housenumber"] && tags["addr:street"]
 
     nil
+  end
+
+  def render_widget(widget, **options)
+    title = t("browse.tag_details.#{widget}", **options.slice(:count, :colour_value))
+    case widget
+    when :wikidata_preview
+      button_tag(:type => "button", :role => "button", :class => "btn btn-link float-end d-flex m-1 mt-0 me-n1 border-0 p-0 wdt-preview", :data => options.slice(:qids)) do
+        tag.svg :width => 27, :height => 16 do
+          concat tag.title title
+          concat tag.path :fill => "currentColor", :d => "M0 16h1V0h-1Zm2 0h3V0h-3Zm4 0h3V0h-3Zm4 0h1V0h-1Zm2 0h1V0h-1Zm2 0h3V0h-3Zm4 0h1V0h-1Zm2 0h3V0h-3Zm4 0h1V0h-1Zm2 0h1V0h-1Z"
+        end
+      end
+    when :colour_preview
+      tag.svg(:width => 14, :height => 14, :class => "float-end m-1") do
+        concat tag.title title
+        concat tag.rect :x => 0.5, :y => 0.5, :width => 13, :height => 13, :fill => options[:colour_value], :stroke => "#2222"
+      end
+    end
+  end
+
+  def render_link(hash)
+    if hash[:url]
+      link_helper = hash[:type] == :email_link ? :mail_to : :link_to
+      link_options =
+        if hash[:type] == :tag2link_link
+          { :rel => "nofollow" }
+        else
+          { :title => t("browse.tag_details.#{hash[:type]}", **hash.except(:text, :url, :type)) }
+        end
+
+      send(link_helper, hash[:text], hash[:url], **link_options)
+    else
+      hash[:text]
+    end
   end
 end

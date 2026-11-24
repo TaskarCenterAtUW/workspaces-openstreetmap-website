@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 # Guard against deployments with old-style application.yml configurations
 # Otherwise, admins might not be aware that they are now silently ignored
 # and major problems could occur
-# rubocop:disable Rails/Output, Rails/Exit
+# rubocop:disable-next Rails/Output, Rails/Exit
 if Rails.root.join("config/application.yml").exist?
   puts "The config/application.yml file is no longer supported."
   puts ""
@@ -13,7 +15,6 @@ if Rails.root.join("config/application.yml").exist?
   puts "your config/application.yml file."
   exit!
 end
-# rubocop:enable Rails/Output, Rails/Exit
 
 # Allowed status values
 unless Object.const_defined?(:ALLOWED_STATUS)

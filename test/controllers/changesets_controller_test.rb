@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class ChangesetsControllerTest < ActionDispatch::IntegrationTest
@@ -60,7 +62,7 @@ class ChangesetsControllerTest < ActionDispatch::IntegrationTest
   def test_index_xhr
     changesets = create_list(:changeset, 30, :num_changes => 1)
 
-    get history_path(:format => "html"), :xhr => true
+    get history_path(:format => "html"), :headers => { "Turbo-Frame" => "sidebar_content_frame" }
     assert_response :success
     assert_template "history"
     assert_template :layout => "xhr"
@@ -115,6 +117,17 @@ class ChangesetsControllerTest < ActionDispatch::IntegrationTest
     assert_template "index"
 
     check_index_result(changesets)
+  end
+
+  def test_index_bbox_invalid
+    get history_path(:format => "html", :bbox => "4.5,4.5,5.5", :list => "1"), :xhr => true
+    assert_redirected_to :controller => :errors, :action => :bad_request
+
+    get history_feed_path(:bbox => "4.5,4.5,5.5")
+    assert_response :bad_request
+
+    get history_feed_path(:bbox => "")
+    assert_response :bad_request
   end
 
   def test_index_bbox_across_antimeridian_with_changesets_close_to_antimeridian
@@ -349,7 +362,7 @@ class ChangesetsControllerTest < ActionDispatch::IntegrationTest
     changeset1 = create(:changeset, :num_changes => 1)
     changeset2 = create(:changeset, :num_changes => 1)
 
-    get history_path(:format => "html", :before => changeset2.id), :xhr => true
+    get history_path(:format => "html", :before => changeset2.id), :headers => { "Turbo-Frame" => "sidebar_content_frame" }
     assert_response :success
     assert_template "history"
     assert_template :layout => "xhr"
@@ -366,7 +379,7 @@ class ChangesetsControllerTest < ActionDispatch::IntegrationTest
     changeset1 = create(:changeset, :num_changes => 1)
     changeset2 = create(:changeset, :num_changes => 1)
 
-    get history_path(:format => "html", :after => changeset1.id), :xhr => true
+    get history_path(:format => "html", :after => changeset1.id), :headers => { "Turbo-Frame" => "sidebar_content_frame" }
     assert_response :success
     assert_template "history"
     assert_template :layout => "xhr"
@@ -403,6 +416,15 @@ class ChangesetsControllerTest < ActionDispatch::IntegrationTest
     assert_dom "article#c#{changeset_comment.id}" do
       assert_dom "> small", :text => /^Comment from #{commenting_user.display_name}/
       assert_dom "a[href='#{user_path(commenting_user)}']"
+    end
+  end
+
+  def test_show_linkified_comment
+    changeset = create(:changeset)
+    create(:changeset_tag, :changeset => changeset, :k => "comment", :v => "Check out http://example.com/ & special <characters>!")
+    sidebar_browse_check :changeset_path, changeset.id, "changesets/show"
+    assert_dom "p", :text => %r{Check out http://example.com/ & special <characters>!} do
+      assert_dom "a[href='http://example.com/']", :text => "http://example.com/"
     end
   end
 
@@ -607,7 +629,7 @@ class ChangesetsControllerTest < ActionDispatch::IntegrationTest
               else
                 assert_select "> xhtml|tr > xhtml|td > xhtml|table", :count => 1 do
                   changeset.tags.each_key do |key|
-                    assert_select "> xhtml|tr > xhtml|td", :text => /^#{key} = /
+                    assert_select "> xhtml|tr > xhtml|td", :visible_text => /^#{key} = /
                   end
                 end
               end

@@ -18,6 +18,7 @@
 # Author: Marwin H.H.
 # Author: Md. Golam Mukit Khan
 # Author: Nasir8891
+# Author: R1F4T
 # Author: R4356th
 # Author: R4bb1
 # Author: Rasal Lia
@@ -71,6 +72,10 @@ bn:
       models:
         user_mute:
           is_already_muted: ইতিমধ্যেই মিউট করা হয়েছে
+        social_link:
+          attributes:
+            url:
+              http_parse_error: ইউআরএল http:// অথবা https:// দিয়ে শুরু হওয়া উচিত
     models:
       acl: প্রবেশাধিকার নিয়ন্ত্রণ তালিকা
       changeset: পরিবর্তনসমূহ
@@ -84,6 +89,7 @@ bn:
       message: বার্তা
       node: সংযোগস্থল
       node_tag: সংযোগস্থলের ট্যাগ
+      note: টীকা
       old_node: পুরাতন সংযোগস্থল
       old_node_tag: পুরাতন সংযোগস্থলের ট্যাগ
       old_relation: পুরনো সম্পর্ক
@@ -107,18 +113,6 @@ bn:
       way_node: রাস্তার নোড
       way_tag: রাস্তার ট্যাগ
     attributes:
-      client_application:
-        name: নাম (আবশ্যিক)
-        url: মূল অ্যাপ্লিকেশন ইউআরএল (প্রয়োজন)
-        callback_url: কলব্যাক ইউআরএল
-        support_url: সহায়তা ইউআরএল
-        allow_read_prefs: ব্যবহারকারীর পছন্দগুলি পড়ে
-        allow_write_prefs: তাদের ব্যবহারকারী পছন্দসমূহ যাচাই করুন
-        allow_write_diary: ডায়েরি ভুক্তি তৈরি, মন্তব্য এবং বন্ধু বানান
-        allow_write_api: মানচিত্রটি সম্পাদন করুন
-        allow_read_gpx: তাদের ব্যক্তিগত জিপিএস অনুসরণ করুন
-        allow_write_gpx: জিপিএস ট্রেস আপলোড করুন
-        allow_write_notes: টীকা পরিবর্তন করুন
       diary_comment:
         body: মূলাংশ
       diary_entry:
@@ -148,6 +142,8 @@ bn:
         gpx_file: জিপিএস ট্রেস ফাইল নির্বাচন করুন
         visibility: দৃষ্টিযোগ্যতা
         tagstring: ট্যাগসমূহ
+      moderation_zone:
+        name: নাম
       message:
         sender: প্রেরক
         title: শিরোনাম
@@ -167,8 +163,10 @@ bn:
         active: সক্রিয়
         display_name: প্রদর্শনের জন্য নাম
         description: প্রোফাইলের বর্ণনা
+        company: কোম্পানি
         home_lat: অক্ষাংশ
         home_lon: দ্রাঘিমাংশ
+        home_location_name: বাড়ির অবস্থানের নাম
         languages: পছন্দের ভাষা
         preferred_editor: পছন্দের সম্পাদক
         pass_crypt: পাসওয়ার্ড
@@ -240,6 +238,7 @@ bn:
       none: কিছু নয়
       openid: ওপেনআইডি
       google: গুগল
+      apple: অ্যাপেল
       facebook: ফেসবুক
       microsoft: মাইক্রোসফট
       github: গিটহাব
@@ -271,13 +270,24 @@ bn:
   accounts:
     show:
       title: অ্যাকাউন্ট সম্পাদনা করুন
+      my_account: আমার অ্যাকাউন্ট
       current email address: বর্তমান ই-মেইল ঠিকানা
       external auth: বাহ্যিক প্রমাণীকরণ
       contributor_terms:
         heading: অবদানকারীর জন্য নিয়মাবলি
-        agreed: আপনি নতুন অবদানকারীর শর্তাবলীতে সম্মত।
+        agreed: আপনি %{date} তারিখে অবদানকারী শর্তাবলীতে সম্মত হয়েছেন।
+        not_agreed: আপনি এখনও অবদানকারী শর্তাবলীতে সম্মত হননি।
         agreed_with_pd: আপনি ঘোষণা করেছেন যে আপনি আপনার সম্পাদনাগুলো পাবলিক ডোমেইনের
           অধীনে প্রকাশ করছেন।
+        review: শর্তাবলীসমূহ পর্যালোচনা করুন
+        review_and_accept: শর্তাবলীসমূহ পর্যালোচনা এবং গ্রহণ করুন
+        consider_pd: পাবলিক ডোমেইন বিবেচনা করুন
+      terms_of_use:
+        heading: ব্যবহারের শর্তাবলী
+        agreed: আপনি %{date} তারিখে ব্যবহারের শর্তাবলীতে সম্মত হয়েছেন।
+        not_agreed: আপনি এখনও ব্যবহারের শর্তাবলীতে সম্মত হননি।
+        review: শর্তাবলীসমূহ পর্যালোচনা করুন
+        review_and_accept: শর্তাবলীসমূহ পর্যালোচনা এবং গ্রহণ করুন
       save changes button: পরিবর্তন সংরক্ষণ
       delete_account: অ্যাকাউন্ট অপসারণ করুন...
     go_public:
@@ -288,6 +298,7 @@ bn:
         বোতামে ক্লিক করুন৷
       only_public_can_edit: যেহেতু ০.৬ এপআই পরিবর্তন হয়েছে, শুধুমাত্র পাবলিক ব্যবহারকারীরা
         মানচিত্র ডেটা সম্পাদনা করতে পারে৷
+      find_out_why_html: (%{link})।
       find_out_why: কারণ জানুন
       email_not_revealed: আপনার ইমেল ঠিকানা সর্বজনীনভাবে প্রকাশ করা হবে না।
       not_reversible: এই ক্রিয়াটি পাল্টানো যাবে না এবং সমস্ত নতুন ব্যবহারকারী এখন
@@ -337,7 +348,10 @@ bn:
         contributor_terms_explain: এই চুক্তিটি আপনার বিদ্যমান এবং ভবিষ্যতের অবদানের
           শর্তাদি নিয়ন্ত্রণ করে।
         read_ct: আমি উপরোক্ত অবদানকারীর শর্তাবলী পড়েছি এবং তাতে সম্মত
+        tou_explain:
+          tou: ব্যবহারের শর্তাবলী
         read_tou: আমি ব্যবহারের শর্তাবলী পড়েছি এবং সম্মত
+        readable_summary: মানুষের পাঠযোগ্য সারাংশ
         informal_translations: অনানুষ্ঠানিক অনুবাদ
         continue: অব্যাহত রাখুন
         cancel: বাতিল
@@ -400,7 +414,7 @@ bn:
         way: রাস্তা
         relation: সম্পর্ক
     containing_relation:
-      entry_role_html: সম্পর্ক %{relation_name} (যখন %{relation_role})
+      entry_role_html: '%{relation_name} (%{relation_role} হিসেবে)'
     not_found:
       title: পাওয়া যায়নি
     timeout:
@@ -437,12 +451,19 @@ bn:
       telephone_link: '%{phone_number}-এ কল করুন'
       colour_preview: রঙ %{colour_value} প্রাকদর্শন
       email_link: ইমেল %{email}
+    versions_navigation:
+      node: সংযোগস্থল
+      way: রাস্তা
+      relation: সম্পর্ক
+      history: ইতিহাস
+      version: 'সংস্করণ #%{version}'
+      versions_label: 'সংস্করণ:'
   feature_queries:
     show:
       title: বৈশিষ্ট্য অনুসন্ধান করুন
       introduction: নিকটবর্তী বৈশিষ্ট্য খুঁজে পেতে মানচিত্রে ক্লিক করুন।
       nearby: নিকটবর্তী বৈশিষ্ট্য
-      enclosing: আবদ্ধ বৈশিষ্ট্য
+      enclosing: পরিবেষ্টিত বৈশিষ্ট্য
   old_elements:
     index:
       node:
@@ -452,6 +473,7 @@ bn:
       relation:
         title_html: 'সম্পর্ক ইতিহাস: %{name}'
       older_versions: পুরনো সংস্করণ
+      newer_versions: নতুনতর সংস্করণ
   nodes:
     timeout:
       sorry: দুঃখিত, আইডি %{id} এর সাথে সম্পৃক্ত নোডের উপাত্ত পুনরুদ্ধার করতে অতিরিক্ত
@@ -523,6 +545,7 @@ bn:
       discussion: আলোচনা
       join_discussion: আলোচনায় যোগ দিতে প্রবেশ করুন
       still_open: চেঞ্জসেট এখনও খোলা - চেঞ্জসেট বন্ধ হয়ে গেলে আলোচনা খোলা হবে।
+      comment_by_html: '%{time_ago} %{user} কর্তৃক মন্তব্য'
       hidden_comment_by_html: '%{user} %{time_ago} মন্তব্যটি লুকিয়েছেন'
       hide_comment: লুকান
       unhide_comment: দৃশ্যমান করুন
@@ -554,14 +577,18 @@ bn:
     popup:
       your location: আপনার অবস্থান
       nearby mapper: কাছাকাছি অবস্থানকারী ম্যাপার
+      following: অনুসরণ করছেন
     show:
       title: আমার ড্যাশবোর্ড
       no_home_location_html: '%{edit_profile_link} এবং কাছাকাছি ব্যবহারকারীদের দেখতে
         আপনার বাড়ির অবস্থান নির্ধারণ করুন।'
       edit_your_profile: আপনার প্রোফাইল সম্পাদনা করুন
+      followings: আপনি যে ব্যবহারকারীদের অনুসরণ করেন
+      no followings: আপনি এখনও কোনও ব্যবহারকারীকে অনুসরণ করেননি।
       nearby users: কাছাকাছি অন্য ব্যবহারকারী
       no nearby users: কাছাকাছি কেউ মানচিত্রাঙ্কন করছেন এমন কোনও ব্যবহারকারী এখনো
         নেই।
+      followed_diaries: দিনলিপির ভুক্তি
       nearby_changesets: কাছাকাছি ব্যবহারকারীদের পরিবর্তনসেট
       nearby_diaries: কাছাকাছি ব্যবহারকারীর ডায়েরি এন্ট্রি
   diary_entries:
@@ -572,6 +599,7 @@ bn:
       use_map_link: মানচিত্র ব্যবহার করুন
     index:
       title: ব্যবহারকারীর দিনলিপি
+      title_followed: অনুসরণ করা ব্যবহারকারীদের দিনলিপি
       title_nearby: নিকটবর্তী ব্যবহারকারীর দিনলিপি
       user_title: '%{user}-এর দিনলিপি'
       in_language_title: '%{language} ভাষায় দিনলিপির ভুক্তি'
@@ -601,7 +629,6 @@ bn:
       comment_link: এই ভুক্তিতে মন্তব্য
       reply_link: লেখককে একটি বার্তা দিন
       comment_count:
-        zero: কোন মন্তব্য নেই
         one: '%{count}টি মন্তব্য'
         other: '%{count}টি মন্তব্য'
       no_comments: কোনও মন্তব্য নেই
@@ -636,9 +663,10 @@ bn:
       new: নতুন দিনলিপির ভুক্তি
       new_title: নিজের ব্যবহারকারী দিনলিপিতে একটি নতুন ভুক্তি রচনা করুন
     profile_diaries:
+      comments:
+        one: '%{count}টি মন্তব্য'
+        other: '%{count}টি মন্তব্য'
       title_label: ডাইরির ভুক্তি
-      comments_label: মন্তব্য
-      date_label: তারিখ
   doorkeeper:
     flash:
       applications:
@@ -652,6 +680,8 @@ bn:
   errors:
     contact:
       contact: যোগাযোগ
+    bad_request:
+      title: খারাপ অনুরোধ
     forbidden:
       title: নিষিদ্ধ
     internal_server_error:
@@ -660,6 +690,15 @@ bn:
         যার ফলে অনুরোধ পূরণ করা যাচ্ছে না (HTTP ৫০০)
     not_found:
       title: ফাইল পাওয়া যায়নি
+  follows:
+    show:
+      follow:
+        button: ব্যবহারকারীকে অনুসরণ করুন
+      unfollow:
+        heading: আপনি কি %{user}-কে অনুসরণ করা বন্ধ করতে চান?
+        button: ব্যবহারকারীকে অনুসরণ করা বন্ধ করুন
+    create:
+      success: আপনি এখন %{name}-কে অনুসরণ করছেন!
   geocoder:
     search_osm_nominatim:
       prefix:
@@ -803,7 +842,10 @@ bn:
           census: আদমশুমারি এলাকা
           national_park: জাতীয় উদ্যান
           political: নির্বাচনী সীমানা
+          postal_code: পোস্টাল কোড
           protected_area: সুরক্ষিত এলাকা
+          public_transport: গণপরিবহন জেলা
+          timezone: সময় অঞ্চল
           "yes": সীমানা
         bridge:
           aqueduct: জলপ্রণালী
@@ -824,6 +866,7 @@ bn:
           college: কলেজ ভবন
           commercial: বাণিজ্যিক ভবন
           construction: নির্মাণাধীন ভবন
+          cowshed: গোয়ালঘর
           detached: বিচ্ছিন্ন বাড়ি
           dormitory: ছাত্রাবাস
           duplex: ডুপ্লেক্স বাড়ি
@@ -974,6 +1017,13 @@ bn:
           wayside_cross: ওয়েসাইড ক্রস
           wreck: ভগ্নাবশেষ
           "yes": ঐতিহাসিক স্থান
+        information:
+          board: তথ্য বোর্ড
+          map: মানচিত্র
+          office: পর্যটন অফিস
+          terminal: তথ্য টার্মিনাল
+          sign: তথ্য চিহ্ন
+          stele: তথ্য স্তম্ভ
         junction:
           "yes": জংশন
         landuse:
@@ -1044,7 +1094,9 @@ bn:
           chimney: চিম্নী
           crane: কপিকল
           dyke: নালা
+          embankment: বাঁধ
           flagpole: সতর্কীকরণ পতাকা
+          gasometer: গ্যাসোমিটার
           lighthouse: বাতিঘর
           manhole: ম্যানহোল
           mast: মাস্তুল
@@ -1060,16 +1112,19 @@ bn:
           water_tap: পানির কল
           water_tower: পানির ট্যাংক
           water_well: পানির কূপ
+          windmill: বায়ুকল
           works: কারখানা
           "yes": মনুষ্য-নির্মিত
         military:
           airfield: সামরিক বিমানপোত
           barracks: সেনানিবাস
+          bunker: বাঙ্কার
           trench: পরিখা
           "yes": সামরিক
         mountain_pass:
           "yes": গিরিপথ
         natural:
+          atoll: অ্যাটল
           bay: উপসাগর
           beach: সৈকত
           cape: অন্তরীপ
@@ -1183,31 +1238,41 @@ bn:
         shop:
           antiques: প্রাচীন শিল্পকর্ম
           art: শিল্পকলা সংক্রান্ত দোকান
+          bag: ব্যাগের দোকান
           bakery: বেকারি
           beauty: প্রসাধনীর দোকান
           beverages: পানীয় দোকান
           bicycle: বাইসাইকেল দোকান
           books: বইয়ের দোকান
+          boutique: বুটিক
           butcher: মাংসবিক্রেতা
           car: গাড়ির দোকান
           car_parts: গাড়ির যন্ত্রাংশ
           car_repair: গাড়ি মেরামত
           carpet: কার্পেটের দোকান
+          charity: দাতব্য দোকান
+          cheese: পনিরের দোকান
           chemist: রাসায়নবিদ
           chocolate: চকলেট
           clothes: কাপড়ের দোকান
+          coffee: কফির দোকান
           computer: কম্পিউটারের দোকান
           confectionery: মিষ্টান্নের দোকান
           convenience: কনভেনিয়েন্স স্টোর
           copyshop: কপি শপ
           cosmetics: প্রসাধনী সামগ্রীর দোকান
+          craft: কারুশিল্প সরবরাহের দোকান
+          curtain: পর্দার দোকান
+          dairy: দুগ্ধের দোকান
           deli: যন্ত্রাংশ
           department_store: ডিপার্টমেন্টাল স্টোর
           discount: সস্তা সামগ্রীর দোকান
           doityourself: নিজে-করো দোকান
           dry_cleaning: কাপড় ধোয়ার দোকান
+          e-cigarette: ই-সিগারেটের দোকান
           electronics: বৈদ্যুতিক জিনিসের দোকান
           estate_agent: এস্টেট এজেন্ট
+          fabric: কাপড়ের দোকান
           farm: কৃষি ভাণ্ডার
           fashion: ফ্যাশন সামগ্রীর দোকান
           florist: ফুলওয়ালা
@@ -1296,6 +1361,12 @@ bn:
         tunnel:
           culvert: সাঁকো
           "yes": সুড়ঙ্গ
+        water:
+          lake: হ্রদ
+          pond: পুকুর
+          reservoir: জলাধার
+          basin: জলের অববাহিকা
+          fishpond: মাছের পুকুর
         waterway:
           artificial: কৃত্রিম জলপথ
           boatyard: নৌকাক্ষেত্র
@@ -1351,12 +1422,17 @@ bn:
       distance: দূরত্ব
       time: সময়
       kilometers: কিলোমিটার
+      miles_feet: মাইল, ফুট
+      miles_yards: মাইল, গজ
+      distance_units_settings: দূরত্বের একক সেটিং
+      download: GeoJSON হিসেবে রুট ডাউনলোড করুন
+      filename: রুট
   issues:
     index:
       title: সমস্যা
       select_status: স্থিতি নির্বাচন করুন
       select_type: প্রকার নির্বাচন করুন
-      search: অনুসন্ধান
+      search: অনুসন্ধান করুন
       states:
         ignored: উপেক্ষিত
         open: খুলুন
@@ -1404,37 +1480,152 @@ bn:
     create:
       successful_report: আপনার অভিযোগ সফলভাবে নিবন্ধন হয়েছে
       provide_details: দয়া করে প্রয়োজনীয় তথ্য সন্নিবেশিত করুন
+  languages_panes:
+    select_language_list:
+      search_language: অনুসন্ধান...
+      languages:
+        af: আফ্রিকান্স
+        gsw: আলেমানীয়
+        ast: আস্তুরীয়
+        az: আজারবাইজানি
+        id: ইন্দোনেশীয়
+        ms: মালয়
+        bs: বসনীয়
+        br: ব্রেটন
+        ca: কাতালান
+        cs: চেক
+        cy: ওয়েলশ
+        da: ডেনীয়
+        de: জার্মান
+        dsb: নিম্ন সোর্বীয়
+        et: এস্তোনীয়
+        en: ইংরেজি
+        en-GB: ইংরেজি (যুক্তরাজ্য)
+        es: স্পেনীয়
+        eo: এস্পেরান্তো
+        eu: বাস্ক
+        fr: ফরাসি
+        fur: ফ্রিউলীয়
+        ga: আইরিশ
+        gd: স্কটিশ গেলিক
+        gl: গ্যালিসীয়
+        hsb: ঊর্ধ্ব সোর্বীয়
+        hr: ক্রোয়েশীয়
+        ia: ইন্টারলিঙ্গুয়া
+        is: আইসল্যান্ডীয়
+        it: ইতালীয়
+        ku-Latn: কুর্দি (লাতিন)
+        lv: লাতভীয়
+        lb: লুক্সেমবার্গীয়
+        lt: লিথুয়ানীয়
+        hu: হাঙ্গেরীয়
+        nl: ওলন্দাজ
+        nb: নরওয়েজীয় বোকমাল
+        nn: নরওয়েজীয় নিনর্স্ক
+        oc: অক্সিটান
+        nds: নিম্ন জার্মান
+        pl: পোলিশ
+        pt-PT: পর্তুগিজ
+        pt: পর্তুগিজ (ব্রাজিল)
+        ro: রোমানীয়
+        sc: সার্দেনীয়
+        sco: স্কটস
+        sq: আলবেনীয়
+        scn: সিসিলীয়
+        sk: স্লোভাক
+        sl: স্লোভেনীয়
+        sr-Latn: সার্বীয় (লাতিন)
+        sh: সার্বো-ক্রোয়েশীয় (লাতিন)
+        fi: ফিনীয়
+        sv: সুয়েডীয়
+        tl: তাগালোগ
+        kab: কাবাইল
+        vi: ভিয়েতনামী
+        tr: তুর্কি
+        yo: ইওরুবা
+        diq: ডিমলি
+        el: গ্রিক
+        ba: বাশকির
+        be: বেলারুশীয়
+        bg: বুলগেরীয়
+        mk: ম্যাসেডোনীয়
+        mo: মলদোভীয়
+        ce: চেচেন
+        ru: রুশ
+        sr: সার্বীয় (সিরিলীয়)
+        tt: তাতার (সিরিলীয়)
+        uk: ইউক্রেনীয়
+        kk-cyrl: কাজাখ (সিরিলীয়)
+        yi: ইদ্দিশ
+        he: হিব্রু
+        ar: আরবি
+        skr-arab: সারাইকি
+        fa: ফার্সি
+        arz: মিশরীয় আরবি
+        pnb: পশ্চিমা পাঞ্জাবি
+        ps: পশতু
+        ne: নেপালি
+        mr: মারাঠি
+        hi: হিন্দি
+        bn: বাংলা
+        pa: পাঞ্জাবি
+        gu: গুজরাটি
+        ta: তামিল
+        te: তেলুগু
+        kn: কন্নড়
+        th: থাই
+        my: বর্মি
+        shn: শান
+        xmf: মিনগ্রেলীয়
+        ka: জর্জীয়
+        km: খমের
+        sat: সাঁওতালি
+        zh-CN: চীনা (সরলীকৃত)
+        zh-TW: চীনা (ঐতিহ্যবাহী)
+        zh-HK: চীনা (হংকং)
+        ja: জাপানি
+        ko: কোরীয়
   layouts:
     project_name:
       title: ওপেনস্ট্রিটম্যাপ
-      h1: ওপেনস্ট্রিটম্যাপ
     logo:
       alt_text: ওপেনস্ট্রিটম্যাপ লোগো
-    home: নিড় অবস্থানে যান
-    logout: প্রস্থান
-    log_in: প্রবেশ
-    sign_up: যোগ দিন
-    start_mapping: মানচিত্রকরণ শুরু করুন
-    edit: সম্পাদনা
-    history: ইতিহাস
-    export: রপ্তানি
-    issues: সমস্যা
-    gps_traces: জিপিএস ট্রেস
-    user_diaries: ব্যবহারকারীর দিনলিপি
-    edit_with: '%{editor} দিয়ে সম্পাদনা করুন'
+    main_navigation: প্রধান
+    layer_info: স্তরের তথ্য
+    start_mapping: মানচিত্রায়ন শুরু করুন
     intro_header: ওপেনস্ট্রিটম্যাপে স্বাগতম!
     intro_text: ওপেনস্ট্রিটম্যাপ বিশ্বের একটি মানচিত্র; যা আপনার মতো মানুষের দ্বারা
       নির্মিত এবং এটি মুক্ত লাইসেন্সের অধীনে বিনামূল্যে ব্যবহারযোগ্য।
+    hosting_partners_2024_html: হোস্টিংয়ে সাহায্য করেছেন %{fastly}, %{corpmembers},
+      ও অন্যান্য %{partners}।
     partners_partners: সহযোগীগণ
+    terms_of_use: ব্যবহারের শর্তাবলী
     tou: ব্যবহারের শর্তাবলী
-    help: সাহায্য
-    about: পরিচিতি
-    copyright: মেধাস্বত্ব
-    communities: সম্প্রদায়
+    nothing_to_preview: প্রাকদর্শন করার মতো কিছু নেই।
     learn_more: আরও পড়ুন
-    more: আরও
     header:
+      about: পরিচিতি
+      communities: সম্প্রদায়
+      copyright: মেধাস্বত্ব
+      donate: দান করুন
+      edit: সম্পাদনা
+      edit_with: '%{editor} দিয়ে সম্পাদনা করুন'
+      export: রপ্তানি
+      gps_traces: জিপিএস ট্রেস
+      help: সাহায্য
+      history: ইতিহাস
+      home: নিড় অবস্থানে যান
+      issues: সমস্যা
+      log_out: প্রস্থান
+      log_in: প্রবেশ
+      more: আরও
       select_language: ভাষা নির্বাচন করুন
+      sign_up: যোগ দিন
+      user_diaries: ব্যবহারকারীর দিনলিপি
+    meta:
+      openstreetmap_search: ওপেনস্ট্রিটম্যাপ অনুসন্ধান
+    select_language_button:
+      title: ভাষা নির্বাচন করুন
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} একটি দিনলিপির ভুক্তিতে মন্তব্য করেছেন'
@@ -1451,6 +1642,13 @@ bn:
       hi: প্রিয় %{to_user},
       see_their_profile: আপনি %{userurl}-এ তাদের প্রোফাইল দেখতে পারেন।
       see_their_profile_html: আপনি %{userurl} এ তার প্রোফাইল দেখতে পারেন।
+    gpx_details:
+      filename: ফাইলের নাম
+      url: ইউআরএল
+      description: বিবরণ
+      tags: ট্যাগ
+      total_points: মোট পয়েন্টের সংখ্যা
+      imported_points: আমদানি করা পয়েন্টের সংখ্যা
     gpx_failure:
       hi: সুপ্রিয় %{to_user},
       failed_to_import: 'GPS ট্রেস ফাইল হিসাবে আমদানি করা ব্যর্থ হয়েছে। অনুগ্রহ করে
@@ -1579,11 +1777,33 @@ bn:
     basic_preferences:
       show:
         title: আমার পছন্দ
+        site_color_schemes:
+          auto: স্বয়ংক্রিয়
+          light: উজ্জ্বল
+          dark: আঁধার
+        preferred_map_color_scheme: মানচিত্রের জন্য পছন্দের রঙের স্কিম
+        map_color_schemes:
+          auto: ওয়েবসাইটের মতোই
+          light: উজ্জ্বল
+          dark: আঁধার
+        editor_color_schemes:
+          auto: ওয়েবসাইটের মতোই
+          light: উজ্জ্বল
+          dark: আঁধার
         save: পছন্দ হালনাগাদ করুন
+    notification_preferences:
+      show:
+        title: বিজ্ঞপ্তির পছন্দসমূহ
+        delivery_mechanisms:
+          email: ইমেইল
   profiles:
     profile_sections:
       navigation:
+        description: বিবরণ
+        links: লিঙ্ক
         image: চিত্র
+        company: কোম্পানি
+        location: অবস্থান
     descriptions:
       show:
         title: প্রোফাইল সম্পাদনা করুন
@@ -1612,6 +1832,7 @@ bn:
       remember: আমাকে মনে রাখো
       lost password link: পাসওয়ার্ড ভুলে গেছেন?
       login_button: প্রবেশ করুন
+      with external: অথবা তৃতীয় পক্ষের পরিষেবা দিয়ে প্রবেশ করুন
       or: অথবা
       auth failure: দুঃখিত, এই তথ্য দিয়ে প্রবেশ করানো যাচ্ছে না।
     destroy:
@@ -1623,34 +1844,6 @@ bn:
       contact_support_html: আপনি যদি এই বিষয়ে আলোচনা করতে চান তাহলে অনুগ্রহ করে %{support_link}-এর
         সাথে যোগাযোগ করুন।
       support: সহায়তা
-  shared:
-    markdown_help:
-      heading_html: '%{kramdown_link} দিয়ে পার্স করা হয়েছে'
-      headings: শিরোনামগুলি
-      heading: শিরোনাম
-      subheading: উপশিরোনাম
-      first: প্রথম আইটেম
-      second: দ্বিতীয় আইটেম
-      link: সংযোগ
-      text: পাঠ্য
-      image: ছবি
-      alt: বিকল্প পাঠ্য
-      url: ইউআরএল
-      codeblock: কোড ব্লক
-    richtext_field:
-      edit: সম্পাদনা
-      preview: প্রাকদর্শন
-      help: সাহায্য
-    pagination:
-      changeset_comments:
-        newer: নতুনতর মন্তব্য
-        newest: নতুনতর মন্তব্য
-      diary_comments:
-        older: পুরাতন মন্তব্য
-        newer: নতুনতর মন্তব্য
-      diary_entries:
-        older: পুরাতন ভুক্তি
-        newer: নতুনতর ভুক্তি
   site:
     about:
       heading_html: '%{copyright}ওপেনস্ট্রিটম্যাপ %{br} অবদানকারীগণ'
@@ -1682,7 +1875,7 @@ bn:
           ফিরে যেতে পারেন অথবা আপনি মেধাস্বত্ব এবং %{mapping_link} সম্পর্কে পড়া বন্ধ
           করতে পারেন।
         native_link: THIS_LANGUAGE_NAME_HERE সংস্করণ
-        mapping_link: মানচিত্রকরণ শুরু করুন
+        mapping_link: মানচিত্রায়ন শুরু করুন
       legal_babble:
         credit_title_html: ওপেনস্ট্রিটম্যাপকে কীভাবে কৃতিত্ব দিবেন
         attribution_example:
@@ -1697,6 +1890,7 @@ bn:
         contributors_cz_cc_licence: ক্রিয়েটিভ কমন্স অ্যাট্রিবিউশন ৪.০ আন্তর্জাতিক
           লাইসেন্স (সিসি বাই ৪.০)
         contributors_cz_cc_licence_url: https://creativecommons.org/licenses/by/4.0/deed.bn
+        contributors_fi_finland: ফিনল্যান্ড
         contributors_fr_france: ফ্রান্স
         contributors_hr_croatia: ক্রোয়েশিয়া
         contributors_rs_serbia: সার্বিয়া
@@ -1756,7 +1950,7 @@ bn:
     sidebar:
       search_results: অনুসন্ধানের ফলাফল
     search:
-      search: অনুসন্ধান
+      search: অনুসন্ধান করুন
       get_directions_title: দুটি বিন্দুর মধ্যে নির্দেশনী খুঁজুন
       from: এ থেকে
       to: এ পর্যন্ত
@@ -1777,7 +1971,7 @@ bn:
         title: মানচিত্রকরণের জন্য মৌলিক শর্তাবলী
       rules:
         title: নিয়মাবলী!
-      start_mapping: মানচিত্রকরণ শুরু করুন
+      start_mapping: মানচিত্রায়ন শুরু করুন
     add_a_note:
       title: সম্পাদনার সময় নেই? একটি টীকা যোগ করুন!
       the_map: মানচিত্র
@@ -1786,6 +1980,10 @@ bn:
   social_links:
     show:
       website: ওয়েবসাইট
+  layers_panes:
+    show:
+      map_notes_zoom_in_tooltip: মানচিত্রের নোট দেখতে জুম ইন করুন
+      map_data_zoom_in_tooltip: মানচিত্রের উপাত্ত দেখতে জুম ইন করুন
   legend_panes:
     show:
       entries:
@@ -1868,23 +2066,23 @@ bn:
       heading: অনুসরণ সম্পাদনা %{name}
       visibility_help: এটার মানে কি?
     show:
-      title: '%{name} অনুসরণটি দেখছেন'
-      heading: '%{name} অনুসরণটি দেখছেন'
+      title: ট্রেস %{name} দেখছেন
+      heading: ট্রেস %{name} দেখছেন
       pending: অমিমাংসিত
       filename: 'ফাইলের নাম:'
       download: ডাউনলোড
       uploaded: 'আপলোড হয়েছে:'
       points: 'পয়েন্ট:'
-      start_coordinates: 'প্রারম্ভের কোঅর্ডিনেট:'
+      start_coordinates: 'শুরুর স্থানাঙ্ক:'
       coordinates_html: '%{latitude}; %{longitude}'
-      map: মানচিত্র
+      map: মানচিত্রে অবস্থান দেখুন
       edit: সম্পাদনা
       owner: 'মালিক:'
       description: 'বিবরণ:'
       tags: 'ট্যাগসমূহ:'
       none: কোনটিই নয়
-      edit_trace: এই অনুসরণটি সম্পাদনা করুন
-      delete_trace: এই অনুসরণটি মুছে ফেলুন
+      edit_trace: এই ট্রেস সম্পাদনা করুন
+      delete_trace: এই ট্রেস মুছে ফেলুন
       trace_not_found: অনুসরণ পাওযা যায়নি।
       visibility: 'দৃষ্টিযোগ্যতা:'
     trace:
@@ -1894,7 +2092,7 @@ bn:
         other: '%{count} পয়েন্ট'
       more: আরও
       trace_details: অনুসরণের বিস্তারিত দেখুন
-      view_map: মানচিত্র দেখুন
+      view_map: মানচিত্রে অবস্থান দেখুন
       edit_map: মানচিত্র সম্পাদনা
       identifiable: শনাক্তকরণযোগ্য
       private: ব্যাক্তিগত
@@ -1914,13 +2112,16 @@ bn:
       oauth2_applications: ওআউথ ২ অ্যাপ্লিকেশন
     auth_providers:
       google:
-        title: গুগল দিয়ে প্রবেশ
+        title: গুগল দিয়ে প্রবেশ করুন
         alt: গুগল লোগো
+      apple:
+        title: অ্যাপল দিয়ে প্রবেশ করুন
+        alt: অ্যাপলের লোগো
       facebook:
-        title: ফেসবুক দিয়ে প্রবেশ
+        title: ফেসবুক দিয়ে প্রবেশ করুন
         alt: ফেসবুক লোগো
       microsoft:
-        title: মাইক্রোসফট দিয়ে লগইন করুন
+        title: মাইক্রোসফট দিয়ে প্রবেশ করুন
         alt: মাইক্রোসফট লোগো
       github:
         title: গিটহাব দিয়ে প্রবেশ করুন
@@ -1928,9 +2129,30 @@ bn:
       wikipedia:
         title: উইকিপিডিয়া দিয়ে প্রবেশ করুন
         alt: উইকিপিডিয়া লোগো
+    markdown_help:
+      heading_html: '%{kramdown_link} দিয়ে পার্স করা হয়েছে'
+      headings: শিরোনামগুলি
+      heading: শিরোনাম
+      subheading: উপশিরোনাম
+      first: প্রথম আইটেম
+      second: দ্বিতীয় আইটেম
+      link: সংযোগ
+      text: পাঠ্য
+      image: ছবি
+      url: ইউআরএল
+      codeblock: কোড ব্লক
+    richtext_field:
+      preview: প্রাকদর্শন
+    pagination:
+      changeset_comments:
+        newest: নতুনতর মন্তব্য
+      diary_comments:
+        older: পুরাতন মন্তব্য
+      diary_entries:
+        newer: নতুনতর ভুক্তি
   oauth:
     scopes:
-      openid: ওপেনস্ট্রিটম্যাপ ব্যবহার করে সাইন-ইন করুন
+      openid: ওপেনস্ট্রিটম্যাপ ব্যবহার করে প্রবেশ করুন
   oauth2_applications:
     index:
       name: নাম
@@ -1953,15 +2175,25 @@ bn:
   users:
     new:
       title: নিবন্ধন করুন
+      tab_title: নিবন্ধন করুন
       about:
-        header: মুক্ত ও সম্পাদনাযোগ্য
+        header: মুক্ত ও সম্পাদনাযোগ্য।
+        paragraph_2: অবদান রাখতে নিবন্ধন করুন।
+      display name description: আপনার সর্বজনীনভাবে প্রদর্শিত ব্যবহারকারী নাম। আপনি
+        পরে পছন্দসমূহে গিয়ে এটি পরিবর্তন করতে পারবেন।
       by_signing_up:
+        html: নিবন্ধন করার মাধ্যমে, আপনি আমাদের %{tou_link}, %{privacy_policy_link}
+          ও %{contributor_terms_link}র সাথে সম্মত হচ্ছেন।
         tou: ব্যবহারের শর্তাবলী
         privacy_policy: গোপনীয়তার নীতি
+        contributor_terms: অবদানের শর্তাবলী
       continue: নিবন্ধন করুন
       email_help:
         privacy_policy: গোপনীয়তার নীতি
+        html: আপনার ঠিকানা সর্বজনীনভাবে প্রদর্শন করা হয় না, আরও তথ্যের জন্য আমাদের
+          %{privacy_policy_link} দেখুন।
       or: বা
+      use external auth: অথবা তৃতীয় পক্ষের পরিষেবা দিয়ে নিবন্ধন করুন
     no_such_user:
       title: এরকম কোনো ব্যবহারকারী নেই
       heading: ব্যবহারকারী %{user} বিদ্যমান নয়
@@ -1979,25 +2211,38 @@ bn:
       my_preferences: আমার পছন্দ
       send message: বার্তা পাঠান
       diary: দিনলিপি
-      edits: সম্পাদনাসমূহ
+      edits: সম্পাদনা
       notes: মানচিত্রের নোট
       mapper since: 'এ থেকে মানচিত্র বানাচ্ছেন:'
+      last map edit: 'সর্বশেষ মানচিত্র সম্পাদনা:'
       ct status: 'অবদানকারী শর্তাবলী:'
       ct undecided: সিদ্ধান্তহীন
       ct declined: বাতিলকৃত
       email address: 'ই-মেইল ঠিকানা:'
-      status: 'অবস্থা:'
+      status: 'স্থিতি:'
       block_history: সক্রিয় বাধাসমূহ
       moderator_history: প্রদত্ত বাধাগুলি
-      comments: মন্তব্যসমূহ
+      comments: মন্তব্য
       create_block: এই ব্যবহারকারীকে বাধা দিন
       activate_user: এই ব্যবহাকারীকে সক্রিয় করুন
       confirm_user: এই ব্যবহারকারীকে নিশ্চিত করুন
-      hide_user: এই ব্যবহারকারীকে লুকান
-      unhide_user: এই ব্যবহাকারীকে দেখান
-      delete_user: এই ব্যবহাকারীকে অপসারণ করুন
       confirm: নিশ্চিত করুন
       report: এই ব্যবহারকারীকে প্রতিবেদন করুন
+      contributions:
+        one: গত বছরে %{count}টি অবদান
+        other: গত বছরে %{count}টি অবদান
+      title:
+        administrator: এই ব্যবহারকারী একজন প্রশাসক
+        moderator: এই ব্যবহারকারী একজন মডারেটর
+      grant:
+        administrator: প্রশাসক প্রবেশাধিকার মঞ্জুর করুন
+        moderator: মডারেটর প্রবেশাধিকার মঞ্জুর করুন
+        are_you_sure: আপনি কি `%{name}' ব্যবহারকারী কে `%{role}' দায়িত্বটি দিতে চান?
+      revoke:
+        administrator: প্রশাসকের প্রবেশাধিকার প্রত্যাহার করুন
+        moderator: মডারেটর প্রবেশাধিকার প্রত্যাহার করুন
+        are_you_sure: আপনি কি নিশ্চিতভাবে `%{name}' ব্যবহারকারীর উক্ত `%{role}' দায়িত্বটি
+          বাতিল করতে চান?
     go_public:
       flash success: আপনার সকল সম্পাদনা এখন উন্মুক্ত, এবং এখন আপনার সম্পাদনের অনুমতি
         রয়েছে।
@@ -2010,10 +2255,9 @@ bn:
         heading: ব্যবহারকারীগণ
         states:
           deleted: অপসারিত
-        search: অনুসন্ধান
+        search: অনুসন্ধান করুন
       page:
         confirm: নির্বাচিত ব্যবহারকারীদের নিশ্চিত করুন
-        hide: নির্বাচিত ব্যবহারকারীদের লুকান
         empty: কোনো সাদৃশ্যপূর্ণ ব্যবহারকারী পাওয়া যায়নি
       user:
         summary_html: '%{ip_address} থেকে %{date} তারিখে %{name} তৈরি করেছেন'
@@ -2044,21 +2288,8 @@ bn:
       option_1: আপনি যদি ওপেনস্ট্রিটম্যাপে নতুন হন, তাহলে অনুগ্রহ করে নিচের ফর্মটি
         ব্যবহার করে একটি নতুন অ্যাকাউন্ট তৈরি করুন!
       option_2: আপনি যদি পূর্বে নিবন্ধন করে থাকেন, তবে অনুগ্রহ করে ব্যবহারকারী নাম
-        এবং পাসওয়ার্ড ব্যবহার করে লগইন করুন এবং সেটিংস থেকে আপনার অ্যাকাউন্ট আইডি
+        এবং পাসওয়ার্ড ব্যবহার করে প্রবেশ করুন এবং সেটিংস থেকে আপনার অ্যাকাউন্ট আইডি
         যুক্ত করুন।
-    role_icons:
-      title:
-        administrator: এই ব্যবহারকারী একজন প্রশাসক
-        moderator: এই ব্যবহারকারী একজন মডারেটর
-      grant:
-        administrator: প্রশাসক প্রবেশাধিকার মঞ্জুর করুন
-        moderator: মডারেটর প্রবেশাধিকার মঞ্জুর করুন
-        are_you_sure: আপনি কি `%{name}' ব্যবহারকারী কে `%{role}' দায়িত্বটি দিতে চান?
-      revoke:
-        administrator: প্রশাসকের প্রবেশাধিকার প্রত্যাহার করুন
-        moderator: মডারেটর প্রবেশাধিকার প্রত্যাহার করুন
-        are_you_sure: আপনি কি নিশ্চিতভাবে `%{name}' ব্যবহারকারীর উক্ত `%{role}' দায়িত্বটি
-          বাতিল করতে চান?
   user_role:
     filter:
       not_a_role: উক্ত `%{role}' টি কোনো সঠিক দায়িত্ব নয়।
@@ -2104,41 +2335,71 @@ bn:
       resolve: মিমাংসা করুন
       reactivate: পুনঃসক্রিয়
       comment: মন্তব্য
+      log_in_to_comment: এই টীকায় মন্তব্য করতে প্রবেশ করুন
       report_link_html: যদি এই নোটটিতে সংবেদনশীল তথ্য থাকে যা অপসারণ করা উচিত, তাহলে
         %{link}।
     new:
       title: নতুন টীকা
+      anonymous_warning_sign_up: নিবন্ধন করুন
       add: টীকাযুক্ত করুন
     notes_paging_nav:
       showing_page: '%{page}টি পাতা'
   javascripts:
     close: বন্ধ
     share:
-      title: বণ্টন
+      title: শেয়ার করুন
       filename: মানচিত্র
+    legend:
+      title: ব্যাখ্যা
+      tooltip: ব্যাখ্যা
+      tooltip_disabled: এই স্তরের জন্য ব্যাখ্যা উপলব্ধ নয়
     map:
+      NavigationControl:
+        ZoomIn: জুম ইন করুন
+        ZoomOut: জুম আউট করুন
+      GeolocateControl:
+        FindMyLocation: আমার অবস্থান দেখান
+      base:
+        standard: মানক
+        cycle_map: সাইকেল মানচিত্র
+        transport_map: পরিবহন মানচিত্র
+        tracestracktop_topo: ট্রেসেসট্র্যাক টোপো
+        hot: মানবিক
       layers:
+        header: মানচিত্রের স্তর
         notes: মানচিত্রের নোট
         data: মানচিত্র উপাত্ত
+        title: স্তর
+      openstreetmap_contributors: ওপেনস্ট্রিটম্যাপ অবদানকারী
       make_a_donation: দান করুন
       website_and_api_terms: ওয়েবসাইট এবং API শর্তাবলী
       andy_allan: অ্যান্ডি অ্যালান
     site:
       edit_tooltip: মানচিত্রটি সম্পাদনা করুন
+      edit_disabled_tooltip: মানচিত্রটি সম্পাদনা করতে জুম ইন করুন
+      createnote_tooltip: মানচিত্রে একটি নোট যোগ করুন
+      createnote_disabled_tooltip: মানচিত্রে একটি নোট যোগ করতে জুম ইন করুন
+      queryfeature_tooltip: বৈশিষ্ট্য অনুসন্ধান করুন
+      queryfeature_disabled_tooltip: অনুসন্ধানের বৈশিষ্ট্যগুলিতে জুম ইন করুন
+    edit_help: মানচিত্রটি সরান এবং আপনি যে অবস্থানটিতে সম্পাদনা করতে চান সেখানে জুম
+      করুন, তারপর এখানে ক্লিক করুন।
     directions:
       distance_in_units:
         m: '%{distance}মি'
         km: '%{distance}কিমি'
+      errors:
+        no_place:
+          title: অনুসন্ধান ব্যর্থ হয়েছে
       instructions:
         continue_without_exit: '%{name}-এ যেতে থাকুন'
         slight_right_without_exit: '%{name}-এ সামান্য ডান দিকে সরান'
         turn_right_without_exit: '%{name}-এ ডানদিকে মোড় নিন'
         turn_left_without_exit: '%{name}-এ ডানদিকে মোড় নিন'
-        slight_left_without_exit: '%{name}-এ সামান্য বামে'
+        slight_left_without_exit: '%{name}-এ সামান্য বামে যান'
         via_point_without_exit: (বিন্দুর মাধ্যমে)
         follow_without_exit: '%{name} অনুসরণ করুন'
-        start_without_exit: '%{name}-এ শুরু'
-        destination_without_exit: গন্তব্যে পৌঁছানো
+        start_without_exit: '%{name}-এ শুরু করুন'
+        destination_without_exit: গন্তব্যে পৌঁছে গেছেন
         against_oneway_without_exit: '%{name}-এ একমুখীর বিরুদ্ধে যান'
         end_oneway_without_exit: '%{name}-এর একমুখী শেষ'
         unnamed: নামহীন সড়ক
@@ -2161,8 +2422,12 @@ bn:
     element:
       wikipedia: উইকিপিডিয়া
     context:
+      directions_from: এখান থেকে দিকনির্দেশ
+      directions_to: এখান পর্যন্ত দিকনির্দেশ
       add_note: এখানে একটি টীকা যোগ করুন
       show_address: ঠিকানা দেখান
+      query_features: বৈশিষ্ট্য অনুসন্ধান করুন
+      centre_map: এখানে মানচিত্রের কেন্দ্র আনুন
     home:
       marker_title: আমার বাড়ির অবস্থান
     edit:
@@ -2185,4 +2450,9 @@ bn:
       confirm: আপনি কি নিশ্চিত?
     update:
       flash: পরিবর্তন সংরক্ষিত।
+  moderation_zones:
+    index:
+      reason: কারণ
+    row:
+      edit: সম্পাদনা
 ...

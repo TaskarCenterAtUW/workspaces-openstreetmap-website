@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class UserCreationTest < ActionDispatch::IntegrationTest
@@ -160,8 +162,7 @@ class UserCreationTest < ActionDispatch::IntegrationTest
 
     user.reload
     assert_predicate user, :active?
-
-    assert_equal user, User.authenticate(:username => new_email, :password => "testtest")
+    assert user.password_matches?("testtest")
   end
 
   # Check that the user can successfully recover their password
@@ -1064,5 +1065,47 @@ class UserCreationTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_response :success
     assert_template "site/welcome"
+  end
+
+  def test_missing_email
+    new_email = ""
+    display_name = "new_tester"
+
+    assert_no_difference("User.count") do
+      assert_no_difference("ActionMailer::Base.deliveries.size") do
+        perform_enqueued_jobs do
+          post "/user",
+               :params => { :user => { :email => new_email,
+                                       :display_name => display_name,
+                                       :pass_crypt => "testtest",
+                                       :pass_crypt_confirmation => "testtest" } }
+          assert_response :success
+          assert_template "users/new"
+          assert_select "form"
+          assert_select "form > div > input.is-invalid#user_email"
+        end
+      end
+    end
+  end
+
+  def test_percent_email
+    new_email = "a%b@example.com"
+    display_name = "new_tester"
+
+    assert_no_difference("User.count") do
+      assert_no_difference("ActionMailer::Base.deliveries.size") do
+        perform_enqueued_jobs do
+          post "/user",
+               :params => { :user => { :email => new_email,
+                                       :display_name => display_name,
+                                       :pass_crypt => "testtest",
+                                       :pass_crypt_confirmation => "testtest" } }
+          assert_response :success
+          assert_template "users/new"
+          assert_select "form"
+          assert_select "form > div > input.is-invalid#user_email"
+        end
+      end
+    end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The ChangesetController is the RESTful interface to Changeset objects
 
 class ChangesetsController < ApplicationController
@@ -22,6 +24,9 @@ class ChangesetsController < ApplicationController
   def index
     param! :before, Integer, :min => 1
     param! :after, Integer, :min => 1
+    param! :bbox, String, :custom => lambda { |bbox|
+      raise RailsParam::InvalidParameterError, "bbox must be of the form min_lon,min_lat,max_lon,max_lat" unless bbox.count(",") == 3
+    }
 
     @params = params.permit(:display_name, :bbox, :friends, :nearby, :before, :after, :list)
 
@@ -57,8 +62,6 @@ class ChangesetsController < ApplicationController
                      end
       elsif @params[:bbox]
         bbox_array = @params[:bbox].split(",").map(&:to_f)
-        raise OSM::APIBadUserInput, "The parameter bbox must be of the form min_lon,min_lat,max_lon,max_lat" unless bbox_array.count == 4
-
         changesets = conditions_bbox(changesets, *bbox_array)
       elsif @params[:friends] && current_user
         changesets = changesets.where(:user => current_user.followings.identifiable)
@@ -66,7 +69,7 @@ class ChangesetsController < ApplicationController
         changesets = changesets.where(:user => current_user.nearby)
       end
 
-      @changesets, @newer_changesets_id, @older_changesets_id = get_page_items(changesets, :includes => [:user, :changeset_tags, :comments])
+      @changesets = get_page_items(changesets, :includes => [:user, :changeset_tags, :comments])
 
       render :action => :index, :layout => false
     end
@@ -80,7 +83,7 @@ class ChangesetsController < ApplicationController
 
   def show
     @type = "changeset"
-    @changeset = Changeset.find(params[:id])
+    @changeset = Changeset.find(params.expect(:id))
     case turbo_frame_request_id
     when "changeset_nodes"
       load_nodes
@@ -158,29 +161,32 @@ class ChangesetsController < ApplicationController
 
   def load_nodes
     @nodes_count = @changeset.actual_num_changed_nodes
-    @current_node_page = params[:node_page].to_i.clamp(1, element_pages_count(@nodes_count))
+    @current_node_page = params.fetch(:node_page, "1").to_i.clamp(1, element_pages_count(@nodes_count))
     @nodes = @changeset.old_nodes
                        .order(:node_id, :version)
                        .offset(ELEMENTS_PER_PAGE * (@current_node_page - 1))
                        .limit(ELEMENTS_PER_PAGE)
+                       .preload(:old_tags)
   end
 
   def load_ways
     @ways_count = @changeset.actual_num_changed_ways
-    @current_way_page = params[:way_page].to_i.clamp(1, element_pages_count(@ways_count))
+    @current_way_page = params.fetch(:way_page, "1").to_i.clamp(1, element_pages_count(@ways_count))
     @ways = @changeset.old_ways
                       .order(:way_id, :version)
                       .offset(ELEMENTS_PER_PAGE * (@current_way_page - 1))
                       .limit(ELEMENTS_PER_PAGE)
+                      .preload(:old_tags)
   end
 
   def load_relations
     @relations_count = @changeset.actual_num_changed_relations
-    @current_relation_page = params[:relation_page].to_i.clamp(1, element_pages_count(@relations_count))
+    @current_relation_page = params.fetch(:relation_page, "1").to_i.clamp(1, element_pages_count(@relations_count))
     @relations = @changeset.old_relations
                            .order(:relation_id, :version)
                            .offset(ELEMENTS_PER_PAGE * (@current_relation_page - 1))
                            .limit(ELEMENTS_PER_PAGE)
+                           .preload(:old_tags)
   end
 
   helper_method def element_pages_count(elements_count)

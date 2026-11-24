@@ -3,6 +3,7 @@
 # Export driver: phpyaml
 # Author: 9and3r
 # Author: A mento
+# Author: Alexgabi
 # Author: Amaia
 # Author: An13sa
 # Author: Asieriko
@@ -14,6 +15,7 @@
 # Author: Ibai
 # Author: Iñaki LL
 # Author: Juele
+# Author: Laquin
 # Author: Maite
 # Author: Marwin H.H.
 # Author: McDutchie
@@ -26,6 +28,9 @@
 # Author: Xabier Armendaritz
 ---
 eu:
+  date:
+    formats:
+      contribution_calendar: '%B-k %-d'
   time:
     formats:
       friendly: '%e %B %Y %H:%M-ean'
@@ -62,8 +67,16 @@ eu:
       models:
         user_mute:
           is_already_muted: dagoeneko isilduta dago
+        social_link:
+          attributes:
+            url:
+              http_parse_error: URLak http:// edo https://-rekin hasi behar du
+        trace:
+          attributes:
+            visibility:
+              cannot_change_to_legacy: ezin da balio zahar batera itzuli
     models:
-      acl: Kontrol zerrendara sartu
+      acl: ACL
       changeset: Aldaketa multzoa
       changeset_tag: Aldaketa multzoaren etiketa
       country: Herrialdea
@@ -75,6 +88,7 @@ eu:
       message: Mezua
       node: Nodoa
       node_tag: Nodoaren etiketa
+      note: Oharra
       old_node: Nodo zaharra
       old_node_tag: Nodo etiketa zaharra
       old_relation: Erlazio zaharra
@@ -98,18 +112,12 @@ eu:
       way_node: Bidearen nodoa
       way_tag: Bidearen etiketa
     attributes:
-      client_application:
-        name: Izena (beharrezkoa)
-        url: Aplikazio nagusiaren URL (beharrezkoa)
-        callback_url: Berriz deitzeko URLa
-        support_url: Laguntza URLa
-        allow_read_prefs: irakurri haien erabiltzaile hobespenak
-        allow_write_prefs: aldatu haien erabiltzaile hobespenak
-        allow_write_diary: sortu eguroko sarreak, iruzkinak eta lagunak egin
-        allow_write_api: mapa aldatu
-        allow_read_gpx: irakurri haien GPS aztarna pribatuak
-        allow_write_gpx: GPS aztarnak igo
-        allow_write_notes: oharrak aldatu
+      acl:
+        address: Helbidea
+        domain: Domeinua
+        mx: MX zerbitzaria
+        k: Giltza
+        v: Balioa
       diary_comment:
         body: Gorputza
       diary_entry:
@@ -136,9 +144,15 @@ eu:
         longitude: Longitudea
         public: Publikoa
         description: Deskribapena
-        gpx_file: 'GPX fitxategia igo:'
+        gpx_file: Aukeratu GPS arrasto fitxategia
         visibility: Ikusgarritasuna
         tagstring: Etiketak
+      moderation_zone:
+        name: Izena
+        reason: Arrazoia
+        zone: Zona
+        period: Epea
+        ends_at: Iraungitze data eta ordua
       message:
         sender: Igorlea
         title: Gaia
@@ -158,13 +172,20 @@ eu:
         active: Aktiboa
         display_name: Erakusteko izena
         description: Profilaren deskribapena
+        company: Enpresa
         home_lat: Latitudea
         home_lon: Longitudea
+        home_location_name: Etxeko kokapenaren izena
         languages: Hobetsitako hizkuntzak
         preferred_editor: Editore hobetsia
         pass_crypt: Pasahitza
         pass_crypt_confirmation: 'Berretsi pasahitza:'
     help:
+      acl:
+        address: IP helbide bat edo CIDR sare bat, adibidez, 192.0.2.0/24
+        domain: Posta elektronikoko domeinu bat; azpidomeinuak ere topatzen ditu
+        mx: Posta elektronikoaren domeinuaren MX zerbitzariaren ostalari-izena
+        v: Aukerako oharra, adibidez, sarrera honen arrazoia
       doorkeeper/application:
         confidential: Bezeroaren sekretua isilpean gorde daitekeenean erabiliko da
           aplikazioa (jatorrizko aplikazio mugikorrak eta orri bakarreko aplikazioak
@@ -186,7 +207,7 @@ eu:
         one: duela ordu %{count} inguru
         other: duela %{count} ordu inguru
       about_x_months:
-        one: duela hilabete %{count} ingueu
+        one: duela hilabete inguru
         other: duela %{count} hilabete inguru
       about_x_years:
         one: duela urte %{count} inguru
@@ -214,11 +235,49 @@ eu:
         one: duela egun %{count}
         other: duela %{count} egun
       x_months:
-        one: duela hilabete %{count}
+        one: duela hilabete
         other: duela %{count} hilabete
       x_years:
         one: duela urte %{count}
         other: duela %{count} urte
+    distance_in_words_in:
+      about_x_hours:
+        one: duela ordu %{count} inguru
+        other: duela %{count} ordu inguru
+      about_x_months:
+        one: duela hilabete inguru
+        other: duela %{count} hilabete inguru
+      about_x_years:
+        one: duela urte %{count} inguru
+        other: duela %{count} urte inguru
+      almost_x_years:
+        one: duela ia urte %{count}
+        other: duela ia %{count} urte
+      half_a_minute: minutu erdi barru
+      less_than_x_seconds:
+        one: segundo %{count} baino gutxiagoan
+        other: '%{count} segundo baino gutxiagoan'
+      less_than_x_minutes:
+        one: duela minutu %{count} baino gutxiago
+        other: duela %{count} minutu baino gutxiago
+      over_x_years:
+        one: duela urte %{count} inguru
+        other: duela %{count} urte inguru
+      x_seconds:
+        one: duela segundo %{count}
+        other: duela %{count} segundo
+      x_minutes:
+        one: duela minutu %{count}
+        other: duela %{count} minutu
+      x_days:
+        one: egun batean
+        other: '%{count} egunetan'
+      x_months:
+        one: hilabete batean
+        other: '%{count} hilabetetan'
+      x_years:
+        one: urte batean
+        other: '%{count} urtetan'
   editor:
     default: Lehenetsia (orain %{name})
     id:
@@ -229,8 +288,9 @@ eu:
       description: Urrutiko agintea (JOSM, Potlatch, Merkaartor)
   auth:
     providers:
-      none: Ezer
+      none: Bat ere ez
       google: Google
+      apple: Apple
       facebook: Facebook
       microsoft: Microsoft
       github: GitHub
@@ -262,12 +322,25 @@ eu:
   accounts:
     show:
       title: Kontua aldatu
+      my_account: Nire kontua
       current email address: Egungo posta helbidea
       external auth: Kanpoko Autentifikazioa
       contributor_terms:
         heading: Kolaboratzaile Terminoak
-        agreed: Kolaboratzaile-termino berriak onartu dituzu.
+        agreed: Kolaboratzaile baldintzak onartu dituzu %{date} egunean.
+        not_agreed: Oraindik ez dituzu onartu Kolaboratzaile baldintzak.
         agreed_with_pd: Zure aldaketak domeinu publikoan egongo direla adierazi duzu.
+        not_agreed_with_pd: Ez duzu adierazi zure aldaketak Domeinu Publikokotzat
+          hartzen dituzunik.
+        review: Berrikusi baldintzak
+        review_and_accept: Berrikusi eta onartu baldintzak
+        consider_pd: Kontuan hartu domeinu publikoa
+      terms_of_use:
+        heading: Erabilera-baldintzak
+        agreed: Erabilera baldintzak onartu zenituen %{date} egunean.
+        not_agreed: Oraindik ez dituzu Erabilera baldintzak onartu.
+        review: Berrikusi baldintzak
+        review_and_accept: Berrikusi eta onartu baldintzak
       save changes button: Aldaketak gorde
       delete_account: Kontua ezabatu
     go_public:
@@ -322,7 +395,7 @@ eu:
         title: Baldintzak
         heading: Baldintzak
         heading_ct: Kolaboratzaile terminoak
-        read and accept with tou: Mesedez, irakurri laguntzaile-akordioa eta erabilera-baldintzak,
+        read and accept with tou: Mesedez, irakurri Kolaboratzaile-akordioa eta Erabilera-baldintzak,
           markatu bi kontrol-laukiak amaitutakoan eta sakatu jarraitu botoia.
         contributor_terms_explain: Akordio honek zure oraingo eta etorkizuneko ekarpenen
           baldintzak arautzen ditu.
@@ -331,11 +404,14 @@ eu:
           html: '%{tou_link} hauek OSMFk eskaintzen dituen webgunearen eta beste azpiegituren
             erabilera arautzen du. Mesedez, egin klik estekan, irakurri eta onartu
             testua.'
+          tou: Erabilera baldintzak
         read_tou: Irakurri ditut eta onartzen ditut Erabilera Baldintzak
         guidance_info_html: 'Termino hauek ulertzen laguntzeko informazioa: %{readable_summary_link}
           eta %{informal_translations_link}'
+        readable_summary: gizakiak irakur dezakeen laburpena
         informal_translations: itzulpen informalak
         continue: Jarraitu
+        cancel: Utzi
         you need to accept or decline: Irakurri eta gero, onartu edo ezetsi Kolaboratzaileen
           termino berriak jarraitzeko.
         legale_select: 'Mesedez bizi zaren herrialdean aukeratu:'
@@ -349,10 +425,29 @@ eu:
         terms_declined_html: Sentitzen dugu Laguntzaile Baldintza berriak ez onartzea
           erabaki izana. Informazio gehiago lortzeko, ikusi %{terms_declined_link}.
         terms_declined_link: wiki orri hau
+    pd_declarations:
+      show:
+        title: Nire ekarpenak domeinu publikokoak direla kontsideratu
+        consider_pd: Nire ekarpenak domeinu publikokoak direla uste dut
+        consider_pd_why: Zergatik nahi nuke nire ekarpenak domeinu publikoa izatea?
+        confirm: Berretsi
+      create:
+        successfully_declared: Zure aldaketak domeinu publikoan egongo direla adierazi
+          duzu.
+        already_declared: Zure aldaketak domeinu publikoan egongo direla adierazi
+          duzu.
+        did_not_confirm: Ez duzu adierazi zure aldaketak Domeinu Publikokotzat hartzen
+          dituzunik.
+    auth_deletions:
+      show:
+        title: Datuak ezabatzeko eskaera
+        body: '%{provider} ID %{id}-ren datuak %{time}-etan kendu dira eta lotutako
+          OpenStreetMap kontutik deskonektatu da.'
   browse:
     deleted_ago_by_html: '%{user}-ek %{time_ago} ezabatua'
     edited_ago_by_html: '%{user}-ek %{time_ago} editatua'
     version: Bertsioa
+    redacted_version: Bertsio editatua
     in_changeset: Aldaketak
     anonymous: anonimoa
     no_comment: (iruzkinik gabe)
@@ -364,6 +459,7 @@ eu:
       one: bide %{count}
       other: '%{count} bide'
     download_xml: XML deskargatu
+    view_unredacted_history: Ikusi editatu gabeko historia
     location: 'Kokapena:'
     node:
       title_html: 'Nodoa: %{name}'
@@ -411,8 +507,9 @@ eu:
         way: bide
         relation: erlazio
     start_rjs:
-      feature_warning: '%{num_features} ezaugarri kargatzen, zure arakatzailea motela
-        edo erantzungabekoa bihur daiteke. Ziur datuak bistaratu nahi dituzula?'
+      feature_warning: '%{num_features} ezaugarriak kargatzeak zure nabigatzailea
+        moteldu edo erantzunik gabe utzi dezake. Ziur datuak bistaratu nahi dituzula?'
+      feature_error: 'Ezaugarriak ezin izan dira kargatu: %{message}'
       load_data: Kargatu datuak
       loading: Kargatzen...
     tag_details:
@@ -426,6 +523,16 @@ eu:
       telephone_link: Deitu %{phone_number} zenbakira
       colour_preview: '%{colour_value} kolore aurrikuspena'
       email_link: Helbide-elektronikoa %{email}
+    versions_navigation:
+      node_versions: Nodoen bertsioak
+      way_versions: Bide bertsioak
+      relation_versions: Erlazio bertsioak
+      node: Nodoa
+      way: Bidea
+      relation: Erlazioa
+      history: Historia
+      version: '#%{version} bertsioa'
+      versions_label: 'Bertsioak:'
   feature_queries:
     show:
       title: Eskaeraren ezaugarriak
@@ -436,19 +543,64 @@ eu:
     index:
       node:
         title_html: 'Nodoaren historia: %{name}'
+        actions: Nodoen ekintzak
       way:
         title_html: 'Bidearen historia: %{name}'
+        actions: Bideko ekintzak
       relation:
         title_html: 'Erlazioaren historia: %{name}'
+        actions: Erlazio ekintzak
+      older_versions: Bertsio Zaharragoak
+      newer_versions: Bertsio Berriagoak
+    actions:
+      view_redacted_data: Ikusi datu editatuak
+  nodes:
+    not_found_message:
+      sorry: '%{id} nodoa ezin izan da aurkitu.'
+    timeout:
+      sorry: '%{id} IDa duen nodoaren datuak berreskuratzeko denbora gehiegi behar
+        izan da.'
   old_nodes:
     not_found_message:
       sorry: Barkatu, ezin izan da %{id} nodoaren %{version} bertsioa aurkitu.
+    timeout:
+      sorry: '%{id} IDa duen nodoaren historia berreskuratzeko denbora gehiegi behar
+        izan da.'
+  ways:
+    not_found_message:
+      sorry: 'Barkatu, #%{id} bidea ezin izan da aurkitu.'
+    timeout:
+      sorry: Barkatu, %{id} IDa duen bidearen datuak berreskuratzeko denbora gehiegi
+        behar izan da.
   old_ways:
     not_found_message:
       sorry: Barkatu, ezin izan da %{id} bidearen %{version} bertsioa aurkitu.
+    timeout:
+      sorry: '%{id} id-a duen bidearen historia berreskuratzeko denbora gehiegi behar
+        izan da.'
+  relations:
+    not_found_message:
+      sorry: '%{id} erlazioa ezin izan da aurkitu.'
+    timeout:
+      sorry: '%{id} IDa duen nodoaren datuak berreskuratzeko denbora gehiegi behar
+        izan da.'
+  relation_members:
+    not_found_message:
+      sorry: '%{id} erlazioa ezin izan da aurkitu.'
+    timeout:
+      sorry: '%{id} IDa duen nodoaren datuak berreskuratzeko denbora gehiegi behar
+        izan da.'
   old_relations:
     not_found_message:
       sorry: Barkatu, ezin izan da %{id} erlazioaren %{version} bertsioa aurkitu.
+    timeout:
+      sorry: '%{id} IDa duen nodoaren historia berreskuratzeko denbora gehiegi behar
+        izan da.'
+  old_relation_members:
+    not_found_message:
+      sorry: '%{id} erlazioaren %{version} bertsioa ezin izan da aurkitu.'
+    timeout:
+      sorry: '%{id} id-a duen erlazioko kideek denbora gehiegi behar izan dute berreskuratzeko.'
   changeset_comments:
     feeds:
       comment:
@@ -466,6 +618,7 @@ eu:
       title: Aldaketak
       title_user: '%{user}k egindako aldaketak'
       title_user_link_html: '%{user_link}-(e)k eginiko aldaketak'
+      title_followed: Jarraitzen dituzun erabiltzaileen aldaketa-multzoak
       title_nearby: Hurbil dauden erabiltzaileek egindako aldaketak
       empty: Ez da aldaketarik aurkitu.
       empty_area: Inguru honetan ez dago aldaketarik.
@@ -473,6 +626,8 @@ eu:
       no_more: Aldaketa gehiagorik ez da aurkitu.
       no_more_area: Inguru honetan ez dago aldaketa gehiagorik.
       no_more_user: Erabiltzaile honek ez du aldaketa gehiagorik egin.
+      older_changesets: Aldaketa-multzo zaharragoak
+      newer_changesets: Aldaketa-multzo berriagoak
       feed:
         title: '%{id} aldaketak'
         title_comment: '%{id} aldaketa - %{comment}'
@@ -481,6 +636,8 @@ eu:
         belongs_to: Egilea
     show:
       title: 'Aldaketa: %{id}'
+      created: 'Sortua: %{when}'
+      closed: 'Itxita: %{when}'
       created_ago_html: Sortua orain dela %{time_ago}
       closed_ago_html: Itxia orain dela %{time_ago}
       created_ago_by_html: '%{user}-ek %{time_ago} sortua'
@@ -499,9 +656,14 @@ eu:
       changesetxml: Aldaketaren XML kodea
       osmchangexml: osmChange XML kodea
     paging_nav:
+      nodes_title: Nodoak
       nodes_paginated: Nodoak (%{x}-%{y} %{count}-tik)
+      ways_title: Bideak
       ways_paginated: Bideak (%{x}-%{y} %{count}-tik)
+      relations_title: Erlazioak
       relations_paginated: Erlazioak (%{x}-%{y} %{count}-tik)
+    not_found_message:
+      sorry: '#%{id} aldaketa-multzoa ezin izan da aurkitu.'
     timeout:
       sorry: Barkatu, zuk eskatutako aldaketen zerrenda berreskuratzeko denbora gehiegi
         behar izan da.
@@ -509,8 +671,17 @@ eu:
     show:
       subscribe:
         heading: Aldaketa multzoko eztabaida honetara harpidetu nahi duzu?
+        button: Eztabaidara harpidetu
       unsubscribe:
+        heading: Hurrengo aldaketa-multzoaren eztabaidatik harpidetza kendu nahi duzu?
         button: Eztabaidatik harpidetza kendu
+    heading:
+      title: '%{id} aldaketa multzoa'
+      created_by_html: '%{link_user}k sortu zuen %{created}ean.'
+    no_such_entry:
+      heading: Ez dago sarrerarik %{id} id-arekin
+      body: Ez dago %{id} id-arekin aldaketa multzorik. Egiaztatu ortografia, edo
+        agian klik egin duzun esteka okerra da.
   dashboards:
     contact:
       km away: '%{count} km-tara'
@@ -518,18 +689,37 @@ eu:
       latest_edit_html: 'Azken aldaketa (%{ago}):'
       no_edits: (aldaketarik gabe)
       view_changeset_details: Ikusi aldaketen xehetasunak
+      actions: Erabiltzailearen ekintzak
     popup:
       your location: Zure kokapena
       nearby mapper: Hurbileko mapeatzaileak
+      following: Jarraitzen
     show:
       title: Nire Arbela
       no_home_location_html: '%{edit_profile_link} eta ezarri zure etxeko kokapena
         inguruko erabiltzaileak ikusteko.'
       edit_your_profile: Zure perfila aldatu
+      followings: Jarraitzen dituzun erabiltzaileak
+      no followings: Ez duzu erabiltzailerik jarraitu oraindik.
       nearby users: Gertuko beste erabiltzaile batzuk
       no nearby users: Ez dago oraindik hurbileko mapa editatzea onartzen duen erabiltzailerik.
+      followed_actions: Jarraitzen dituzun erabiltzaileentzako ekintzak
+      followed_changesets: Aldaketa multzoa
+      followed_diaries: Egunerokoan idatzitakoak
+      nearby_actions: Inguruko erabiltzaileentzako ekintzak
       nearby_changesets: inguruko erabiltzaileen aldaketak
       nearby_diaries: inguruko erabiltzaileen eguneroko sarrerak
+  notifications:
+    missing_record:
+      body: Zoritxarrez, hau ez dago gehiago eskuragarri
+    index:
+      title: Jakinarazpenak
+      no_notifications: Ez duzu jakinarazpenik une honetan
+      point_to_preferences_html: Jakinarazpenak nola jaso nahi dituzun zehatz dezakezu
+        %{link} atalean.
+      link_text: lehentasunen atala
+    changeset_comment:
+      headline: Aldaketa-multzoaren iruzkina
   diary_entries:
     new:
       title: Eguneroko Sarrera Berria
@@ -551,6 +741,7 @@ eu:
       title: '%{user}(r)en egunerokoa | %{title}'
       user_title: '%{user}(r)en egunerokoa'
       discussion: Eztabaida
+      subscribe: Harpidetu
       leave_a_comment: Iruzkin bat utzi
       login_to_leave_a_comment_html: '%{login_link} iruzkin bat uzteko'
       login: Hasi saioa
@@ -563,6 +754,7 @@ eu:
       posted_by_html: '%{link_user} erabiltzaileak %{created} datan argitaratua %{language_link}
         hizkuntzan'
       updated_at_html: Azken eguneratzea %{updated} egunean.
+      full_entry: Sarrera osoa ikusi
       comment_link: Sarrera honetan iruzkina utzi
       reply_link: Egileari mezua bidali
       comment_count:
@@ -624,6 +816,8 @@ eu:
       contact_the_community_html: Anima zaitez OpenStreetMap komunitatearekin %{contact_link}
         arazoren bat edo apurtutako estekaren bat aurkitu baduzu. Zure eskaeraren
         URL zehatza kontuan hartu.
+    bad_request:
+      title: Eskaera okerra
     forbidden:
       title: Debekatuta
       description: OpenStreetMap zerbitzarian eskatu duzun eragiketa administratzaileentzat
@@ -636,6 +830,13 @@ eu:
       title: Fitxategia ez da aurkitu
       description: Ezin izan da izen hori duen fitxategi/karpeta/API eragiketarik
         OpenStreetMap zerbitzarian aurkitu (HTTP 404)
+  follows:
+    show:
+      follow:
+        button: Erabiltzailea jarraitu
+      unfollow:
+        heading: '%{user} jarraitzeari utzi nahi diozu?'
+        button: Erabiltzailea jarraitzeari utzi
   geocoder:
     search_osm_nominatim:
       prefix:
@@ -965,6 +1166,8 @@ eu:
           wayside_shrine: Ermitarako bidea
           wreck: Aztarnak
           "yes": Leku historikoa
+        information:
+          map: Mapa
         junction:
           "yes": Bide-gurutzea
         landuse:
@@ -1462,20 +1665,22 @@ eu:
       other_issues_against_this_user: Beste arazo batzuk erabiltzaile honen aurka
       no_other_issues: Ez dago beste arazorik erabiltzaile honen aurka.
       comments_on_this_issue: Arazo honen inguruko iruzkinak
+      comment_from_html: '%{user_link} erabiltzailearen iruzkina %{comment_created_at}(e)an'
     resolve:
       resolved: Arazoaren egoera 'Konponduta' dela ezarri da
     ignore:
       ignored: Arazoaren egoera 'Ez ikusi eginda' dela ezarri da
     reopen:
       reopened: Arazoaren egoera 'Irekita' dela ezarri da
-    comments:
-      comment_from_html: '%{user_link} erabiltzailearen iruzkina %{comment_created_at}(e)an'
     reports:
       reported_by_html: '%{user} erabiltzaileak %{category} gisa salatua. Data: %{updated_at}'
     helper:
       reportable_title:
         diary_comment: '%{entry_title}, iruzkina #%{comment_id}'
         note: 'Oharra #%{note_id}'
+    reporters:
+      reporters:
+        more_reporters: eta %{count} gehiago
   issue_comments:
     create:
       comment_created: Zure iruzkina arrakastaz sortu da
@@ -1515,32 +1720,38 @@ eu:
     create:
       successful_report: Zure reportea arrakastaz erregistratu da
       provide_details: Mesedez, eman beharrezko xehetasunak
+  languages_panes:
+    select_language_list:
+      languages:
+        de: Alemana
+        ja: Japoniera
   layouts:
     logo:
       alt_text: OpenStreetMap logoa
-    home: Hasierara joan
-    logout: Itxi saioa
-    log_in: Saioa hasi
-    sign_up: Eman izena
     start_mapping: Hasi mapeatzen
-    edit: Aldatu
-    history: Historia
-    export: Esportatu
-    issues: Arazoak
-    gps_traces: GPS Aztarnak
-    user_diaries: Erabiltzaileen egunerokoak
-    edit_with: '%{editor}rekin editatu'
     intro_header: Ongi etorri OpenStreetMap-era!
     intro_text: OpenStreetMap munduko mapa da, zu bezalako jendeak sortutakoa eta
       doako lizentzia irekiarekin erabiltzeko dagoena.
     partners_partners: bazkideak
     tou: Erabilera-baldintzak
-    help: Laguntza
-    about: Honi buruz
-    copyright: Egile-eskubideak
-    communities: Komunitateak
     learn_more: Ikasi gehiago
-    more: Gehiago
+    header:
+      about: Honi buruz
+      communities: Komunitateak
+      copyright: Egile-eskubideak
+      edit: Aldatu
+      edit_with: '%{editor}rekin editatu'
+      export: Esportatu
+      gps_traces: GPS Aztarnak
+      help: Laguntza
+      history: Historia
+      home: Hasierara joan
+      issues: Arazoak
+      log_out: Itxi saioa
+      log_in: Saioa hasi
+      more: Gehiago
+      sign_up: Eman izena
+      user_diaries: Erabiltzaileen egunerokoak
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} eguneroko sarrera batean iruzkina utzi du'
@@ -1827,8 +2038,6 @@ eu:
         keep image: Oraingo irudia mantendu
         delete image: Oraingo irudia kendu
         replace image: Oraingo irudia ordezkatu
-        image size hint: (gutxienez 100x100ko irudi koadroak hobeto funtzionatzen
-          dute)
     locations:
       show:
         no home location: Zure etxe-helbidea ez duzu txertatu.
@@ -1856,35 +2065,6 @@ eu:
       contact_support_html: Mesedez, %{support_link} eskatu honi buruz eztabaidatu
         nahi baduzu.
       support: laguntza
-  shared:
-    markdown_help:
-      heading_html: '%{kramdown_link}rekin aztertu da'
-      headings: Goiburuak
-      heading: Goiburua
-      subheading: Azpi-goiburua
-      unordered: Ordenik gabeko zerrenda
-      ordered: Ordenatutako zerrenda
-      first: Lehenengo elementua
-      second: Bigarren elementua
-      link: Esteka
-      text: Testua
-      image: Irudia
-      alt: Ordezko testua
-      url: URL
-      codeblock: Kode blokea
-    richtext_field:
-      edit: Aldatu
-      preview: Aurreikuspena
-    pagination:
-      diary_comments:
-        older: Iruzkin zaharragoak
-        newer: Iruzkin berriagoak
-      diary_entries:
-        older: Sarrera zaharragoak
-        newer: Sarrera berriagoak
-      traces:
-        older: Aztarna zaharragoak
-        newer: Aztarna berriagoak
   site:
     about:
       heading_html: '%{copyright}OpenStreetMap %{br} laguntzaileak'
@@ -2332,7 +2512,7 @@ eu:
       owner: 'Jabea:'
       description: 'Deskribapena:'
       tags: 'Etiketak:'
-      none: Ezer
+      none: Bat ere ez
       edit_trace: Aztarna hau aldatu
       delete_trace: Aztarna hau ezabatu
       trace_not_found: Ez da aztarnarik aurkitu!
@@ -2415,6 +2595,28 @@ eu:
       wikipedia:
         title: Saioa hasi Wikipediarekin
         alt: Wikipedia kontuarekin saioa hasi
+    markdown_help:
+      heading_html: '%{kramdown_link}rekin aztertu da'
+      headings: Goiburuak
+      heading: Goiburua
+      subheading: Azpi-goiburua
+      unordered: Ordenik gabeko zerrenda
+      first: Lehenengo elementua
+      second: Bigarren elementua
+      link: Esteka
+      text: Testua
+      image: Irudia
+      url: URL
+      codeblock: Kode blokea
+    richtext_field:
+      preview: Aurreikuspena
+    pagination:
+      diary_comments:
+        older: Iruzkin zaharragoak
+      diary_entries:
+        newer: Sarrera berriagoak
+      traces:
+        newer: Aztarna berriagoak
   oauth:
     permissions:
       missing: Ez duzu aplikaziorako sarbidea baimendu instalazio honetan
@@ -2540,11 +2742,19 @@ eu:
       confirm_user: Erabiltzaile hau baieztatu
       unconfirm_user: Erabiltzaile honen baieztapena atzera bota
       unsuspend_user: Erabiltzaile honen etetea kendu
-      hide_user: Erabiltzaile hau ezkutatu
-      unhide_user: Erabiltzaile honen ezkutaketa kendu
-      delete_user: Erabiltzaile hau ezabatu
       confirm: Berretsi
       report: Salatu erabiltzaile hau
+      title:
+        administrator: Lankide hau administratzailea da
+        moderator: Lankide hau moderatzailea da
+      grant:
+        administrator: Eman administratzaile sarbidea
+        moderator: Eman moderadorearen sarbidea
+        are_you_sure: Ziur zaude `%{role}' rola eman nahi diozula`%{name}' erabiltzaileari?
+      revoke:
+        administrator: Kendu administratzaile sarbidea
+        moderator: Kendu moderatzaile sarbidea
+        are_you_sure: Ziur zaude `%{role}' rola kendu nahi diozula`%{name}' erabiltzaileari?
     go_public:
       flash success: Zure aldaketa guztiak publikoak dira orain, eta orain editatzeko
         baimena daukazu.
@@ -2564,7 +2774,6 @@ eu:
         heading: Erabiltzaileak
       page:
         confirm: Berretsi Hautatutako Erabiltzaileak
-        hide: Ezkutatu Hautatutako Erabiltzaileak
         empty: No matching users found
       user:
         summary_html: '%{date}n %{ip_address}tik %{name} sortu da'
@@ -2602,18 +2811,6 @@ eu:
         Kontua baduzu dagoeneko, zure kontuan saioa has dezakezu
         zure erabiltzaile-izena eta pasahitza erabiliz eta kontua lotu
         zure IDarekin zure erabiltzaileen ezarpenekin.
-    role_icons:
-      title:
-        administrator: Lankide hau administratzailea da
-        moderator: Lankide hau moderatzailea da
-      grant:
-        administrator: Eman administratzaile sarbidea
-        moderator: Eman moderadorearen sarbidea
-        are_you_sure: Ziur zaude `%{role}' rola eman nahi diozula`%{name}' erabiltzaileari?
-      revoke:
-        administrator: Kendu administratzaile sarbidea
-        moderator: Kendu moderatzaile sarbidea
-        are_you_sure: Ziur zaude `%{role}' rola kendu nahi diozula`%{name}' erabiltzaileari?
   user_role:
     filter:
       not_a_role: '''%{role}'' katea ez da baliozko rola.'
@@ -2739,11 +2936,11 @@ eu:
       tooltip: Maparen gakoa
       tooltip_disabled: Maparen gakoa ez dago eskuragarri geruza honetarako
     map:
-      zoom:
-        in: Handiagotu
-        out: Txikiagotu
-      locate:
-        title: Erakutsi nire kokapena
+      NavigationControl:
+        ZoomIn: Handiagotu
+        ZoomOut: Txikiagotu
+      GeolocateControl:
+        FindMyLocation: Erakutsi nire kokapena
         metersPopup:
           one: Puntu honetatik gehienez metro batera zaude
           other: Puntu honetatik %{count} metrora zaude

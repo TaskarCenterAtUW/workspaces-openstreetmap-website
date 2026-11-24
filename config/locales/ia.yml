@@ -13,7 +13,7 @@
 ia:
   date:
     formats:
-      heatmap: '%-d de %B'
+      contribution_calendar: '%-d de %B'
   time:
     formats:
       friendly: '%e de %B %Y a %H:%M'
@@ -90,19 +90,6 @@ ia:
       way_node: Nodo de via
       way_tag: Etiquetta de via
     attributes:
-      client_application:
-        name: Nomine (obligatori)
-        url: URL principal del application (obligatori)
-        callback_url: URL de retorno
-        support_url: URl de supporto
-        allow_read_prefs: leger su preferentias de usator
-        allow_write_prefs: modificar su preferentias de usator
-        allow_write_diary: crear entratas de diario e commentos
-        allow_write_api: modificar le carta
-        allow_write_changeset_comments: commentar gruppos de modificationes
-        allow_read_gpx: leger su tracias GPS private
-        allow_write_gpx: incargar tracias GPS
-        allow_write_notes: modificar notas
       diary_comment:
         body: Texto
       diary_entry:
@@ -168,11 +155,11 @@ ia:
       trace:
         tagstring: separate per commas
       user_block:
-        reason: Le motivo proque le usator es blocate. Per favor sia tanto calme e
-          rationabile como possibile, e da tante detalios sur le situation como tu
-          pote. Non oblida que le message essera publicamente visibile. Nota ben que
-          non tote le usatores comprende le jargon del communitate; per favor tenta
-          usar terminos simple.
+        reason: Le motivo pro le qual le usator es blocate. Per favor sia tanto calme
+          e rationabile como possibile, e da tante detalios sur le situation como
+          tu pote. Non oblida que le message essera publicamente visibile. Nota ben
+          que non tote le usatores comprende le jargon del communitate; per favor
+          tenta usar terminos simple.
         needs_view: Debe le usator aperir un session ante que iste blocada es cancellate?
       user:
         new_email: (nunquam monstrate publicamente)
@@ -227,6 +214,7 @@ ia:
     providers:
       none: Necun
       google: Google
+      apple: Apple
       facebook: Facebook
       microsoft: Microsoft
       github: GitHub
@@ -271,7 +259,7 @@ ia:
           como liberate al Dominio Public.
         review: Leger le Conditiones
         review_and_accept: Leger e acceptar le Conditiones
-        consider_pd: Considera le dominio public
+        consider_pd: Considerar como dominio public
       terms_of_use:
         heading: Conditiones de uso
         agreed: Tu ha acceptate le Conditiones de uso le %{date}.
@@ -332,9 +320,9 @@ ia:
         title: Conditiones
         heading: Conditiones
         heading_ct: Conditiones de contributor
-        read and accept with tou: Per favor, lege le accordo de contributor e le conditiones
+        read and accept with tou: Per favor, lege le Accordo de contributor e le Conditiones
           de uso, marca ambe quadratos quando tu es finite e pois preme le button
-          Continuar.
+          “Continuar”.
         contributor_terms_explain: Iste accordo regula le conditiones de tu contributiones
           existente e futur.
         read_ct: Io ha legite e io accepta le precedente terminos de contributor
@@ -342,6 +330,7 @@ ia:
           html: Iste %{tou_link} governa le uso del sito web e altere infrastructura
             fornite per OSMF. Per favor, clicca sur le ligamine, lege le texto, e
             declara te de accordo.
+          tou: Conditiones de uso
         read_tou: Io ha legite e io accepta le Conditiones de uso
         guidance_info_html: 'Information pro adjutar a comprender iste terminos: un
           %{readable_summary_link} e qualque %{informal_translations_link}'
@@ -515,12 +504,24 @@ ia:
     timeout:
       sorry: Pardono, le datos pro le relation con le ID %{id} ha prendite troppo
         de tempore pro esser recuperate.
+  relation_members:
+    not_found_message:
+      sorry: Le relation №%{id} non poteva esser trovate.
+    timeout:
+      sorry: Le datos pro le relation con le ID %{id} ha prendite troppo de tempore
+        pro esser recuperate.
   old_relations:
     not_found_message:
       sorry: Guai, le version %{version} del relation №%{id} non pote esser trovate.
     timeout:
       sorry: Pardono, le historia del relation con le ID %{id} ha prendite troppo
         de tempore pro esser recuperate.
+  old_relation_members:
+    not_found_message:
+      sorry: Le version %{version} del relation №%{id} non pote esser trovate.
+    timeout:
+      sorry: Le membros del relation con le ID %{id} ha prendite troppo de tempore
+        pro esser recuperate.
   changeset_comments:
     feeds:
       comment:
@@ -726,8 +727,6 @@ ia:
         one: '%{count} commento'
         other: '%{count} commentos'
       title_label: Entrata del diario
-      comments_label: Commentos
-      date_label: Data
   diary_comments:
     new:
       heading: Adder un commento al sequente discussion de entrata de diario?
@@ -788,6 +787,9 @@ ia:
       title: File non trovate
       description: Non poteva trovar un file, directorio o operation API con iste
         nomine sur le servitor de OpenStreetMap (HTTP 404)
+  export:
+    show:
+      title: OpenStreetMap incastrate
   follows:
     show:
       follow:
@@ -946,9 +948,13 @@ ia:
           aboriginal_lands: Territorios aborigine
           administrative: Limite administrative
           census: Limite de censo
+          low_emission_zone: Zona a basse emissiones
           national_park: Parco national
           political: Circumscription electoral
+          postal_code: Codice postal
           protected_area: Area protegite
+          public_transport: Districto de transporto public
+          timezone: Fuso horari
           "yes": Frontiera
         bridge:
           aqueduct: Aqueducto
@@ -1124,6 +1130,7 @@ ia:
           milestone: Petra milliari historic
           mine: Mina
           mine_shaft: Puteo de mina
+          monastery: Monasterio historic
           monument: Monumento
           railway: Ferrovia historic
           roman_road: Via roman
@@ -1214,7 +1221,7 @@ ia:
           sports_centre: Centro sportive
           stadium: Stadio
           swimming_pool: Piscina
-          track: Pista de athletismo
+          track: Pista de cursa (non sport a motor)
           water_park: Parco aquatic
           "yes": Tempore libere
         lock:
@@ -1250,6 +1257,7 @@ ia:
           mineshaft: Puteo de mina
           monitoring_station: Station de surveliantia
           petroleum_well: Puteo petrolifere
+          planter: Floriera
           pier: Jectata
           pipeline: Tubulatura
           pumping_station: Station de pumpage
@@ -1390,6 +1398,7 @@ ia:
           abandoned: Ferrovia abandonate
           buffer_stop: Guardacolpos
           construction: Ferrovia in construction
+          crossing: Cruciamento inter ferrovia e sentiero
           disused: Ferrovia in disuso
           funicular: Ferrovia funicular
           halt: Halto de traino
@@ -1651,6 +1660,7 @@ ia:
       download: Discargar itinerario in GeoJSON
       filename: itinerario
       directions_courtesy_html: Itinerario fornite per %{link}
+      check_demo_html: Plus detalios de %{link}
   issues:
     index:
       title: Problemas
@@ -1703,16 +1713,15 @@ ia:
       other_issues_against_this_user: Altere problemas concernente iste usator
       no_other_issues: Il non ha altere problemas concernente iste usator.
       comments_on_this_issue: Commentos sur iste problema
+      comment_from_html: Commento de %{user_link} del %{comment_created_at}
+      reassign_to_moderators: Reassignar le problema al moderatores
+      reassign_to_administrators: Reassignar le problema al administratores
     resolve:
       resolved: Le stato del problema ha essite cambiate a 'Resolvite'
     ignore:
       ignored: Le stato del problema ha essite cambiate a 'Ignorate'
     reopen:
       reopened: Le stato del problema ha essite cambiate a 'Aperte'
-    comments:
-      comment_from_html: Commento de %{user_link} del %{comment_created_at}
-      reassign_to_moderators: Reassignar le problema al moderatores
-      reassign_to_administrators: Reassignar le problema al administratores
     reports:
       reported_by_html: Reportate como %{category} per %{user} le %{updated_at}
     helper:
@@ -1772,21 +1781,128 @@ ia:
     create:
       successful_report: Tu reporto ha essite registrate
       provide_details: Per favor, forni le detalios necessari
+  languages_panes:
+    select_language_list:
+      search_language: Cercar…
+      languages:
+        af: Afrikaans
+        gsw: Alemannico
+        frp: Franco-provençal
+        ast: Asturiano
+        az: Azerbaijano
+        id: Indonesiano
+        ms: Malay
+        bcl: Bikol central
+        bs: Bosniaco
+        br: Breton
+        ca: Catalano
+        cs: Checo
+        cy: Gallese
+        da: Danese
+        de: Germano
+        dsb: Basse sorabo
+        et: Estoniano
+        en: Anglese
+        en-GB: Anglese (Regno Unite)
+        es: Espaniol
+        eo: Esperanto
+        eu: Basco
+        fr: Francese
+        fy: Frison occidental
+        fur: Friulano
+        ga: Irlandese
+        gd: Gaelico scotese
+        gl: Galleco
+        aln: Gheg albanese
+        hsb: Alte sorabo
+        hr: Croato
+        ia: Interlingua
+        is: Islandese
+        it: Italiano
+        kw: Cornico
+        gcf: Creolo de Guadalupe
+        ku-Latn: Kurdo (latin)
+        lv: Letton
+        lb: Luxemburgese
+        lkt: Lakota
+        lt: Lituano
+        hu: Hungaro
+        fit: Finnese tornedalian
+        nl: Nederlandese
+        nb: Norvegiano (Bokmål)
+        nn: Norvegiano (Nynorsk)
+        oc: Occitano
+        nds: Basse germano
+        pl: Polonese
+        pt-PT: Portugese
+        pt: Portugese (Brasil)
+        ksh: Coloniese
+        ro: Romaniano
+        sc: Sardo
+        sco: Scotese
+        sq: Albanese
+        scn: Siciliano
+        sk: Slovaco
+        sl: Sloveno
+        sr-Latn: Serbo (latin)
+        sh: Serbo-croato (latin)
+        fi: Finnese
+        sv: Svedese
+        tl: Tagalog
+        kab: Kabylo
+        vi: Vietnamese
+        tr: Turco
+        yo: Yoruba
+        diq: Dimli
+        el: Greco
+        ba: Bashkiro
+        be: Bieloruso
+        be-Tarask: Bieloruso (Tarašk.)
+        bg: Bulgaro
+        mk: Macedone
+        mo: Moldavo
+        ce: Checheno
+        ru: Russo
+        sr: Serbo (cyrillic)
+        tt: Tataro (cyrillic)
+        uk: Ukrainiano
+        kk-cyrl: Kazakh (cyrillic)
+        yi: Yiddish
+        he: Hebreo
+        ar: Arabe
+        skr-arab: Saraiki
+        fa: Persa
+        arz: Arabe de Egypto
+        pnb: Punjabi occidental
+        ps: Pashto
+        nqo: N’Ko
+        ne: Nepalese
+        mr: Marathi
+        hi: Hindi
+        bn: Bengali
+        pa: Punjabi
+        gu: Gujarati
+        ta: Tamil
+        te: Telugu
+        kn: Kannada
+        th: Thailandese
+        my: Birmano
+        shn: Shan
+        xmf: Mingrelio
+        ka: Georgiano
+        km: Khmer
+        sat: Santali
+        zh-CN: Chinese (simplificate)
+        zh-TW: Chinese (traditional)
+        zh-HK: Chinese (Hong Kong)
+        ja: Japonese
+        ko: Coreano
   layouts:
     logo:
       alt_text: Logo de OpenStreetMap
-    home: Vader al loco de residentia
-    logout: Clauder session
-    log_in: Aperir session
-    sign_up: Crear conto
+    main_navigation: Principal
+    layer_info: Information sur le strato
     start_mapping: Comenciar a cartographiar
-    edit: Modificar
-    history: Historia
-    export: Exportar
-    issues: Problemas
-    gps_traces: Tracias GPS
-    user_diaries: Diarios de usatores
-    edit_with: Modificar con %{editor}
     intro_header: Benvenite a OpenStreetMap!
     intro_text: OpenStreetMap es un carta del mundo, create per gente como tu e libere
       de usar sub un licentia aperte.
@@ -1794,16 +1910,33 @@ ia:
       e altere %{partners}.
     partners_corpmembers: Membros corporative de OSMF
     partners_partners: partners
+    welcome_tou_notice_html: Per le uso de iste sito web o altere infrastructura fornite
+      per le Fundation OpenStreetMap, tu accepta le %{terms_link}.
+    terms_of_use: Conditiones de uso
     tou: Conditiones de uso
     nothing_to_preview: Nihil a previsualisar.
-    help: Adjuta
-    about: A proposito
-    copyright: Derectos de autor
-    communities: Communitates
     learn_more: Leger plus
-    more: Plus
     header:
+      about: A proposito
+      communities: Communitates
+      copyright: Derectos de autor
+      donate: Donar
+      edit: Modificar
+      edit_with: Modificar con %{editor}
+      export: Exportar
+      gps_traces: Tracias GPS
+      help: Adjuta
+      history: Historia
+      home: Vader al loco de residentia
+      issues: Problemas
+      log_out: Clauder session
+      log_in: Aperir session
+      more: Plus
       select_language: Selige lingua
+      sign_up: Crear conto
+      user_diaries: Diarios de usatores
+    meta:
+      openstreetmap_search: Cercar in OpenStreetMap
     select_language_button:
       title: Selige lingua
     offline_flash:
@@ -2111,8 +2244,9 @@ ia:
       update_success_flash:
         message: Preferentias actualisate.
       navigation:
-        preferences: Preferentias
-        advanced_preferences: Preferentias avantiate
+        preferences: Interfacie
+        notification_preferences: Notificationes
+        advanced_preferences: Avantiate
     basic_preferences:
       show:
         title: Mi preferentias
@@ -2124,10 +2258,28 @@ ia:
           dark: Obscur
         preferred_map_color_scheme: Schema de colores preferite pro le carta
         map_color_schemes:
-          auto: Automatic
+          auto: Equal al sito web
+          light: Clar
+          dark: Obscur
+        preferred_editor_color_scheme: Schema de colores preferite pro le editor
+        editor_color_schemes:
+          auto: Equal al sito web
           light: Clar
           dark: Obscur
         save: Actualisar preferentias
+    notification_preferences:
+      show:
+        title: Preferentias de notification
+        changeset_comment: Commentos de gruppo de modificationes
+        diary_comment: Commentos de diario
+        direct_message: Messages directe
+        gpx_import_failure: 'Importation tracia GPS: fallimento'
+        gpx_import_success: 'Importation tracia GPS: successo'
+        new_follower: Nove sequitores
+        note_comment: Commentos de nota
+        save: Actualisar preferentias
+        delivery_mechanisms:
+          email: E-mail
     advanced_preferences:
       show:
         title: Mi preferentias avantiate
@@ -2140,6 +2292,7 @@ ia:
         image: Imagine
         company: Compania
         location: Loco
+        contribution_calendar: Calendario de contributiones
     descriptions:
       show:
         title: Modificar profilo
@@ -2172,7 +2325,6 @@ ia:
         keep image: Retener le imagine actual
         delete image: Remover le imagine actual
         replace image: Reimplaciar le imagine actual
-        image size hint: (imagines quadrate de al minus 100×100 functiona melio)
       update:
         success: Imagine de profilo actualisate.
         failure: Non poteva actualisar le imagine de profilo.
@@ -2198,6 +2350,16 @@ ia:
       update:
         success: Loco del profilo actualisate.
         failure: Non poteva actualisar le loco del profilo.
+    heatmaps:
+      show:
+        title: Configurar le calendario de contributiones
+        show_contribution_calendar_in_public: Monstrar le calendario de contributiones
+          sur tu pagina de profilo
+        save: Actualisar le configuration del calendario de contributiones
+        cancel: Cancellar
+      update:
+        success: Calendario de contributiones actualisate.
+        failure: Non poteva actualisar le calendario de contributiones.
   sessions:
     new:
       tab_title: Aperir session
@@ -2215,6 +2377,8 @@ ia:
       login_button: Aperir session
       with external: o usa un tertio pro aperir session
       or: o
+      reset_to_login: Tu contrasigno ha expirate. Per favor reinitialisa tu contrasigno
+        pro aperir session.
       auth failure: Pardono, non poteva aperir un session con iste detalios.
     destroy:
       title: Clauder session
@@ -2225,62 +2389,6 @@ ia:
       contact_support_html: Per favor contacta %{support_link} si tu vole discuter
         isto.
       support: assistentia
-  shared:
-    markdown_help:
-      heading_html: Interpretate con %{kramdown_link}
-      headings: Titulos
-      heading: Titulo
-      subheading: Subtitulo
-      unordered: Lista non ordinate
-      ordered: Lista ordinate
-      first: Prime elemento
-      second: Secunde elemento
-      link: Ligamine
-      text: Texto
-      image: Imagine
-      alt: Texto alternative
-      url: URL
-      codeblock: Bloco de codice
-    richtext_field:
-      edit: Modificar
-      preview: Previsualisar
-      help: Adjuta
-    pagination:
-      changeset_comments:
-        older: Commentos plus ancian
-        newer: Commentos plus nove
-        oldest: Le commentos le plus ancian
-        newest: Le commentos le plus nove
-      diary_comments:
-        older: Commentos plus ancian
-        newer: Commentos plus recente
-        oldest: Le commentos le plus ancian
-        newest: Le commentos le plus nove
-      diary_entries:
-        older: Entratas plus ancian
-        newer: Entratas plus recente
-        oldest: Le entratas le plus ancian
-        newest: Le entratas le plus nove
-      issues:
-        older: Problemas plus ancian
-        newer: Problemas plus recente
-        oldest: Le problema le plus ancian
-        newest: Le problemas le plus nove
-      traces:
-        older: Tracias plus ancian
-        newer: Tracias plus nove
-        oldest: Le tracias le plus ancian
-        newest: Le tracias le plus nove
-      user_blocks:
-        older: Blocos plus ancian
-        newer: Blocos plus nove
-        oldest: Le blocos le plus ancian
-        newest: Le blocos le plus nove
-      users:
-        older: Usatores plus ancian
-        newer: Usatores plus nove
-        oldest: Le usatores le plus ancian
-        newest: Le usatores le plus nove
   site:
     about:
       heading_html: '%{copyright}Contributores %{br} de OpenStreetMap'
@@ -2320,8 +2428,22 @@ ia:
       legal_1_1_terms_of_use: Conditiones de uso
       legal_1_1_aup: Politica de uso acceptabile
       legal_1_1_privacy_policy: Politica de confidentialitate
-      legal_2_1_html: Per favor %{contact_the_osmf_link} si tu ha questiones sur le
-        licentia o le derecto de autor o altere questiones juridic.
+      legal_1_2_html: Si tu vole usar le cartas o le datos de OpenStreetMap, per favor
+        assecura te de attribuer los a OpenStreetMap. Consulta %{attribution_guidelines_link}
+        pro plus information.
+      legal_attribution_guidelines_title: Directivas de attribution
+      legal_attribution_guidelines_url: https://osmfoundation.org/wiki/Licence/Attribution_Guidelines
+      legal_1_3_html: In le caso specific de usar un captura de schermo de OpenStreetMap
+        directemente in tu libro, publication, film o programma de television, non
+        es necessari demandar permission perque le datos in OpenStreetMap es aperte
+        al uso de tote le mundo. Consulta le %{attribution_guidelines_link} e vide
+        exemplos existente in %{attribution_example_film} e %{attribution_example_tv}.
+      legal_attribution_example_film_title: Film
+      legal_attribution_example_film_url: https://wiki.openstreetmap.org/wiki/Films
+      legal_attribution_example_tv_title: TV
+      legal_attribution_example_tv_url: https://wiki.openstreetmap.org/wiki/TV_series
+      legal_2_1_html: Per favor %{contact_the_osmf_link} pro omne altere questiones
+        sur le licentia o le derecto de autor o altere questiones juridic.
       legal_2_1_contact_the_osmf: contacta le OSMF
       legal_2_2_html: OpenStreetMap, le logotypo con le lupa e "State of the Map"
         es %{registered_trademarks_link}.
@@ -2467,8 +2589,8 @@ ia:
         contributors_hr_croatia: Croatia
         contributors_hr_dgu: Administration Geodetic Statal de Croatia
         contributors_hr_open_data_portal: Portal national de datos aperte
-        contributors_nl_credit_html: '%{netherlands}: Contine datos &copy; AND, 2007
-          (%{and_link})'
+        contributors_nl_credit_new_html: '%{netherlands}: Contine datos &copy; AND,
+          2007'
         contributors_nl_netherlands: Nederlandia
         contributors_nz_credit_html: |-
           %{new_zealand}: Contine datos proveniente del %{linz_data_service_link}
@@ -2553,6 +2675,12 @@ ia:
           description: Fontes additional listate in le wiki de OpenStreetMap
       export_button: Exportar
       export_download: Discargamento…
+      confirmation:
+        header: Discargar datos XML
+        body: Vole tu discargar le datos cartographic de iste area in formato XML?
+          Nota que grande areas pote prender qualque tempore a discargar.
+        cancel: Cancellar
+        download: Discargar
     fixthemap:
       title: Reportar un problema / Corriger le carta
       how_to_help:
@@ -2830,6 +2958,14 @@ ia:
         %{height}
       download: Discargar
       downloading: Discargamento…
+  webgl_error_panes:
+    show:
+      compact_message: WebGL es necessari pro iste carta.
+      description_html: Pare que %{your_browser_does_not_support_webgl}, un technologia
+        pro render graphicos 3D sur le web.
+      your_browser_does_not_support_webgl: tu navigator non supporta WebGL
+      webgl_is_required_for_this_map: WebGL es necessari pro monstrar iste carta.
+      read_more_about_webgl: Leger plus
   traces:
     visibility:
       private: Private (solmente condividite como anonymo, punctos non ordinate)
@@ -2875,13 +3011,13 @@ ia:
       points: 'Punctos:'
       start_coordinates: 'Coordinata de initio:'
       coordinates_html: '%{latitude}; %{longitude}'
-      map: carta
-      edit: modificar
+      map: vider position sur carta
+      edit: aperir in editor
       owner: 'Proprietario:'
       description: 'Description:'
       tags: 'Etiquettas:'
       none: Nulle
-      edit_trace: Modificar iste tracia
+      edit_trace: Modificar le detalios del tracia
       delete_trace: Deler iste tracia
       trace_not_found: Tracia non trovate!
       visibility: 'Visibilitate:'
@@ -2893,8 +3029,8 @@ ia:
         other: '%{count} punctos'
       more: plus
       trace_details: Vider detalios del tracia
-      view_map: Vider carta
-      edit_map: Modificar carta
+      view_map: Vider position sur carta
+      edit_map: Aperir in editor
       public: PUBLIC
       identifiable: IDENTIFICABILE
       private: PRIVATE
@@ -2954,6 +3090,9 @@ ia:
       google:
         title: Aperir session con Google
         alt: Logotypo de Google
+      apple:
+        title: Aperir session con Apple
+        alt: Logo de Apple
       facebook:
         title: Aperir session con Facebook
         alt: Logotypo de Facebook
@@ -2991,6 +3130,48 @@ ia:
       x:
         title: Condivider sur X
         alt: Icone de X
+    markdown_help:
+      heading_html: Interpretate con %{kramdown_link}
+      headings: Titulos
+      heading: Titulo
+      subheading: Subtitulo
+      unordered: Lista non ordinate
+      first: Prime elemento
+      second: Secunde elemento
+      link: Ligamine
+      text: Texto
+      image: Imagine
+      url: URL
+      codeblock: Bloco de codice
+    richtext_field:
+      preview: Previsualisar
+    pagination:
+      changeset_comments:
+        newest: Le commentos le plus nove
+      diary_comments:
+        older: Commentos plus ancian
+        oldest: Le commentos le plus ancian
+        newest: Le commentos le plus nove
+      diary_entries:
+        newer: Entratas plus recente
+        oldest: Le entratas le plus ancian
+        newest: Le entratas le plus nove
+      issues:
+        newer: Problemas plus recente
+        oldest: Le problemas le plus ancian
+        newest: Le problemas le plus nove
+      traces:
+        newer: Tracias plus nove
+        oldest: Le tracias le plus ancian
+        newest: Le tracias le plus nove
+      user_blocks:
+        newer: Blocos plus nove
+        oldest: Le blocos le plus ancian
+      users:
+        older: Usatores plus ancian
+        newer: Usatores plus nove
+        oldest: Le usatores le plus ancian
+        newest: Le usatores le plus nove
   oauth:
     permissions:
       missing: Tu non ha permittite al application le accesso a iste facilitate
@@ -3069,9 +3250,8 @@ ia:
       signup_to_authorize_html: Crea un conto sur OpenStreetMap pro acceder a %{client_app_name}.
       no_auto_account_create: Infortunatemente in iste momento non es possibile crear
         un conto pro te automaticamente.
-      please_contact_support_html: Per favor contacta le %{support_link} pro arrangiar
-        le creation de un conto. Nos tentara tractar le requesta le plus rapidemente
-        possibile.
+      please_contact_support_html: Per favor contacta le %{support_link}. Nos tentara
+        tractar le requesta le plus rapidemente possibile.
       support: assistentia
       about:
         header: Libere e modificabile.
@@ -3102,6 +3282,10 @@ ia:
           pro plus information.
       or: o
       use external auth: o usa un tertio pro aperir session
+      verify_human: Verifica que tu es un esser human
+    create:
+      not_human: Infortunatemente, nos non pote confirmar que tu es un esser human.
+        Isto es necessari pro crear nove contos.
     no_such_user:
       title: Iste usator non existe
       heading: Le usator %{user} non existe
@@ -3149,10 +3333,9 @@ ia:
       activate_user: Activar iste usator
       confirm_user: Confirmar iste usator
       unconfirm_user: Disconfirmar iste usator
+      suspend_user: Suspender iste usator
       unsuspend_user: Non plus suspender iste usator
-      hide_user: Celar iste usator
-      unhide_user: Revelar iste usator
-      delete_user: Deler iste usator
+      undelete_user: Restaurar iste usator
       confirm: Confirmar
       report: Signalar iste usator
       edit_profile_details: Modificar le detalios del profilo
@@ -3161,9 +3344,24 @@ ia:
       change_image: Cambiar imagine
       edit_company: Modificar compania
       edit_location: Modificar loco
+      edit_contribution_calendar: Configurar le calendario de contributiones
       contributions:
         one: '%{count} contribution in the le ultime anno'
         other: '%{count} contributiones in le ultime anno'
+      title:
+        administrator: Iste usator es un administrator
+        moderator: Iste usator es un moderator
+        importer: Iste usator es un importator
+      grant:
+        administrator: Conceder accesso de administrator
+        moderator: Conceder accesso de moderator
+        importer: Conceder le accesso de importator
+        are_you_sure: Es tu secur de voler conceder le rolo ‘%{role}’ al usator ‘%{name}’?
+      revoke:
+        administrator: Revocar accesso de administrator
+        moderator: Revocar accesso de moderator
+        importer: Revocar le accesso de importator
+        are_you_sure: Es tu secur de voler revocar le rolo ‘%{role}’ del usator ‘%{name}’?
     sidebar_section:
       home_location: Loco de residentia
       company: Compania
@@ -3214,7 +3412,7 @@ ia:
           one: '%{count} usator trovate'
           other: '%{count} usatores trovate'
         confirm: Confirmar usatores seligite
-        hide: Celar usatores seligite
+        suspend: Suspender le usatores seligite
         empty: Nulle usator correspondente trovate
       user:
         summary_html: '%{name} create ab %{ip_address} le %{date}'
@@ -3260,21 +3458,6 @@ ia:
         del formulario sequente.
       option_2: Si tu jam ha un conto, tu pote aperir session con tu nomine de usator
         e contrasigno e postea associar le conto a tu ID in tu parametros de usator.
-    role_icons:
-      title:
-        administrator: Iste usator es un administrator
-        moderator: Iste usator es un moderator
-        importer: Iste usator es un importator
-      grant:
-        administrator: Conceder accesso de administrator
-        moderator: Conceder accesso de moderator
-        importer: Conceder le accesso de importator
-        are_you_sure: Es tu secur de voler conceder le rolo ‘%{role}’ al usator ‘%{name}’?
-      revoke:
-        administrator: Revocar accesso de administrator
-        moderator: Revocar accesso de moderator
-        importer: Revocar le accesso de importator
-        are_you_sure: Es tu secur de voler revocar le rolo ‘%{role}’ del usator ‘%{name}’?
   user_role:
     filter:
       not_a_role: Le catena ‘%{role}’ non es un rolo valide.
@@ -3493,6 +3676,7 @@ ia:
     share:
       title: Condivider
       view_larger_map: Vider carta plus grande
+      export_failed_title: Le exportation del carta ha fallite
       filename: carta
     embed:
       report_problem: Reportar problema
@@ -3501,17 +3685,26 @@ ia:
       tooltip: Legenda
       tooltip_disabled: Le legenda non es disponibile pro iste strato
     map:
-      zoom:
-        in: Zoom avante
-        out: Zoom retro
-      locate:
-        title: Monstrar mi position
+      Map:
+        Title: Carta
+      Marker:
+        Title: Marcator sur carta
+      Popup:
+        Close: Clauder
+      NavigationControl:
+        ZoomIn: Zoom avante
+        ZoomOut: Zoom retro
+      GeolocateControl:
+        FindMyLocation: Monstrar mi position
+        LocationNotAvailable: Position indisponibile
         metersPopup:
           one: Tu es minus de %{count} metro distante de iste puncto
           other: Tu es minus de %{count} metros distante de iste puncto
         feetPopup:
           one: Tu es minus de %{count} pede distante de iste puncto
           other: Tu es minus de %{count} pedes distante de iste puncto
+      AttributionControl:
+        ToggleAttribution: Alternar attribution
       base:
         standard: Standard
         cycle_map: Carta cyclista
@@ -3539,8 +3732,6 @@ ia:
       hotosm_name: le Equipa Humanitari de OpenStreetMap
       openmaptiles_credit: Tegulas vectorial de %{openmaptiles_link} albergate per
         %{maptiler_link}
-      openmaptiles_name: OpenMapTiles
-      maptiler_name: MapTiler
     site:
       edit_tooltip: Modificar le carta
       edit_disabled_tooltip: Face zoom avante pro modificar le carta
@@ -3562,6 +3753,9 @@ ia:
         mi: '%{distance} millias'
       errors:
         no_route: Nulle route ha essite trovate inter iste duo locos.
+        no_place:
+          title: Le recerca ha fallite
+          body: Non poteva localisar ‘%{place}’.
       instructions:
         continue_without_exit: Continuar sur %{name}
         slight_right_without_exit: Girar legiermente a dextra verso %{name}
@@ -3656,15 +3850,21 @@ ia:
     home:
       marker_title: Mi loco de residentia
       not_set: Le loco de residentia non es definite pro tu conto
-    heatmap:
+    contribution_calendar:
       tooltip:
         no_contributions: Necun contribution le %{date}
         contributions:
           one: '%{count} contribution le %{date}'
           other: '%{count} contributiones le %{date}'
+    remote_edit:
+      failed:
+        title: Modification fallite
+        body: Assecura te que JOSM o Merkaartor es cargate e que le option de controlo
+          remote es activate
     edit:
       id_not_configured:
         title: iD non ha essite configurate
+        body: Consulta CONFIGURE.md pro plus information
   redactions:
     edit:
       heading: Modificar censura
