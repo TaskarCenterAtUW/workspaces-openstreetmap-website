@@ -1561,6 +1561,42 @@ CREATE SEQUENCE public.spammy_phrases_id_seq
 
 ALTER SEQUENCE public.spammy_phrases_id_seq OWNED BY public.spammy_phrases.id;
 
+--
+-- Name: team_user; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.team_user (
+    team_id bigint NOT NULL,
+    user_id bigint NOT NULL
+);
+
+--
+-- Name: teams; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.teams (
+    id bigint NOT NULL,
+    workspace_id bigint,
+    name character varying
+);
+
+--
+-- Name: teams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.teams_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+--
+-- Name: teams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.teams_id_seq OWNED BY public.teams.id;
+
 
 --
 -- Name: user_blocks; Type: TABLE; Schema: public; Owner: -
@@ -1993,6 +2029,12 @@ ALTER TABLE ONLY public.social_links ALTER COLUMN id SET DEFAULT nextval('public
 
 ALTER TABLE ONLY public.spammy_phrases ALTER COLUMN id SET DEFAULT nextval('public.spammy_phrases_id_seq'::regclass);
 
+--
+-- Name: teams id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.teams ALTER COLUMN id SET DEFAULT nextval('public.teams_id_seq'::regclass);
+
 
 --
 -- Name: user_blocks id; Type: DEFAULT; Schema: public; Owner: -
@@ -2396,6 +2438,13 @@ ALTER TABLE ONLY public.social_links
 
 ALTER TABLE ONLY public.spammy_phrases
     ADD CONSTRAINT spammy_phrases_pkey PRIMARY KEY (id);
+
+--
+-- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.teams
+    ADD CONSTRAINT teams_pkey PRIMARY KEY (id);
 
 
 --
@@ -2958,6 +3007,18 @@ CREATE INDEX index_reports_on_user_id ON public.reports USING btree (user_id);
 
 CREATE INDEX index_social_links_on_user_id ON public.social_links USING btree (user_id);
 
+--
+-- Name: index_team_user_on_team_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_team_user_on_team_id_and_user_id ON public.team_user USING btree (team_id, user_id);
+
+--
+-- Name: index_teams_on_workspace_id_and_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_teams_on_workspace_id_and_name ON public.teams USING btree (workspace_id, name);
+
 
 --
 -- Name: index_user_blocks_on_creator_id_and_id; Type: INDEX; Schema: public; Owner: -
@@ -3329,6 +3390,13 @@ ALTER TABLE ONLY public.diary_entry_subscriptions
 ALTER TABLE ONLY public.diary_entry_subscriptions
     ADD CONSTRAINT diary_entry_subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
+--
+-- Name: team_user fk_rails_2546ad9954; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_user
+    ADD CONSTRAINT fk_rails_2546ad9954 FOREIGN KEY (user_id) REFERENCES public.users(id) NOT VALID;
+
 
 --
 -- Name: note_subscriptions fk_rails_2c1913f293; Type: FK CONSTRAINT; Schema: public; Owner: -
@@ -3408,6 +3476,13 @@ ALTER TABLE ONLY public.note_subscriptions
 
 ALTER TABLE ONLY public.oauth_access_grants
     ADD CONSTRAINT fk_rails_b4b53e07b8 FOREIGN KEY (application_id) REFERENCES public.oauth_applications(id) NOT VALID;
+
+--
+-- Name: team_user fk_rails_bfaba78b56; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_user
+    ADD CONSTRAINT fk_rails_bfaba78b56 FOREIGN KEY (team_id) REFERENCES public.teams(id) NOT VALID;
 
 
 --
@@ -3734,7 +3809,7 @@ ALTER TABLE ONLY public.ways
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user", public;
+SET search_path TO "public";
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('9'),
@@ -3790,6 +3865,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260113142804'),
 ('20251218105716'),
 ('20251121134648'),
+('20251028201000'),
 ('20250704143751'),
 ('20250506052030'),
 ('20250304172798'),

@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+# TDEI Workspaces: upstream's GitHub Actions checks (GitHub sets CI=true) run
+# against a plain database with no workspace schemas. Skip Apartment's
+# boot-time init there: it opens a database connection at boot (the ESLint job
+# has no database) and renames the excluded models' tables to public.*, which
+# the annotation and database consistency checks then misread. Deployed apps
+# don't set CI.
+ENV["APARTMENT_DISABLE_INIT"] ||= "true" if ENV["CI"] == "true"
+
 # You can have Apartment route to the appropriate Tenant by adding some Rack middleware.
 # Apartment can support many different "Elevators" that can take care of this routing to your data.
 # Require whichever Elevator you're using below or none if you have a custom one.
@@ -35,8 +43,6 @@ Apartment.configure do |config|
     "Report",
     "SocialLink",
     "SpammyPhrase",
-    "Team",
-    "TeamUser",
     "User",
     "UserBlock",
     "UserMute",
@@ -134,7 +140,7 @@ Apartment.configure do |config|
   # items in the schema dump that should *not* have their namespace replaced by
   # the new tenant
   #
-  config.pg_excluded_names = ["geometry","geography","box2d","box3d"]
+  config.pg_excluded_names = %w[geometry geography box2d box3d]
 
   # Specifies whether the database and schema (when using PostgreSQL schemas) will prepend in ActiveRecord log.
   # Uncomment the line below if you want to enable this behavior.
