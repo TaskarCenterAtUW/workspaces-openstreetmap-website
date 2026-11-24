@@ -27,3 +27,5 @@ tmp
 docker-db-data
 
 /config/credentials/
+# TDEI Workspaces: generated from config/workspaces.database.yml (Dockerfile.prod)
+/config/database.yml

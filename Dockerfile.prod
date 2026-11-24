@@ -56,6 +56,8 @@ WORKDIR /app
 COPY . .
 
 COPY config/example.storage.yml config/storage.yml
+# The database settings come from WS_OSM_DB_* (see config/workspaces.database.yml).
+COPY config/workspaces.database.yml config/database.yml
 
 # https://help.openstreetmap.org/questions/69887/actionviewtemplateerror-couldnt-find-file-settingslocalyml
 RUN touch config/settings.local.yml
