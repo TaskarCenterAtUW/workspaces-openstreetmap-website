@@ -3809,7 +3809,7 @@ ALTER TABLE ONLY public.ways
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user", public;
+SET search_path TO "public";
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('9'),

@@ -3,9 +3,9 @@
 # TDEI Workspaces: upstream's GitHub Actions checks (GitHub sets CI=true) run
 # against a plain database with no workspace schemas. Skip Apartment's
 # boot-time init there: it opens a database connection at boot (the ESLint job
-# has no database), renames the excluded models' tables to public.*, which the
-# annotation and database consistency checks then misread, and sets the
-# search_path that db/structure.sql is dumped with. Deployed apps don't set CI.
+# has no database) and renames the excluded models' tables to public.*, which
+# the annotation and database consistency checks then misread. Deployed apps
+# don't set CI.
 ENV["APARTMENT_DISABLE_INIT"] ||= "true" if ENV["CI"] == "true"
 
 # You can have Apartment route to the appropriate Tenant by adding some Rack middleware.
