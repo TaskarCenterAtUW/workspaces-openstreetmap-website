@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module Nodes
     class WaysController < ApiController
@@ -12,6 +14,7 @@ module Api
       def index
         @ways = Way
                 .visible
+                .includes(:way_nodes, :changeset => :user)
                 .where(:id => WayNode.where(
                   :node_id => params[:node_id]
                 ).select(:way_id))

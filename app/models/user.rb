@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -12,7 +14,6 @@
 #  home_lat             :float
 #  home_lon             :float
 #  home_zoom            :integer          default(3)
-#  home_location_name   :string
 #  pass_salt            :string
 #  email_valid          :boolean          default(FALSE), not null
 #  new_email            :string
@@ -34,11 +35,13 @@
 #  diary_comments_count :integer          default(0)
 #  note_comments_count  :integer          default(0)
 #  creation_address     :inet
+#  home_location_name   :string
 #  company              :string
+#  public_heatmap       :boolean          default(TRUE), not null
 #
 # Indexes
 #
-#  index_users_on_creation_address   (creation_address) USING gist
+#  index_users_on_creation_address   (creation_address inet_ops) USING gist
 #  users_auth_idx                    (auth_provider,auth_uid) UNIQUE
 #  users_display_name_canonical_idx  (lower(NORMALIZE(display_name, NFKC)))
 #  users_display_name_idx            (display_name) UNIQUE
@@ -48,7 +51,6 @@
 #
 
 class User < ApplicationRecord
-  require "digest"
   include AASM
 
   has_many :traces, -> { where(:visible => true) }
@@ -89,6 +91,8 @@ class User < ApplicationRecord
 
   has_many :reports
 
+  has_many :notifications, :as => :recipient, :class_name => "Noticed::Notification"
+
   has_many :social_links
   accepts_nested_attributes_for :social_links, :allow_destroy => true
 
@@ -96,9 +100,13 @@ class User < ApplicationRecord
   scope :active, -> { where(:status => %w[active confirmed]) }
   scope :identifiable, -> { where(:data_public => true) }
 
+  # Types which a) have trusted libvips loaders and also b) can be shown in browsers and email clients,
+  # either directly or because their variants are converted to PNG
+  AVATAR_CONTENT_TYPES = %w[image/png image/jpeg image/gif image/webp image/tiff image/heic image/heif image/avif].freeze
+
   has_one_attached :avatar, :service => Settings.avatar_storage
 
-  validates :display_name, :presence => true, :length => 3..255,
+  validates :display_name, :presence => true, :length => { :maximum => 255 },
                            :exclusion => %w[new terms save confirm confirm-email go_public reset-password forgot-password suspended]
   validates :display_name, :if => proc { |u| u.display_name_changed? },
                            :normalized_uniqueness => { :case_sensitive => false }
@@ -112,6 +120,7 @@ class User < ApplicationRecord
                     :uniqueness => { :case_sensitive => false }
   validates :email, :if => proc { |u| u.email_changed? },
                     :whitespace => { :leading => false, :trailing => false }
+  validates :new_email, :characters => true
   validates :pass_crypt, :confirmation => true, :length => 8..255
   validates :home_lat, :allow_nil => true, :numericality => true, :inclusion => { :in => -90..90 }
   validates :home_lon, :allow_nil => true, :numericality => true, :inclusion => { :in => -180..180 }
@@ -120,16 +129,20 @@ class User < ApplicationRecord
   validates :auth_uid, :unless => proc { |u| u.auth_provider.nil? },
                        :uniqueness => { :scope => :auth_provider }
   validates :avatar, :if => proc { |u| u.attachment_changes["avatar"] },
-                     :image => true
+                     :attached => true,
+                     :content_type => { :in => AVATAR_CONTENT_TYPES },
+                     :size => { :less_than_or_equal_to => proc { Settings.max_avatar_size } }
+  validates :avatar, :processable_file => true
   validates :description, :length => 0..65536
 
-  validates_email_format_of :email, :if => proc { |u| u.email_changed? }
-  validates_email_format_of :new_email, :allow_blank => true, :if => proc { |u| u.new_email_changed? }
+  validates :email, :deliverable_email => true, :if => proc { |u| u.email_changed? }
+  validates :new_email, :deliverable_email => true, :allow_blank => true, :if => proc { |u| u.new_email_changed? }
 
   alias_attribute :created_at, :creation_time
 
   before_save :encrypt_password
   before_save :update_tile
+  before_save :normalise_avatar
   after_save :spam_check
 
   generates_token_for :new_user, :expires_in => 1.week do
@@ -137,7 +150,7 @@ class User < ApplicationRecord
   end
 
   generates_token_for :new_email, :expires_in => 1.week do
-    fingerprint
+    fingerprint(new_email)
   end
 
   generates_token_for :password_reset, :expires_in => 1.week do
@@ -154,34 +167,35 @@ class User < ApplicationRecord
     display_name
   end
 
-  def self.authenticate(options)
-    if options[:username] && options[:password]
-      user = find_by("email = ? OR display_name = ?", options[:username].strip, options[:username])
+  def self.lookup(username)
+    username.strip!
 
-      if user.nil?
-        users = where("LOWER(email) = LOWER(?) OR LOWER(NORMALIZE(display_name, NFKC)) = LOWER(NORMALIZE(?, NFKC))", options[:username].strip, options[:username])
+    user = find_by("email = ? OR display_name = ?", username, username)
 
-        user = users.first if users.one?
-      end
+    if user.nil?
+      users = where("LOWER(email) = LOWER(?) OR LOWER(NORMALIZE(display_name, NFKC)) = LOWER(NORMALIZE(?, NFKC))", username, username)
 
-      if user && PasswordHash.check(user.pass_crypt, user.pass_salt, options[:password])
-        if PasswordHash.upgrade?(user.pass_crypt, user.pass_salt)
-          user.pass_crypt, user.pass_salt = PasswordHash.create(options[:password])
-          user.save
-        end
-      else
-        user = nil
-      end
+      user = users.first if users.one?
     end
 
-    if user &&
-       (user.status == "deleted" ||
-         (user.status == "pending" && !options[:pending]) ||
-         (user.status == "suspended" && !options[:suspended]))
-      user = nil
-    end
+    user if user && user.status != "deleted"
+  end
 
-    user
+  def password_expired?
+    !PasswordHash.valid?(pass_crypt, pass_salt)
+  end
+
+  def password_matches?(password)
+    if PasswordHash.check(pass_crypt, pass_salt, password)
+      if PasswordHash.upgrade?(pass_crypt, pass_salt)
+        self.pass_crypt, self.pass_salt = PasswordHash.create(password)
+        save
+      end
+
+      true
+    else
+      false
+    end
   end
 
   aasm :column => :status, :no_direct_assignment => true do
@@ -215,7 +229,11 @@ class User < ApplicationRecord
 
     # Accounts can be automatically suspended by spam_check
     event :suspend do
-      transitions :from => [:pending, :active], :to => :suspended
+      before do
+        close_open_issues
+      end
+
+      transitions :from => [:pending, :active, :confirmed], :to => :suspended
     end
 
     # Unsuspending an account moves it back to active without overriding the spam scoring
@@ -224,17 +242,24 @@ class User < ApplicationRecord
     end
 
     # Mark the account as deleted but keep all data intact
-    event :hide do
+    # Only to be used in tests. There's currently no production
+    # use for this transition.
+    event :mark_deleted do
+      before do
+        close_open_issues
+      end
+
       transitions :from => [:pending, :active, :confirmed, :suspended], :to => :deleted
     end
 
-    event :unhide do
+    event :undelete do
       transitions :from => [:deleted], :to => :active
     end
 
     # Mark the account as deleted and remove personal data
     event :soft_destroy do
       before do
+        close_open_issues
         revoke_authentication_tokens
         remove_personal_data
       end
@@ -259,6 +284,15 @@ class User < ApplicationRecord
     @preferred_languages ||= Locale.list(languages)
   end
 
+  def preferred_color_scheme(*priority_list)
+    color_preferences = preferences.color_schemes.where.not(:v => "auto").pluck(:k, :v).to_h
+    priority_list.each do |target|
+      scheme = color_preferences["#{target}.color_scheme"]
+      return scheme unless scheme.nil?
+    end
+    nil
+  end
+
   def default_diary_language
     diary_language_preference = preferences.find_by(:k => "diary.default_language")
     if diary_language_preference
@@ -271,6 +305,19 @@ class User < ApplicationRecord
   def default_diary_language=(language)
     preference = preferences.find_or_create_by(:k => "diary.default_language")
     preference.update!(:v => language)
+  end
+
+  def default_trace_visibility
+    visibility = preferences.find_by(:k => "gps.trace.visibility")&.v
+    if Trace.valid_visibility?(visibility)
+      visibility
+    else
+      Trace.default_visibility
+    end
+  end
+
+  def notification_preferences
+    @notification_preferences ||= UserNotificationPreferences.new(self)
   end
 
   def home_location?
@@ -346,6 +393,12 @@ class User < ApplicationRecord
   end
 
   ##
+  # close any open issues
+  def close_open_issues
+    issues.with_status(:open).each(&:resolve!)
+  end
+
+  ##
   # revoke any authentication tokens
   def revoke_authentication_tokens
     access_tokens.not_expired.each(&:revoke)
@@ -371,27 +424,19 @@ class User < ApplicationRecord
   ##
   # return a spam score for a user
   def spam_score
-    changeset_score = changesets.size * 50
-    trace_score = traces.size * 50
-    diary_entry_score = diary_entries.visible.inject(0) { |acc, elem| acc + elem.body.spam_score }
-    diary_comment_score = diary_comments.visible.inject(0) { |acc, elem| acc + elem.body.spam_score }
-    report_score = Report.where(:category => "spam", :issue => issues.with_status("open")).distinct.count(:user_id) * 20
-
-    score = description.spam_score / 4.0
-    score += diary_entries.visible.where("created_at > ?", 1.day.ago).count * 10
-    score += diary_entry_score / diary_entries.visible.length unless diary_entries.visible.empty?
-    score += diary_comment_score / diary_comments.visible.length unless diary_comments.visible.empty?
-    score += report_score
-    score -= changeset_score
-    score -= trace_score
-
-    score.to_i
+    SpamScorer.new_from_user(self).score
   end
 
   ##
   # perform a spam check on a user
   def spam_check
-    suspend! if may_suspend? && spam_score > Settings.spam_threshold
+    suspend! if !confirmed? && may_suspend? && spam_score > Settings.spam_threshold
+  end
+
+  ##
+  # suspend the user only if allowed by aasm rules
+  def suspend_if_possible!
+    suspend! if may_suspend?
   end
 
   ##
@@ -406,10 +451,11 @@ class User < ApplicationRecord
     )
   end
 
-  def fingerprint
+  def fingerprint(*extra)
     digest = Digest::SHA256.new
     digest.update(email)
     digest.update(pass_crypt)
+    extra.each { |value| digest.update(value.to_s) }
     digest.hexdigest
   end
 
@@ -492,5 +538,23 @@ class User < ApplicationRecord
 
   def update_tile
     self.home_tile = QuadTile.tile_for_point(home_lat, home_lon) if home_location?
+  end
+
+  # Replace a newly uploaded avatar with a normalised copy, before it is stored.
+  def normalise_avatar
+    change = attachment_changes["avatar"]
+    return if change.nil? || change.is_a?(ActiveStorage::Attached::Changes::DeleteOne)
+    raise ArgumentError, "Unsupported avatar change: #{change.class}" unless change.is_a?(ActiveStorage::Attached::Changes::CreateOne)
+
+    source = case change.attachable
+             when ActionDispatch::Http::UploadedFile then change.attachable
+             when Hash then change.attachable.fetch(:io)
+             else raise ArgumentError, "Unsupported avatar attachable: #{change.attachable.class}"
+             end
+
+    self.avatar = AvatarNormaliser.normalise(source, change.blob.content_type)
+  rescue Vips::Error
+    errors.add(:avatar, :file_not_processable)
+    throw :abort
   end
 end

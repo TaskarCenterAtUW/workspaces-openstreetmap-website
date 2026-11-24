@@ -5,6 +5,7 @@
 # Author: ElangoRamanujam
 # Author: Fahimrazick
 # Author: Gurulenin
+# Author: Kaartic
 # Author: Karthi.dr
 # Author: Krishnaprasaths
 # Author: Mahir78
@@ -96,18 +97,6 @@ ta:
       way_node: வழி முனையம்
       way_tag: வழி இணைப்பு
     attributes:
-      client_application:
-        name: பெயர் (தேவை)
-        url: முதன்மை பயன்பாட்டு URL (தேவை)
-        callback_url: திரும்ப அழைக்கும் URL
-        support_url: URL ஐ ஆதரிக்கவும்
-        allow_read_prefs: அவர்களின் பயனர் விருப்பங்களை வாசி
-        allow_write_prefs: அவர்களின் பயனர் விருப்பங்களை மாற்றவும்
-        allow_write_diary: நாட்குறிப்பு உள்ளீடுகள், கருத்துகள் மற்றும் நண்பர்களை உருவாக்குங்கள்
-        allow_write_api: வரைபடத்தை மாற்றவும்
-        allow_read_gpx: அவர்களின் தனிப்பட்ட GPS தடங்களைப் படிக்கவும்
-        allow_write_gpx: GPS தடங்களை பதிவேற்றவும்
-        allow_write_notes: குறிப்புகளை மாற்றவும்
       diary_comment:
         body: உள்ளடக்கம்
       diary_entry:
@@ -134,7 +123,7 @@ ta:
         longitude: குத்துயரம்
         public: பொது
         description: விளக்கம்
-        gpx_file: GPX கோப்பினை பதிவேற்றவும்
+        gpx_file: GPX கோப்பை தேர்வு செய்யவும்
         visibility: 'காணும்தூரம்:'
         tagstring: குறிச்சொற்கள்
       message:
@@ -167,6 +156,8 @@ ta:
         redirect_uri: ஒவ்வொரு URIக்கு ஒரு வரியைப் பயன்படுத்தவும்
       trace:
         tagstring: காற்புள்ளி வரம்பில்லை
+      user:
+        new_email: (வெளிப்படையாக காட்டப்படாது)
   editor:
     default: இயல்புநிலை (தற்போதைய %{name})
     remote:
@@ -574,15 +565,16 @@ ta:
           spam_label: இந்தக் குறிப்பு ஒரு எரிதம்
           personal_label: இந்தக் குறிப்பில் தனிநபர் தகவல்கள் உள்ளன
   layouts:
-    home: முகப்பு
-    logout: விடுபதிகை
-    log_in: புகுபதிகை
-    edit: தொகு
-    history: வரலாறு
-    help: உதவி
-    copyright: பதிப்புரிமை
     learn_more: மேலும் அறிய
-    more: மேலும்
+    header:
+      copyright: பதிப்புரிமை
+      edit: தொகு
+      help: உதவி
+      history: வரலாறு
+      home: முகப்பு
+      log_out: விடுபதிகை
+      log_in: புகுபதிகை
+      more: மேலும்
   user_mailer:
     email_confirm:
       greeting: வணக்கம்,
@@ -667,19 +659,6 @@ ta:
     destroy:
       title: விடுபதிகை
       logout_button: விடுபதிகை
-  shared:
-    markdown_help:
-      heading: தலைப்பு
-      text: உரை
-      image: படம்
-    richtext_field:
-      edit: தொகு
-    pagination:
-      diary_comments:
-        newer: புதிய கருத்துக்கள்
-      diary_entries:
-        older: பழைய உள்ளீடுகள்
-        newer: புதிய உள்ளீடுகள்
   site:
     copyright:
       foreign:
@@ -776,6 +755,13 @@ ta:
       apple:
         title: ஆப்பிள் மூலம் உள்நுழையவும்
         alt: ஆப்பிள் சின்னம்
+    markdown_help:
+      heading: தலைப்பு
+      text: உரை
+      image: படம்
+    pagination:
+      diary_entries:
+        newer: புதிய உள்ளீடுகள்
   users:
     new:
       title: கணக்கை உருவாக்கு
@@ -800,10 +786,16 @@ ta:
       create_block: இப் பயனரைத் தடைசெய்
       activate_user: இந்த பயனரை  செயற்படுத்து
       confirm_user: இந்த பயனரை உறுதிசெய்
-      hide_user: இந்த பயனரை மறை
-      unhide_user: இந்த பயனரை மறைத்ததை நீக்கு
-      delete_user: இப்பயனரை நீக்கு
       confirm: உறுதிசெய்
+      title:
+        administrator: இந்த பயனர் ஒரு நிர்வாகி
+        moderator: இந்த பயனர் ஒரு நடுவர்
+      grant:
+        administrator: நிர்வாகி அனுமதியை அளிக்கவும்
+        moderator: நடுவர் அனுமதி அளிக்கவும்
+      revoke:
+        administrator: நிர்வாகி அனுமதியை திரும்பபெறவும்
+        moderator: நடுவர் அனுமதியை திரும்பபெறவும்
     lists:
       show:
         title: பயனர்கள்
@@ -818,16 +810,6 @@ ta:
     suspended:
       title: கணக்கு இடைநீக்கம் செய்யப்பட்டுள்ளது
       heading: கணக்கு இடைநீக்கம் செய்யப்பட்டுள்ளது
-    role_icons:
-      title:
-        administrator: இந்த பயனர் ஒரு நிர்வாகி
-        moderator: இந்த பயனர் ஒரு நடுவர்
-      grant:
-        administrator: நிர்வாகி அனுமதியை அளிக்கவும்
-        moderator: நடுவர் அனுமதி அளிக்கவும்
-      revoke:
-        administrator: நிர்வாகி அனுமதியை திரும்பபெறவும்
-        moderator: நடுவர் அனுமதியை திரும்பபெறவும்
   user_blocks:
     show:
       status: நிலை

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "simplecov"
 require "simplecov-lcov"
 
@@ -32,24 +34,45 @@ ENV["RAILS_ENV"] = "test"
 require_relative "../config/environment"
 require "rails/test_help"
 require "webmock/minitest"
-require "minitest/focus" unless ENV["CI"]
+require "minitest/focus"
 
-WebMock.disable_net_connect!(:allow_localhost => true)
+WebMock.disable_net_connect!(:allow_localhost => true, :allow => %w[selenium-default selenium-de selenium-nolang rails-app])
+
+# Scan each job performed for N+1 queries, in the same way as requests are
+# scanned (see config/initializers/prosopite.rb).
+#
+# Jobs performed during a request, using perform_enqueued_jobs, aren't
+# scanned as their queries would otherwise count towards the request's,
+# whereas in production each job is performed separately.
+ActiveJob::Base.around_perform do |_job, block|
+  if Prosopite.scan?
+    Prosopite.pause { block.call }
+  else
+    Prosopite.scan { block.call }
+  end
+end
 
 module ActiveSupport
   class TestCase
     include FactoryBot::Syntax::Methods
     include ActiveJob::TestHelper
+    include LibXML
 
-    # Run tests in parallel with specified workers
-    parallelize(:workers => :number_of_processors)
+    if ENV.key?("CAPYBARA_SERVER_PORT")
+      # Running in the devcontainer. Can't figure out how
+      # to run things in parallel at the moment, so for now
+      # we are not doing it.
+    elsif Settings.enable_parallel_tests
+      # Run tests in parallel with specified workers
+      parallelize(:workers => :number_of_processors)
 
-    parallelize_setup do |worker|
-      SimpleCov.command_name "#{SimpleCov.command_name}-#{worker}"
-    end
+      parallelize_setup do |worker|
+        SimpleCov.command_name "#{SimpleCov.command_name}-#{worker}"
+      end
 
-    parallelize_teardown do
-      SimpleCov.result
+      parallelize_teardown do
+        SimpleCov.result
+      end
     end
 
     ##
@@ -180,6 +203,29 @@ module ActiveSupport
     end
 
     ##
+    # Check that an email was received on the given email address,
+    # with the given subject. Note that it assumes that there's only
+    # one recipient and will fail otherwise. If you need a different
+    # behaviour, please extend.
+    def assert_email_received(expected_address, expected_subject)
+      email = ActionMailer::Base.deliveries.find { |e| e.to.first == expected_address }
+      assert_not_nil email
+      assert_equal 1, email.to.length
+      assert_equal expected_address, email.to.first
+      assert_equal expected_subject, email.subject
+    end
+
+    ##
+    # Check that no email was received on the given email address.
+    # Note that this assumes that any emails have only one recipient,
+    # and may give incorrect results otherwise. If you need a different
+    # behaviour, please extend.
+    def assert_email_not_received(expected_address)
+      email = ActionMailer::Base.deliveries.find { |e| e.to.first == expected_address }
+      assert_nil email
+    end
+
+    ##
     # execute a block with a given set of HTTP responses stubbed
     def with_http_stubs(stubs_file)
       stubs = YAML.load_file(File.expand_path("../http/#{stubs_file}.yml", __FILE__))
@@ -206,9 +252,15 @@ module ActiveSupport
       end
     end
 
-    def session_for(user)
-      get login_path
-      post login_path, :params => { :username => user.display_name, :password => "test" }
+    def session_for(user, referer: nil)
+      login_params = {
+        :username => user.display_name,
+        :password => "s3cr3t"
+      }
+      login_params[:referer] = referer if referer
+
+      post login_path, :params => login_params
+
       follow_redirect!
     end
 
@@ -333,6 +385,10 @@ module ActiveSupport
     def with_settings(settings)
       saved_settings = Settings.to_hash.slice(*settings.keys)
 
+      settings.each_key do |key|
+        saved_settings[key] = nil unless saved_settings.key?(key)
+      end
+
       Settings.merge!(settings)
 
       yield
@@ -350,7 +406,7 @@ module ActiveSupport
 
     # This is a convenience method for checks of resources rendered in a map view sidebar
     # First we check that when we don't have an id, it will correctly return a 404
-    # then we check that we get the correct 404 when a non-existant id is passed
+    # then we check that we get the correct 404 when a non-existent id is passed
     # then we check that it will get a successful response, when we do pass an id
     def sidebar_browse_check(path, id, template)
       path_method = method(path)
@@ -368,7 +424,7 @@ module ActiveSupport
       assert_template "browse/not_found"
       assert_template :layout => "map"
 
-      get path_method.call(:id => 0), :xhr => true
+      get path_method.call(:id => 0), :headers => { "Turbo-Frame" => "sidebar_content_frame" }
       assert_response :not_found
       assert_template "browse/not_found"
       assert_template :layout => "xhr"
@@ -378,10 +434,18 @@ module ActiveSupport
       assert_template template
       assert_template :layout => "map"
 
-      get path_method.call(:id => id), :xhr => true
+      get path_method.call(:id => id), :headers => { "Turbo-Frame" => "sidebar_content_frame" }
       assert_response :success
       assert_template template
       assert_template :layout => "xhr"
+    end
+
+    def parse_html(html)
+      Rails::Dom::Testing.html_document_fragment.parse(html)
+    end
+
+    def read_fixture_file(relpath)
+      Rails.root.join("test", "fixtures", relpath).read
     end
   end
 end

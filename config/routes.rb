@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 OpenStreetMap::Application.routes.draw do
   use_doorkeeper :scope => "oauth2" do
     controllers :authorizations => "oauth2_authorizations",
@@ -85,11 +87,8 @@ OpenStreetMap::Application.routes.draw do
 
     resource :map, :only => :show
 
-    resources :tracepoints, :path => "trackpoints", :only => :index
-
     resources :users, :only => :index
     resources :users, :path => "user", :id => /\d+/, :only => :show
-    resources :user_traces, :path => "user/gpx_files", :module => :users, :controller => :traces, :only => :index
     get "user/details" => "users#details"
 
     resources :user_preferences, :except => [:new, :create, :edit], :param => :preference_key, :path => "user/preferences" do
@@ -105,13 +104,18 @@ OpenStreetMap::Application.routes.draw do
     end
     post "/user/messages/:id" => "messages#update", :as => nil
 
-    resources :traces, :path => "gpx", :only => [:create, :show, :update, :destroy], :id => /\d+/ do
-      scope :module => :traces do
-        resource :data, :only => :show
+    # Lambda constraint, rather than a static if, so tests can toggle the setting per-request with with_settings
+    constraints(->(_req) { !Settings.traces_disabled }) do
+      resources :tracepoints, :path => "trackpoints", :only => :index
+      resources :user_traces, :path => "user/gpx_files", :module => :users, :controller => :traces, :only => :index
+      resources :traces, :path => "gpx", :only => [:create, :show, :update, :destroy], :id => /\d+/ do
+        scope :module => :traces do
+          resource :data, :only => :show
+        end
       end
+      post "gpx/create" => "traces#create", :id => /\d+/, :as => :trace_create
+      get "gpx/:id/details" => "traces#show", :id => /\d+/, :as => :trace_details
     end
-    post "gpx/create" => "traces#create", :id => /\d+/, :as => :trace_create
-    get "gpx/:id/details" => "traces#show", :id => /\d+/, :as => :trace_details
 
     # Map notes API
     resources :notes, :except => [:new, :edit, :update], :id => /\d+/, :controller => "notes" do
@@ -212,14 +216,15 @@ OpenStreetMap::Application.routes.draw do
   post "/login" => "sessions#create"
   match "/logout" => "sessions#destroy", :via => [:get, :post]
   get "/offline" => "site#offline"
+  resource :languages_pane, :path => "/panes/languages", :only => :show
   resource :layers_pane, :path => "/panes/layers", :only => :show
   resource :legend_pane, :path => "/panes/legend", :only => :show
   resource :share_pane, :path => "/panes/share", :only => :show
+  resource :webgl_error_pane, :path => "/panes/webgl_error", :only => :show
   get "/id" => "site#id"
   resource :feature_query, :path => "query", :only => :show
   post "/user/:display_name/confirm/resend" => "confirmations#confirm_resend", :as => :user_confirm_resend
-  match "/user/:display_name/confirm" => "confirmations#confirm", :via => [:get, :post]
-  match "/user/confirm" => "confirmations#confirm", :via => [:get, :post]
+  match "/user/:display_name/confirm" => "confirmations#confirm", :via => [:get, :post], :as => :user_confirm
   match "/user/confirm-email" => "confirmations#confirm_email", :via => [:get, :post]
   post "/user/go_public" => "users#go_public"
   scope :user, :as => "user" do
@@ -235,9 +240,16 @@ OpenStreetMap::Application.routes.draw do
   get "/forgot-password.html", :to => redirect(:path => "/user/forgot-password")
 
   # omniauth
-  get "/auth/failure" => "users#auth_failure"
-  match "/auth/:provider/callback" => "users#auth_success", :via => [:get, :post], :as => :auth_success
-  match "/auth/:provider" => "users#auth", :via => [:post, :patch], :as => :auth
+  scope "/auth", :as => :auth do
+    get "/failure" => "users#auth_failure"
+
+    scope ":provider" do
+      match "/callback" => "users#auth_success", :via => [:get, :post], :as => :success
+      match "" => "users#auth", :via => [:post, :patch]
+
+      resources :deletions, :only => [:show, :create], :module => "accounts", :controller => "auth_deletions", :param => :confirmation_code
+    end
+  end
 
   # permalink
   get "/go/:code" => "site#permalink", :code => /[a-zA-Z0-9_@~]+[=-]*/, :as => :permalink
@@ -246,32 +258,35 @@ OpenStreetMap::Application.routes.draw do
   post "/preview/:type" => "site#preview", :as => :preview
 
   # traces
-  resources :traces, :id => /\d+/, :except => [:show] do
-    resource :data, :module => :traces, :only => :show
-  end
-  get "/user/:display_name/traces/tag/:tag/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/user/%{display_name}/traces/tag/%{tag}")
-  get "/user/:display_name/traces/tag/:tag" => "traces#index"
-  get "/user/:display_name/traces/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/user/%{display_name}/traces")
-  get "/user/:display_name/traces" => "traces#index"
-  get "/user/:display_name/traces/:id" => "traces#show", :id => /\d+/, :as => "show_trace"
-  scope "/user/:display_name/traces/:trace_id", :module => :traces, :trace_id => /\d+/ do
-    get "picture" => "pictures#show", :as => "trace_picture"
-    get "icon" => "icons#show", :as => "trace_icon"
-  end
-  get "/traces/tag/:tag/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/traces/tag/%{tag}")
-  get "/traces/tag/:tag" => "traces#index"
-  get "/traces/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/traces")
-  get "/traces/mine/tag/:tag/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/traces/mine/tag/%{tag}")
-  get "/traces/mine/tag/:tag" => "traces#mine"
-  get "/traces/mine/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/traces/mine")
-  get "/traces/mine" => "traces#mine"
-  get "/trace/create", :to => redirect(:path => "/traces/new")
-  get "/trace/:id/data", :format => false, :id => /\d+/, :to => redirect(:path => "/traces/%{id}/data")
-  get "/trace/:id/data.:format", :id => /\d+/, :to => redirect(:path => "/traces/%{id}/data.%{format}")
-  get "/trace/:id/edit", :id => /\d+/, :to => redirect(:path => "/traces/%{id}/edit")
+  constraints(->(_req) { !Settings.traces_disabled }) do
+    resources :traces, :id => /\d+/, :except => [:show] do
+      resource :data, :module => :traces, :only => :show
+    end
+    get "/user/:display_name/traces/tag/:tag/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/user/%{display_name}/traces/tag/%{tag}")
+    get "/user/:display_name/traces/tag/:tag" => "traces#index"
+    get "/user/:display_name/traces/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/user/%{display_name}/traces")
+    get "/user/:display_name/traces" => "traces#index"
+    get "/user/:display_name/traces/:id" => "traces#show", :id => /\d+/, :as => "show_trace"
+    scope "/user/:display_name/traces/:trace_id", :module => :traces, :trace_id => /\d+/ do
+      get "picture" => "pictures#show", :as => "trace_picture"
+      get "icon" => "icons#show", :as => "trace_icon"
+    end
+    get "/traces/tag/:tag/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/traces/tag/%{tag}")
+    get "/traces/tag/:tag" => "traces#index"
+    get "/traces/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/traces")
+    get "/traces/mine/tag/:tag/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/traces/mine/tag/%{tag}")
+    get "/traces/mine/tag/:tag" => "traces#mine"
+    get "/traces/mine/page/:page", :page => /[1-9][0-9]*/, :to => redirect(:path => "/traces/mine")
+    get "/traces/mine" => "traces#mine"
+    get "/trace/create", :to => redirect(:path => "/traces/new")
+    get "/trace/:id/data", :format => false, :id => /\d+/, :to => redirect(:path => "/traces/%{id}/data")
+    get "/trace/:id/data.:format", :id => /\d+/, :to => redirect(:path => "/traces/%{id}/data.%{format}")
+    get "/trace/:id/edit", :id => /\d+/, :to => redirect(:path => "/traces/%{id}/edit")
 
-  namespace :traces, :path => "" do
-    resource :feed, :path => "(/user/:display_name)/traces(/tag/:tag)/rss", :only => :show, :defaults => { :format => :rss }
+    namespace :traces, :path => "" do
+      resource :feed, :path => "(/user/:display_name)/traces(/tag/:tag)/rss", :only => :show, :defaults => { :format => :rss }
+      resource :legacy_visibility, :path => "/traces/mine/legacy_visibility", :only => [:edit, :update]
+    end
   end
 
   # diary pages
@@ -331,6 +346,7 @@ OpenStreetMap::Application.routes.draw do
   namespace :profile, :module => :profiles do
     resource :description, :only => [:show, :update]
     resource :links, :only => [:show, :update]
+    resource :heatmap, :only => [:show, :update]
     resource :image, :only => [:show, :update]
     resource :company, :only => [:show, :update]
     resource :location, :only => [:show, :update]
@@ -340,10 +356,13 @@ OpenStreetMap::Application.routes.draw do
 
   scope :preferences, :module => :preferences do
     resource :basic_preferences, :path => "basic", :only => [:show, :update]
+    resource :notification_preferences, :path => "notifications", :only => [:show, :update]
     resource :advanced_preferences, :path => "advanced", :only => [:show, :update]
   end
   get "/preferences", :to => redirect(:path => "/preferences/basic"), :as => nil
   get "/preferences/edit", :to => redirect(:path => "/preferences/basic"), :as => nil
+
+  resources :notifications, :only => [:index]
 
   # friendships
   scope "/user/:display_name" do
@@ -371,8 +390,8 @@ OpenStreetMap::Application.routes.draw do
   resource :directions, :only => :show
 
   # export
-  post "/export/finish" => "export#finish"
-  get "/export/embed" => "export#embed"
+  post "/export/finish" => "export#create"
+  get "/export/embed" => "export#show"
 
   # messages
   resources :messages, :path_names => { :new => "new/:display_name" }, :id => /\d+/, :only => [:new, :create, :show, :destroy] do
@@ -418,6 +437,12 @@ OpenStreetMap::Application.routes.draw do
 
   # redactions
   resources :redactions
+
+  # ACLs
+  resources :acls, :except => [:show]
+
+  # moderation zones
+  resources :moderation_zones, :only => [:index, :new, :create, :edit, :update]
 
   # errors
   match "/400", :to => "errors#bad_request", :via => :all

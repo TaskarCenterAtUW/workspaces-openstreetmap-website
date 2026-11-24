@@ -86,18 +86,6 @@ diq:
       way_node: Ray Qedyin
       way_tag: Etikete ray
     attributes:
-      client_application:
-        name: Name (ganiyo)
-        url: Gıray Esas Aplikasyoni (ganiyo)
-        callback_url: Gırey Peyd Cıgeyrayışi
-        support_url: Gırey Destegi
-        allow_read_prefs: Tercihanê karberi bıwanê
-        allow_write_prefs: Tercihanê karberanê inan bıvurne
-        allow_write_diary: Embaz bıkerên, mışorê u rocek çiyeki vırazên
-        allow_write_api: Xeritay bıvurne
-        allow_read_gpx: Rêça GPSanê xısusiyan bıwane
-        allow_write_gpx: Şopanê GPSi bar kerê
-        allow_write_notes: Notan bıvurne
       diary_comment:
         body: Metın
       diary_entry:
@@ -799,18 +787,19 @@ diq:
       reports: Rapori
       last_updated: Rocanekerdışo Peyên
   layouts:
-    logout: Bıveciye
-    log_in: Cı kewe
-    sign_up: Qeyd be
-    edit: Bıvurne
-    history: Tarix
-    export: Teberdayış
     tou: Şertê gurenayışi
-    help: Peşti
-    about: Heqa
-    copyright: Heqa telifi
     learn_more: Tayêna bımuse
-    more: Zêde
+    header:
+      about: Heqa
+      copyright: Heqa telifi
+      edit: Bıvurne
+      export: Teberdayış
+      help: Peşti
+      history: Tarix
+      log_out: Bıveciye
+      log_in: Cı kewe
+      more: Zêde
+      sign_up: Qeyd be
   user_mailer:
     diary_comment_notification:
       hi: Merheba %{to_user},
@@ -899,11 +888,6 @@ diq:
       logout_button: Veciyayış
     suspended_flash:
       support: peşti
-  shared:
-    pagination:
-      diary_comments:
-        older: Mışewreyê Kehani
-        newer: Mışewreyê Newey
   site:
     copyright:
       native:
@@ -995,10 +979,17 @@ diq:
       public_traces: Pêron rê akerde rêçê GPS
       public_traces_from: '%{user} ra pêron rê akerde rêçê GPS'
       tagged_with: '%{tags} ya etiketyayo'
+    legacy_visibilities:
+      edit:
+        confirmation:
+          cancel: Bıtexelne
   application:
     share:
       share:
         title: Vıla ke
+    pagination:
+      diary_comments:
+        older: Mışewreyê Kehani
   users:
     new:
       continue: Qeyd be
@@ -1029,11 +1020,17 @@ diq:
       create_block: nê karberi kılit ke
       activate_user: Nê karberi aktiv ke
       confirm_user: nê karberi tesdiq ke
-      hide_user: nê karberi  bınımnê
-      unhide_user: nê karberi menımnê
-      delete_user: nê karberi esternê
       confirm: Tesdiq ke
       change_image: Resımi bıvurne
+      title:
+        administrator: No karber idarekaro
+        moderator: No karber yew moderatoro
+      grant:
+        administrator: Hesabê adminisrator de gırdi
+        moderator: Hesabê moderator de gırdi
+      revoke:
+        administrator: Hesabê adminisratori terkne
+        moderator: Hesabê moderatori terkne
     sidebar_section:
       home_location: Cayê keyeyi
     issued_blocks:
@@ -1052,7 +1049,6 @@ diq:
         no_edits: İştıraki çıniyê
       page:
         confirm: Karberê ke weçineyayê ena tesdiq ke
-        hide: Karbera weçinayışi bınımnê
       user:
         summary_html: '%{name} %{ip_address} ra %{date} dı vıraşt'
         summary_no_ip_html: '%{name} %{date} dı vıraşt'
@@ -1067,16 +1063,6 @@ diq:
     suspended:
       title: Hesab Darideyo
       heading: Hesab Darideyo
-    role_icons:
-      title:
-        administrator: No karber idarekaro
-        moderator: No karber yew moderatoro
-      grant:
-        administrator: Hesabê adminisrator de gırdi
-        moderator: Hesabê moderator de gırdi
-      revoke:
-        administrator: Hesabê adminisratori terkne
-        moderator: Hesabê moderatori terkne
   user_blocks:
     new:
       title: '%{name}i rê blok vırazeno.'
@@ -1126,9 +1112,9 @@ diq:
     share:
       title: Vıla ke
     map:
-      zoom:
-        in: Nêzdi ke
-        out: Dûri fiye
+      NavigationControl:
+        ZoomIn: Nêzdi ke
+        ZoomOut: Dûri fiye
       base:
         standard: Standard
         cycle_map: Xeritay Topoğrafiki
@@ -1143,4 +1129,7 @@ diq:
       description: 'Şınasnayış:'
       user: Vıraştoğ
       confirm: Şıma bêgumanê?
+  acls:
+    form:
+      cancel: Bıtexelne
 ...

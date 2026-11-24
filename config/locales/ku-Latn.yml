@@ -88,19 +88,6 @@ ku-Latn:
       way_node: Girêdana rê
       way_tag: Nîşana rê
     attributes:
-      client_application:
-        name: Nav (Hewce ye)
-        url: URLya Sepana Sereke (Hewce ye)
-        callback_url: Lînka paşve lêgerînê
-        support_url: Lînka piştgirîkirinê
-        allow_read_prefs: tercîhên wan ên bikarhêneriyê bixwîne
-        allow_write_prefs: tercîhên wan ên bikarhêneriyê biguherîne
-        allow_write_diary: qeydên rojnivîskê û şîroveyan çêke
-        allow_write_api: nexşeyê biguherîne
-        allow_write_changeset_comments: şîroveya li ser qeyda guhertinan
-        allow_read_gpx: şopên wan ên GPSê yên xisûsî bixwîne
-        allow_write_gpx: şopên GPSê bar bike
-        allow_write_notes: notan biguherîne
       diary_comment:
         body: Nivîs
       diary_entry:
@@ -1434,14 +1421,13 @@ ku-Latn:
       other_issues_against_this_user: Pirsgirêkên din ên têkilî vê/vî bikarhênerê/î
       no_other_issues: Pirsgirêkekî din a têkilî vê/vî bikarhênerê/î tune ye
       comments_on_this_issue: Şîroveyên vê pirsgirêkê
+      comment_from_html: Şîrove ji %{user_link} li ser %{comment_created_at}
     resolve:
       resolved: Rewşa pirsgirêk wekî "Çareser Bike" hat eyarkirin
     ignore:
       ignored: Rewşa pirsgirêkê wekî "Guh Nede" hat eyarkirin
     reopen:
       reopened: Rewşa pirsgirêk wekî "Vekirî" hat eyarkirin
-    comments:
-      comment_from_html: Şîrove ji %{user_link} li ser %{comment_created_at}
     reports:
       reported_by_html: Ji aliyê %{user} ve wekî %{category} hat raporkirin li ser
         %{updated_at}
@@ -1491,29 +1477,30 @@ ku-Latn:
   layouts:
     logo:
       alt_text: Logoya OpenStreetMapê
-    home: Here Cihê Mala Xwe
-    logout: Derkeve
-    log_in: Têkeve
-    sign_up: Xwe Qeyd Bike
     start_mapping: Dest bi çêkirina nexşeyan bike
-    edit: Biguherîne
-    history: Tarîx
-    export: Derxîne
-    issues: Pirsgirêk
-    gps_traces: Şopên GPSê
-    user_diaries: Rojnivîskên bikarhênerê
-    edit_with: Bi %{editor} sererast bike
     intro_header: Tu bi xêr hatî OpenStreetMapêǃ
     intro_text: OpenStreetMap xerîteyekî dinyayê ye ku ji aliyê kesên wek te ve tê
       çêkirin û emilandina we belaş e û di bin lîsansa azad de ye.
     partners_partners: şirîkên me
     tou: Mercên Bikaranînê
-    help: Alîkarî
-    about: Derbar
-    copyright: Mafê daneriyê
-    communities: Civat
     learn_more: Zêdetir Hîn Bibe
-    more: Zêdetir
+    header:
+      about: Derbar
+      communities: Civat
+      copyright: Mafê daneriyê
+      edit: Biguherîne
+      edit_with: Bi %{editor} sererast bike
+      export: Derxîne
+      gps_traces: Şopên GPSê
+      help: Alîkarî
+      history: Tarîx
+      home: Here Cihê Mala Xwe
+      issues: Pirsgirêk
+      log_out: Derkeve
+      log_in: Têkeve
+      more: Zêdetir
+      sign_up: Xwe Qeyd Bike
+      user_diaries: Rojnivîskên bikarhênerê
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} li ser nivîsek rojane şirove kir'
@@ -1796,8 +1783,6 @@ ku-Latn:
         keep image: Rismê ku lê ye bila bimîne
         delete image: Rismê ku lê ye rabike
         replace image: Rismê ku lê ye biguherîne
-        image size hint: (wêneyên ku herî kêm ji 100x100 kareyan pêk werin, çêtir
-          têne xuyan)
     locations:
       show:
         no home location: Te cihê malê xwe diyar nekir.
@@ -1825,33 +1810,6 @@ ku-Latn:
       contact_support_html: Ji kerema xwe bi %{support_link} re têkiliyê deyne ger
         bixwazî vê yekê xeber bidî.
       support: piştgirî
-  shared:
-    markdown_help:
-      headings: Sernivîs
-      heading: Sernivîs
-      subheading: Sernivîsa binî
-      unordered: Lîsta nerêzkirî
-      ordered: Lîsta rêzkirî
-      first: Hêmana yekem
-      second: Hêmana duyem
-      link: Lînk
-      text: Nivîs
-      image: Wêne
-      alt: Nivîsa alternatîv
-      url: URL
-    richtext_field:
-      edit: Biguherîne
-      preview: Pêşdîtin
-    pagination:
-      diary_comments:
-        older: Şîroveyên kevintir
-        newer: Şîroveyên nûtir
-      diary_entries:
-        older: Nivîsên Kevintir
-        newer: Nivîsên Nûtir
-      traces:
-        older: Şopên kevintir
-        newer: Şopên nûtir
   site:
     about:
       used_by_html: '%{name} li ser bi hezaran malper, sepanên mobîl û cîhazên hişkalavan,
@@ -2250,6 +2208,26 @@ ku-Latn:
       wikipedia:
         title: Logoya Wîkîpediyayê
         alt: Logoya Wîkîpediyayê
+    markdown_help:
+      headings: Sernivîs
+      heading: Sernivîs
+      subheading: Sernivîsa binî
+      unordered: Lîsta nerêzkirî
+      first: Hêmana yekem
+      second: Hêmana duyem
+      link: Lînk
+      text: Nivîs
+      image: Wêne
+      url: URL
+    richtext_field:
+      preview: Pêşdîtin
+    pagination:
+      diary_comments:
+        older: Şîroveyên kevintir
+      diary_entries:
+        newer: Nivîsên Nûtir
+      traces:
+        newer: Şopên nûtir
   oauth:
     permissions:
       missing: Te destûrê neda ji bo ku ev sepan bigihije vê îmkanê.
@@ -2366,11 +2344,20 @@ ku-Latn:
       confirm_user: Vê bikarhênerê tesdîq bike
       unconfirm_user: Pejirandina vê bikarhênerê rake
       unsuspend_user: Bêdengiya li ser vê bikarhênerê rake
-      hide_user: Vê bikarhênerê veşêre
-      unhide_user: Vi bikarhênerî nîşan bide
-      delete_user: Vî/ê bikarhênerî/ê jê bibe
       confirm: Pesend bike
       report: Vî/Vê bikarhênerî/ê gilî bike
+      title:
+        administrator: Ev bikarhêner rêvebirek e
+        moderator: Ev bikarhêner moderatorek e
+      grant:
+        administrator: Heqê gihînê yê rêvebirê
+        moderator: Heqê gihînê yê moderatorê
+        are_you_sure: Tu piştrast î ku tu dixwazî rola '%{role}' bidî bikarhêner '%{name}'?
+      revoke:
+        administrator: Heqê gihînê yê rêvebirê betal bike
+        moderator: Heqê gihînê yê moderatorê betal bike
+        are_you_sure: Tu piştrast î ku tu dixwazî rola '%{role}' ji bikarhêner '%{name}'
+          rabikî?
     go_public:
       flash success: Hemû guherandinên te niha ji her kesê re vekirî ye, û destûra
         te jî heye ji bo guherandinê.
@@ -2390,7 +2377,6 @@ ku-Latn:
         heading: Bikarhêner
       page:
         confirm: Bikarhênerên bijartî bipejirîne
-        hide: Bikarhênerên bijartî veşêre
         empty: Bikarhênerek ku lê were nehate dîtin
       user:
         summary_html: '%{name} ji aliyê %{ip_address} ve di %{date} de hate çêkirin'
@@ -2427,19 +2413,6 @@ ku-Latn:
       option_2: Heke jixwe hesabekî te hebe, tu dikarî navê xwe yê bikarhêneriyê û
         şîfreya xwe binivîsî û têkevî, û piştre jî ji mîhengên bikarhênerê nasnameya
         (IDya) xwe bi hesabê xwe ve girê bidî.
-    role_icons:
-      title:
-        administrator: Ev bikarhêner rêvebirek e
-        moderator: Ev bikarhêner moderatorek e
-      grant:
-        administrator: Heqê gihînê yê rêvebirê
-        moderator: Heqê gihînê yê moderatorê
-        are_you_sure: Tu piştrast î ku tu dixwazî rola '%{role}' bidî bikarhêner '%{name}'?
-      revoke:
-        administrator: Heqê gihînê yê rêvebirê betal bike
-        moderator: Heqê gihînê yê moderatorê betal bike
-        are_you_sure: Tu piştrast î ku tu dixwazî rola '%{role}' ji bikarhêner '%{name}'
-          rabikî?
   user_role:
     filter:
       not_a_role: '''%{role}'' ne rolek muteber e.'
@@ -2582,11 +2555,11 @@ ku-Latn:
       tooltip: Sembolên nexşeyê
       tooltip_disabled: Sembolên nexşeyê ji bo vê tebeqeyê ne berdest e
     map:
-      zoom:
-        in: Nêzîk bike
-        out: Dûr bike
-      locate:
-        title: Cihê min nîşan bide
+      NavigationControl:
+        ZoomIn: Nêzîk bike
+        ZoomOut: Dûr bike
+      GeolocateControl:
+        FindMyLocation: Cihê min nîşan bide
         metersPopup:
           one: Tu di nava %{count} metreya vê nuqteyê de yî
           other: Tu di nava %{count} metreyên vê nuqteyê de yî

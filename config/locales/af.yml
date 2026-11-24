@@ -8,6 +8,7 @@
 # Author: Fwolff
 # Author: Hentie
 # Author: Joris Darlington Quarshie
+# Author: Maro21
 # Author: Marwin H.H.
 # Author: Naudefj
 # Author: Nroets
@@ -80,18 +81,6 @@ af:
       way_node: Weg-knooppunt
       way_tag: Weg-merker
     attributes:
-      client_application:
-        name: Naam (verplig)
-        url: Hoof-URL van program (verplig)
-        callback_url: Callback-URL
-        support_url: Ondersteunings-URL
-        allow_read_prefs: hul gebruikersvoorkeure lees
-        allow_write_prefs: hul gebruikersvoorkeure wysig
-        allow_write_diary: skep dagboekinskrywings, lewer kommentaar en ontmoet vriende
-        allow_write_api: die kaart wysig
-        allow_read_gpx: lees hul privaat GPS-spore
-        allow_write_gpx: laai GPS-spore op
-        allow_write_notes: notas wysig
       diary_comment:
         body: Teks
       diary_entry:
@@ -1271,14 +1260,13 @@ af:
       other_issues_against_this_user: Ander probleme teen hierdie gebruiker
       no_other_issues: Geen ander probleme teen hierdie gebruiker nie.
       comments_on_this_issue: Kommentaar oor dié probleem
+      comment_from_html: Kommentaar van %{user_link} op %{comment_created_at}
     resolve:
       resolved: Probleemstatus is op 'Opgelos' gestel
     ignore:
       ignored: Probleemstatus is op 'Geïgnoreer' gestel
     reopen:
       reopened: Probleemstatus is op 'Oop' gestel
-    comments:
-      comment_from_html: Kommentaar van %{user_link} op %{comment_created_at}
     reports:
       reported_by_html: As %{category} gerapporteer deur %{user} op %{updated_at}
     helper:
@@ -1327,28 +1315,29 @@ af:
   layouts:
     logo:
       alt_text: OpenStreetMap-embleem
-    home: Na tuisligging gaan
-    logout: Meld af
-    log_in: Meld aan
-    sign_up: Registreer
     start_mapping: Begin karteer
-    edit: Wysig
-    history: Geskiedenis
-    export: Voer uit
-    issues: Probleme
-    gps_traces: GPS-spore
-    user_diaries: Gebruikersdagboeke
-    edit_with: Redigeer met %{editor}
     intro_header: Welkom by OpenStreetMap!
     intro_text: OpenStreetMap is wêreldkaart deur gewone mense geskep. Die gebruik
       daarvan is gratis en val onder 'n oop-lisensie.
     partners_partners: vennote
     tou: Gebruiksvoorwaardes
-    help: Hulp
-    about: Aangaande
-    copyright: Kopiereg
     learn_more: Meer inligting
-    more: Meer
+    header:
+      about: Aangaande
+      copyright: Kopiereg
+      edit: Wysig
+      edit_with: Redigeer met %{editor}
+      export: Voer uit
+      gps_traces: GPS-spore
+      help: Hulp
+      history: Geskiedenis
+      home: Na tuisligging gaan
+      issues: Probleme
+      log_out: Meld af
+      log_in: Meld aan
+      more: Meer
+      sign_up: Registreer
+      user_diaries: Gebruikersdagboeke
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} het kommentaar op ''n dagboekinskrywing gelewer'
@@ -1508,24 +1497,6 @@ af:
       title: Teken af
       heading: Meld van OpenStreetMap af
       logout_button: Teken af
-  shared:
-    markdown_help:
-      headings: Opskrifte
-      heading: Opskrif
-      link: Skakel
-      text: Teks
-      image: Beeld
-      url: URL
-    richtext_field:
-      edit: Wysig
-      preview: Voorskou
-    pagination:
-      diary_comments:
-        older: Ouer Kommentaar
-        newer: Nuwer kommentaar
-      diary_entries:
-        older: Vorige Inskrywings
-        newer: Jonger inskrywings
   site:
     about_section:
       local_knowledge_title: Plaaslike kennis
@@ -1753,6 +1724,20 @@ af:
       wikipedia:
         title: Meld aan met Wikipedia
         alt: Meld aan met ’n Wikipedia-rekening
+    markdown_help:
+      headings: Opskrifte
+      heading: Opskrif
+      link: Skakel
+      text: Teks
+      image: Beeld
+      url: URL
+    richtext_field:
+      preview: Voorskou
+    pagination:
+      diary_comments:
+        older: Ouer Kommentaar
+      diary_entries:
+        newer: Jonger inskrywings
   oauth:
     permissions:
       missing: U het nie die program toegang tot hierdie fasiliteit verleen nie.
@@ -1830,11 +1815,17 @@ af:
       create_block: Versper hierdie gebruiker
       activate_user: Aktiveer hierdie gebruiker
       confirm_user: Bevestig dié gebruiker
-      hide_user: Versteek hierdie gebruiker
-      unhide_user: Wys hierdie gebruiker
-      delete_user: Skrap dié Gebruiker
       confirm: Bevestig
       report: Rapporteer hierdie gebruiker
+      title:
+        administrator: Hierdie gebruiker is 'n administrateur
+        moderator: Hierdie gebruiker is 'n moderator
+      grant:
+        administrator: Ken adminregte toe
+        moderator: Ken moderatorregte toe
+      revoke:
+        administrator: Herroep adminregte
+        moderator: Herroep moderatorregte
     issued_blocks:
       show:
         title: Versperrings deur %{name}
@@ -1851,7 +1842,6 @@ af:
         heading: Gebruikers
       page:
         confirm: Bevestig geselekteerde gebruikers
-        hide: Versteek verkose gebruikers
         empty: Geen gebruikers gevind nie
       user:
         summary_html: '%{name} geskep vanaf %{ip_address} op %{date}'
@@ -1865,16 +1855,6 @@ af:
         post: Inskrywing
     auth_failure:
       no_authorization_code: Geen matigingskode
-    role_icons:
-      title:
-        administrator: Hierdie gebruiker is 'n administrateur
-        moderator: Hierdie gebruiker is 'n moderator
-      grant:
-        administrator: Ken adminregte toe
-        moderator: Ken moderatorregte toe
-      revoke:
-        administrator: Herroep adminregte
-        moderator: Herroep moderatorregte
   user_blocks:
     not_found:
       sorry: Jammer, die gebruiker met ID %{id} kon nie gevind word.
@@ -1956,11 +1936,11 @@ af:
       title: Kaartsleutel
       tooltip: Kaartsleutel
     map:
-      zoom:
-        in: Zoem in
-        out: Zoem uit
-      locate:
-        title: Wys my ligging
+      NavigationControl:
+        ZoomIn: Zoem in
+        ZoomOut: Zoem uit
+      GeolocateControl:
+        FindMyLocation: Wys my ligging
       base:
         cycle_map: Fietskaart
       layers:

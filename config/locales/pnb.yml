@@ -3,6 +3,7 @@
 # Export driver: phpyaml
 # Author: Ajeje Brazorf
 # Author: Bgo eiu
+# Author: Maro21
 # Author: Marwin H.H.
 ---
 pnb:
@@ -74,19 +75,6 @@ pnb:
       way_node: راہ وچ نوڈ
       way_tag: راہ دا ٹیگ
     attributes:
-      client_application:
-        name: ناں (لازم)
-        url: ایس اَیپ لئی مکھ کڑی دا پتہ (لازم)
-        callback_url: کال‌بیک کڑی دا پتہ
-        support_url: مدد‌ کڑی دا پتہ
-        allow_read_prefs: اوس ورتنوالے دیاں ترجیحاں پڑھا سکدیاں
-        allow_write_prefs: اوس ورتنوالے دیان ترجیحاں سودھ سکدیاں
-        allow_write_diary: اوس روزنامچے وچ لیکھ بݨا سکدے، ٹپݨیاں کر سکدیاں تے دوست
-          جوڑ سکدے
-        allow_write_api: ایہہ نقشہ سودھ سکدا
-        allow_read_gpx: اوس ورتنوالے دیاں لُکاؤݨ کھرے کھوجاں پڑھا سکدیاں
-        allow_write_gpx: اوس لئی کھرے کھوجاں چڑھا سکدیاں
-        allow_write_notes: اوس لئی نوٹ سودھ سکدے
       diary_comment:
         body: مُکھ بھاگ
       diary_entry:
@@ -1094,12 +1082,11 @@ pnb:
       other_issues_against_this_user: ایس ورتنوالے بارے وچ ہور مسئلے
       no_other_issues: ایس ورتنوالے بارے وچ ہور مسئلے کوئی نہیں اے۔
       comments_on_this_issue: ایس مسئلے تے ٹپݨیاں
+      comment_from_html: '%{comment_created_at} «%{user_link}» دی ٹپݨی'
     resolve:
       resolved: ہݨے مسئلے دا حال ”حل کھندھیا“
     reopen:
       reopened: ہݨے مسئلے دا حال ”کھُلھا“
-    comments:
-      comment_from_html: '%{comment_created_at} «%{user_link}» دی ٹپݨی'
     reports:
       reported_by_html: '%{updated_at} %{user} %{category} نال رپورٹ کیتی سی۔'
     helper:
@@ -1134,31 +1121,31 @@ pnb:
   layouts:
     project_name:
       title: اوپن سٹریٹ میپ
-      h1: اوپن سٹریٹ میپ
     logo:
       alt_text: اوپن سٹریٹ میپ دا لوگو
-    home: گھریلو ٹکاݨے تے جاؤ
-    logout: لوگ‌آؤٹ کرو
-    log_in: لَوگ اِین کرو
-    sign_up: بھرتی ہووو
     start_mapping: نکشابندی شُرو کرو
-    edit: سودھو
-    history: تریخ
-    export: برامد کرو
-    issues: مسئلے
-    gps_traces: کھرے کھوجاں
-    user_diaries: روزنامچے
-    edit_with: '%{editor} نال سودھو'
     intro_header: اوپن سٹریٹ میپ تے سواگت اے!
     partners_fastly: فَیستلی
     partners_partners: جوڑیدار
     tou: ورتن شرطاں
-    help: مدد
-    about: بارے
-    copyright: نکل حق
-    communities: مجلساں
     learn_more: ہور سکھو
-    more: ہور
+    header:
+      about: بارے
+      communities: مجلساں
+      copyright: نکل حق
+      edit: سودھو
+      edit_with: '%{editor} نال سودھو'
+      export: برامد کرو
+      gps_traces: کھرے کھوجاں
+      help: مدد
+      history: تریخ
+      home: گھریلو ٹکاݨے تے جاؤ
+      issues: مسئلے
+      log_out: لوگ‌آؤٹ کرو
+      log_in: لَوگ اِین کرو
+      more: ہور
+      sign_up: بھرتی ہووو
+      user_diaries: روزنامچے
   user_mailer:
     diary_comment_notification:
       subject: '[⁠اوایس‌ایم⁠] روزنامچے تے «⁠%{user}⁠» ٹپݨی کیتے'
@@ -1380,32 +1367,6 @@ pnb:
       title: لوگ‌آؤٹ
       heading: اِتھے لوگ‌آوٹ کرو
       logout_button: لوگ‌آؤٹ کرو
-  shared:
-    markdown_help:
-      headings: سرخیاں
-      heading: سرخی
-      subheading: دوجا سرلیکھ
-      unordered: بناں سلسلے دی فہرست
-      ordered: سلسلے نال فہرست
-      first: پہلا آئٹم
-      second: ڈوجھا آئیٹم
-      link: کڑی
-      text: لکھت
-      image: تصویر
-      url: یو آر ایل
-    richtext_field:
-      edit: سودھو
-      preview: وکھالہ
-    pagination:
-      diary_comments:
-        older: پُراݨی ٹپݨیاں
-        newer: ناویاں ٹپݨیاں
-      diary_entries:
-        older: پُراݨے لیکھ
-        newer: نویں لیکھ
-      traces:
-        older: پراݨے کھر کھوجاں
-        newer: نویں کھر کھوجاں
   site:
     about:
       used_by_html: ویب سائیٹ، اَیپ تے ہارڈویر لئی %{name} توں نقشے دے ڈیٹا دیندے
@@ -1701,6 +1662,26 @@ pnb:
       wikipedia:
         title: وِکیپیڈیا نال لوگ‌این کرو
         alt: وِکیپیڈیا ورتو
+    markdown_help:
+      headings: سرخیاں
+      heading: سرخی
+      subheading: دوجا سرلیکھ
+      unordered: بناں سلسلے دی فہرست
+      first: پہلا آئٹم
+      second: ڈوجھا آئیٹم
+      link: کڑی
+      text: لکھت
+      image: تصویر
+      url: یو آر ایل
+    richtext_field:
+      preview: وکھالہ
+    pagination:
+      diary_comments:
+        older: پُراݨی ٹپݨیاں
+      diary_entries:
+        newer: نویں لیکھ
+      traces:
+        newer: نویں کھر کھوجاں
   oauth:
     scopes:
       read_prefs: ورتنوالے دیاں ترجیحاں پڑھا سکدیاں
@@ -1790,11 +1771,14 @@ pnb:
       activate_user: ایس ورتنوالے نوں کریا شیل کرو
       confirm_user: ایس ورتنوالے نوں تصدیق کرو
       unconfirm_user: ایس ورتنوالے نوں اݨ تصدیق کرو
-      hide_user: ایس ورتنوالے نوں لُکاؤ
-      unhide_user: ایس ورتنوالے دا اُہلا ہٹاؤ
-      delete_user: ایس ورتنوالے نوں مٹاؤ
       confirm: پکا کرو
       report: ایس ورتنوالا رپورٹ کریو
+      title:
+        administrator: ایہہ ورتنوالا اِکّ پرشاسک اے۔
+        moderator: ایہہ ورتنوالا اِکّ وچولا اے۔
+      grant:
+        administrator: پرشاسکی حق دیق
+        moderator: وچولگی دے حق دیو
     go_public:
       flash success: ہݨے تہادیاں ساریاں سودھاں عوام اے، تسیں سودھ سکدے اے۔
     lists:
@@ -1803,7 +1787,6 @@ pnb:
         heading: ورتنوالے
       page:
         confirm: چݨے ہوۓ ورتنوالیاں دی تصدیق کرو
-        hide: چݨے ہوۓ ورتنوالے لُکاؤ
         empty: کوئی میل کھاندے ورتنوالے نہیں لبھے
     changeset_comments:
       page:
@@ -1823,13 +1806,6 @@ pnb:
       unknown_error: اِجازت لے نہیں سکی گئی
     auth_association:
       heading: حالاں تہاڈے شناختی نال کجھ کھاتہ نہیں جوڑدے اے۔
-    role_icons:
-      title:
-        administrator: ایہہ ورتنوالا اِکّ پرشاسک اے۔
-        moderator: ایہہ ورتنوالا اِکّ وچولا اے۔
-      grant:
-        administrator: پرشاسکی حق دیق
-        moderator: وچولگی دے حق دیو
   user_blocks:
     not_found:
       back: تتکرے ول واپس
@@ -1907,11 +1883,11 @@ pnb:
       title: نقشے دا ٹیکا
       tooltip: نقشے دا ٹیکا
     map:
-      zoom:
-        in: وڈا کرو
-        out: چھوٹی کرو
-      locate:
-        title: میری ستھتی ویکھاؤ
+      NavigationControl:
+        ZoomIn: وڈا کرو
+        ZoomOut: چھوٹی کرو
+      GeolocateControl:
+        FindMyLocation: میری ستھتی ویکھاؤ
       base:
         standard: معیاری
         cyclosm: سائیکل

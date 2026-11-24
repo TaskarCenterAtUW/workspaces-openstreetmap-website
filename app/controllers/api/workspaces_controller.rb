@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TODO: this controller needs special auth with the workspaces backend
 module Api
   class WorkspacesController < ApiController

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module UserBlocks
     class ActiveListsController < ApiController
@@ -8,7 +10,7 @@ module Api
       before_action :set_request_formats
 
       def show
-        @user_blocks = current_user.blocks.active.order(:id => :desc)
+        @user_blocks = current_user.blocks.active.preload(:creator, :revoker).order(:id => :desc)
         @skip_reason = true
       end
     end

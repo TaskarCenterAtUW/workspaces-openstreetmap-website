@@ -1,10 +1,21 @@
-sotm_2025:
-  id: sotm_2025
-  alt: State of the Map 2025
-  link: https://2025.stateofthemap.org
-  img: banners/sotm_2025.png
+31day_2026:
+  id: 31day_2026
+  alt: 31 Day OSM Challenge 2026
+  link: https://wiki.openstreetmap.org/wiki/31_Day_OSM_Challenge
+  img: banners/31day_2026.png
   srcset:
-    - [banners/sotm_2025.png, 1x]
-    - [banners/sotm_2025@2x.png, 2x]
-  startdate: 2025-jul-01
-  enddate: 2025-oct-05
+    - [banners/31day_2026.png, 1x]
+    - [banners/31day_2026@2x.png, 2x]
+  startdate: 2026-oct-01
+  enddate: 2026-oct-31
+
+SotMLatam2026:
+  id: SotMLatam2026
+  alt: State of the Map Latam 2026
+  link: https://www.osmlatam.org/sotm/2026-es/
+  img: banners/SotMLatam2026.png
+  srcset:
+    - [banners/SotMLatam2026.png, 1x]
+    - [banners/SotMLatam2026@2x.png, 2x]
+  startdate: 2026-oct-27
+  enddate: 2026-oct-29

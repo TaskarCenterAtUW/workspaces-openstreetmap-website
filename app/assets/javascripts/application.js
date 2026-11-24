@@ -1,19 +1,20 @@
 //= require jquery3
 //= require jquery_ujs
-//= require jquery.throttle-debounce
 //= require js-cookie/dist/js.cookie
 //= require popper
 //= require bootstrap-sprockets
 //= require osm
 //= require leaflet/dist/leaflet-src
 //= require leaflet.osm
+//= require maplibre-gl/dist/maplibre-gl
+//= require leaflet.maplibre
 //= require leaflet.shortbread
+//= require leaflet.thunderforest
+//= require i18n
 //= require leaflet.maptiler
 //= require leaflet.map
 //= require leaflet.zoom
 //= require leaflet.locationfilter
-//= require i18n
-//= require make-plural/cardinals
 //= require matomo
 //= require richtext
 //= require language_selector
@@ -25,11 +26,13 @@
   OSM.i18n.defaultLocale = OSM.DEFAULT_LOCALE;
   OSM.i18n.locale = application_data.locale;
 
-  // '-' are replaced with '_' in https://github.com/eemeli/make-plural/tree/main/packages/plurals
-  const pluralizer = plurals[locale.replace(/\W+/g, "_")] || plurals[locale.split("-")[0]];
-  if (pluralizer) {
-    OSM.i18n.pluralization.register(locale, (_, count) => [pluralizer(count), "other"]);
-  }
+  import(OSM.MODULE_PATHS.make_plural_cardinals).then((plurals) => {
+    // '-' are replaced with '_' in https://github.com/eemeli/make-plural/tree/main/packages/plurals
+    const pluralizer = plurals[locale.replace(/\W+/g, "_")] || plurals[locale.split("-")[0]];
+    if (pluralizer) {
+      OSM.i18n.pluralization.register(locale, (_, count) => [pluralizer(count), "other"]);
+    }
+  });
 
   OSM.preferred_editor = application_data.preferredEditor;
   OSM.preferred_languages = application_data.preferredLanguages;
@@ -98,8 +101,9 @@ $(function () {
   // NB: Turns Turbo Drive off by default. Turbo Drive must be opt-in on a per-link and per-form basis
   // See https://turbo.hotwired.dev/reference/drive#turbo.session.drive
   Turbo.session.drive = false;
+  Turbo.session.history.stop();
 
-  const $expandedSecondaryMenu = $("header nav.secondary > ul"),
+  const $expandedSecondaryMenu = $("header nav ul.nav"),
         $collapsedSecondaryMenu = $("#compact-secondary-nav > ul"),
         secondaryMenuItems = [],
         breakpointWidth = 768;
@@ -112,10 +116,14 @@ $(function () {
     const windowWidth = $(window).width();
 
     if (windowWidth < breakpointWidth) {
-      $("body").addClass("small-nav");
       expandAllSecondaryMenuItems();
     } else {
-      $("body").removeClass("small-nav");
+      if (secondaryMenuItems.length === 0) {
+        $expandedSecondaryMenu.find("li:not(#compact-secondary-nav)").each(function () {
+          secondaryMenuItems.push([this, $(this).width()]);
+        });
+        moreItemWidth = $("#compact-secondary-nav").width();
+      }
       const availableWidth = $expandedSecondaryMenu.width();
       secondaryMenuItems.forEach(function (item) {
         $(item[0]).remove();
@@ -150,7 +158,7 @@ $(function () {
   function expandSecondaryMenuItem($item) {
     $item.children("a")
       .removeClass("dropdown-item")
-      .addClass("nav-link")
+      .addClass("nav-link px-1 py-2 py-md-1")
       .addClass(function () {
         return $(this).hasClass("active") ? "text-secondary-emphasis" : "text-secondary";
       });
@@ -161,7 +169,7 @@ $(function () {
   function collapseSecondaryMenuItem($item) {
     $item.children("a")
       .addClass("dropdown-item")
-      .removeClass("nav-link text-secondary text-secondary-emphasis");
+      .removeClass("nav-link px-1 py-2 py-md-1 text-secondary text-secondary-emphasis");
     $item.removeClass("nav-item").appendTo($collapsedSecondaryMenu);
     toggleCompactSecondaryNav();
   }
@@ -179,26 +187,56 @@ $(function () {
    * to defer the measurement slightly as a workaround.
    */
   setTimeout(function () {
-    $expandedSecondaryMenu.find("li:not(#compact-secondary-nav)").each(function () {
-      secondaryMenuItems.push([this, $(this).width()]);
-    });
-    moreItemWidth = $("#compact-secondary-nav").width();
-
     updateHeader();
 
     $(window).resize(updateHeader);
     $(document).on("turbo:render", updateHeader);
   }, 0);
 
-  $("#menu-icon").on("click", function (e) {
-    e.preventDefault();
-    $("header").toggleClass("closed");
-  });
-
-  $("nav.primary li a").on("click", function () {
-    $("header").toggleClass("closed");
+  $("#edit_tab li a").on("click", function () {
+    $(".navbar-toggler:not(.collapsed)").trigger("click");
   });
 
   $("#edit_tab")
     .attr("title", OSM.i18n.t("javascripts.site.edit_disabled_tooltip"));
+
+  document.addEventListener("turbo:frame-load", function (event) {
+    if (event.target.id === "select_language_list") {
+      const $search = $("#language_search");
+      if ($search.length) {
+        $search.off("input");
+        $search.on("input", function () {
+          const query = $(this).val().toLowerCase();
+          $(".language-item").each(function () {
+            const text = $(this).text().toLowerCase();
+            // Get languageCode from link_to data attribute
+            const code = $(this).find("a").data("languageCode").toLowerCase();
+            // Show the item if the query matches either the language name or code
+            const matches = text.indexOf(query) > -1 || code.indexOf(query) > -1;
+            $(this).toggle(matches);
+          });
+        });
+      }
+      $search
+        .val("")
+        .trigger("input")
+        .trigger("focus");
+    }
+  });
+
+  $("#select_language_dialog").on("shown.bs.modal", function () {
+    $("#language_search").trigger("focus");
+  });
+
+  $("#select_language_dialog").on("show.bs.modal", function () {
+    $("#language_search")
+      .val("")
+      .trigger("input");
+    const $frame = $("#select_language_list");
+    const src = new URL($frame.data("src"), window.location.origin);
+    src.searchParams.set("source", window.location.pathname + window.location.search);
+    if ($frame.attr("src") !== src.toString()) {
+      $frame.attr("src", src.toString());
+    }
+  });
 });

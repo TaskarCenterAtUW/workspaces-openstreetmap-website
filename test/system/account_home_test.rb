@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class AccountHomeTest < ApplicationSystemTestCase
@@ -53,5 +55,18 @@ class AccountHomeTest < ApplicationSystemTestCase
     visit account_home_path
     assert_no_selector ".leaflet-marker-icon"
     assert_text "Home location is not set"
+  end
+
+  test "account home page respects the URL hash on initialization" do
+    user = create(:user, :display_name => "test user", :home_lat => 60, :home_lon => 30)
+    sign_in_as(user)
+
+    visit "#{account_home_path}#map=5/0/0"
+
+    assert_selector "a.geolink[href*='#map=']"
+
+    zoom = execute_script("return OSM.cookies.get('_osm_location').split('|')[2]")
+
+    assert_equal "5", zoom
   end
 end

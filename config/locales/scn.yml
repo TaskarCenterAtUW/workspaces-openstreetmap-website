@@ -15,7 +15,7 @@
 scn:
   date:
     formats:
-      heatmap: '%B %-d'
+      contribution_calendar: '%B %-d'
   time:
     formats:
       friendly: '%e %B %Y ê %H:%M'
@@ -93,19 +93,6 @@ scn:
       way_node: Gruppu dû caminu
       way_tag: Etichetta dû caminu
     attributes:
-      client_application:
-        name: Nomu (ubblicatoriu)
-        url: Nnirizzu URL mastru di l’applicazzioni (ubblicatoriu)
-        callback_url: Nnirizzu URL di richiamata
-        support_url: Nnirizzu URL pi l’assistenza
-        allow_read_prefs: leggi i so prifirenzi di l’utenti
-        allow_write_prefs: cancia i so mpustazzioni di l’utenti.
-        allow_write_diary: criari pàggini dû diariu e cummenti
-        allow_write_api: cancia a carta
-        allow_write_changeset_comments: cummintari i gruppi di canci
-        allow_read_gpx: leggi i so tracci GPS privati
-        allow_write_gpx: càrrica i traccia GPS
-        allow_write_notes: cancia i noti
       diary_comment:
         body: Corpu
       diary_entry:
@@ -166,7 +153,7 @@ scn:
       doorkeeper/application:
         confidential: L’appricazzioni s'usa unni u sicritu dû client si po tèniri
           sicuru (l'app mobile native o l'app a pàggina sìngula nun sunnu sicuri)
-        redirect_uri: Usa un ringu pi ogni URI
+        redirect_uri: Usa un rigu pi ogni URI
       trace:
         tagstring: spartuti câ vìrgula
       user_block:
@@ -1008,28 +995,29 @@ scn:
   layouts:
     logo:
       alt_text: Logu d'OpenStreetMap
-    home: Vai â casa
-    logout: Nesci
-    log_in: Trasi
-    sign_up: Scrìviti
     start_mapping: Accumenza a mappari
-    edit: Cancia
-    history: Crunuluggìa
-    export: Esporta
-    gps_traces: Tracciati GPS
-    user_diaries: Diarî di l'utenti
-    edit_with: Cancia cu %{editor}
     intro_header: Bimminuti nta OpenStreetMap!
     intro_text: OpenStreetMap è na cartina dû munnu, criata di genti comu a tìa e
       lìbbira a adupirari secunnu na licenza graputa.
     partners_partners: cullabburatura
     tou: Cunnizzioni pi l’usu
     nothing_to_preview: Nenti di vìdiri.
-    help: Guida
-    about: Nfurmazzioni
-    copyright: Dritti d'auturi
     learn_more: Sapìrinni cchiossai
-    more: Autru
+    header:
+      about: Nfurmazzioni
+      copyright: Dritti d'auturi
+      edit: Cancia
+      edit_with: Cancia cu %{editor}
+      export: Esporta
+      gps_traces: Tracciati GPS
+      help: Guida
+      history: Crunuluggìa
+      home: Vai â casa
+      log_out: Nesci
+      log_in: Trasi
+      more: Autru
+      sign_up: Scrìviti
+      user_diaries: Diarî di l'utenti
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} cummintau na vuci dû tò diariu'
@@ -1256,7 +1244,6 @@ scn:
         keep image: Manteni la mmàggini attuali
         delete image: Leva la mmàggini attuali
         replace image: Rimpiazza la mmàggini attuali
-        image size hint: (sù megghiu li mmàggini quatrati 100x100 o chiù grossi)
     locations:
       show:
         no home location: Ancora nun mpustasti la tò pusizzioni basi.
@@ -1278,28 +1265,6 @@ scn:
       title: Nesci
       heading: Nesci d'OpenStreetMap
       logout_button: Nesci
-  shared:
-    markdown_help:
-      headings: Ntistazzioni
-      heading: Ntistazzioni
-      subheading: Suttantistazzioni
-      link: Culligamentu
-      text: Testu
-      image: Mmàggini
-      url: URL
-    richtext_field:
-      edit: Cancia
-      preview: Antiprima
-    pagination:
-      diary_comments:
-        older: Cummenti cchiù vecchî
-        newer: Cummenti cchiù novi
-      diary_entries:
-        older: Vuci cchiù vecchî
-        newer: Vuci cchiù novi
-      traces:
-        older: Tracciati cchiù vecchî
-        newer: Tracciati cchiù novi
   site:
     about:
       used_by_html: '%{name} furnisci li dati giogràfici a migghiara di siti web,
@@ -1650,6 +1615,23 @@ scn:
       wikipedia:
         title: Trasi cu Wikipedia
         alt: Trasi c'un cuntu Wikipedia
+    markdown_help:
+      headings: Ntistazzioni
+      heading: Ntistazzioni
+      subheading: Suttantistazzioni
+      link: Culligamentu
+      text: Testu
+      image: Mmàggini
+      url: URL
+    richtext_field:
+      preview: Antiprima
+    pagination:
+      diary_comments:
+        older: Cummenti cchiù vecchî
+      diary_entries:
+        newer: Vuci cchiù novi
+      traces:
+        newer: Tracciati cchiù novi
   oauth:
     scopes:
       read_prefs: Leggi li prifirenzi utenti
@@ -1713,10 +1695,18 @@ scn:
       create_block: blocca a st'utenti
       activate_user: attiva a st'utenti
       confirm_user: Cunferma a st'utenti
-      hide_user: Ammuccia a st'utenti
-      unhide_user: Ammustra a st'utenti
-      delete_user: Cancella a st'utenti
       confirm: Cunferma
+      title:
+        administrator: St'utenti è n'amministraturi
+        moderator: St'utenti è nu mudiraturi
+      grant:
+        administrator: Cuncedi l’accessu comu amministraturi
+        moderator: Cuncedi l’accessu comu mudiraturi
+        are_you_sure: Sî sicuru chi voi cuncèdiri lu rolu «%{role}» a l'utenti «%{name}»?
+      revoke:
+        administrator: Arrèvuca l'accessu comu amministraturi
+        moderator: Arrèvuca l'accessu comu mudiraturi
+        are_you_sure: Sî sicuru chi voi arrivucari lu rolu «%{role}» a l'utenti «%{name}»?
     go_public:
       flash success: Ora tutti li tò canciamenti sunnu pùbblici, e hai lu pirmissu
         di fari canciamenti.
@@ -1736,7 +1726,6 @@ scn:
         heading: Utenti
       page:
         confirm: Cunferma a l'utenti scigghiuti
-        hide: Ammuccia a l'utenti scigghiuti
         empty: Nun fu attruvatu nuḍḍu utenti chi currispunni
       user:
         summary_html: '%{name} criatu di %{ip_address} lu %{date}'
@@ -1758,18 +1747,6 @@ scn:
       no_authorization_code: Nuḍḍu còdici d'auturizzazzioni
       unknown_signature_algorithm: Alguritmu di firma scanusciutu
       invalid_scope: Àmmitu nun vàlidu
-    role_icons:
-      title:
-        administrator: St'utenti è n'amministraturi
-        moderator: St'utenti è nu mudiraturi
-      grant:
-        administrator: Cuncedi l’accessu comu amministraturi
-        moderator: Cuncedi l’accessu comu mudiraturi
-        are_you_sure: Sî sicuru chi voi cuncèdiri lu rolu «%{role}» a l'utenti «%{name}»?
-      revoke:
-        administrator: Arrèvuca l'accessu comu amministraturi
-        moderator: Arrèvuca l'accessu comu mudiraturi
-        are_you_sure: Sî sicuru chi voi arrivucari lu rolu «%{role}» a l'utenti «%{name}»?
   user_role:
     filter:
       not_a_role: La stringa «%{role}» nun è un rolu vàlidu.
@@ -1882,11 +1859,11 @@ scn:
       tooltip: Liggenna
       tooltip_disabled: La liggenna c'è sulu pû stratu Standard
     map:
-      zoom:
-        in: Zumma pi dintra
-        out: Zumma pi fora
-      locate:
-        title: Ammustra unni sugnu
+      NavigationControl:
+        ZoomIn: Zumma pi dintra
+        ZoomOut: Zumma pi fora
+      GeolocateControl:
+        FindMyLocation: Ammustra unni sugnu
       base:
         standard: Standard
         cycle_map: Cartina pî bicicletti

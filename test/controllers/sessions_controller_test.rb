@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
@@ -40,24 +42,24 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_template "sessions/new"
 
-    get login_path, :params => { :username => user.display_name, :password => "test" }
+    get login_path, :params => { :username => user.display_name, :password => "s3cr3t" }
     assert_response :success
     assert_template "sessions/new"
 
-    post login_path, :params => { :username => user.display_name, :password => "test" }
+    post login_path, :params => { :username => user.display_name, :password => "s3cr3t" }
     assert_redirected_to root_path
 
-    post login_path, :params => { :username => " #{user.display_name}", :password => "test" }
+    post login_path, :params => { :username => " #{user.display_name}", :password => "s3cr3t" }
     assert_redirected_to root_path
 
-    post login_path, :params => { :username => "#{user.display_name} ", :password => "test" }
+    post login_path, :params => { :username => "#{user.display_name} ", :password => "s3cr3t" }
     assert_redirected_to root_path
   end
 
   def test_login_remembered
     user = create(:user)
 
-    post login_path, :params => { :username => user.display_name, :password => "test", :remember_me => "yes" }
+    post login_path, :params => { :username => user.display_name, :password => "s3cr3t", :remember_me => "yes" }
     assert_redirected_to root_path
 
     assert_equal 28 * 86400, session[:_remember_for]
@@ -66,18 +68,67 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   def test_login_not_remembered
     user = create(:user)
 
-    post login_path, :params => { :username => user.display_name, :password => "test", :remember_me => "0" }
+    post login_path, :params => { :username => user.display_name, :password => "s3cr3t", :remember_me => "0" }
     assert_redirected_to root_path
 
     assert_nil session[:_remember_for]
   end
 
+  def test_login_pending_user
+    user = create(:user, :pending)
+
+    post login_path, :params => { :username => user.display_name, :password => "s3cr3t", :remember_me => "0" }
+    assert_redirected_to :controller => "confirmations", :action => "confirm", :display_name => user.display_name
+  end
+
+  def test_login_suspended_user
+    user = create(:user, :suspended)
+
+    post login_path, :params => { :username => user.display_name, :password => "s3cr3t", :remember_me => "0" }
+    assert_redirected_to login_path(:username => user.display_name, :remember_me => false)
+    assert_equal({ :partial => "sessions/suspended_flash" }, flash[:error])
+  end
+
+  def test_login_invalid_user
+    post login_path, :params => { :username => "nobody", :password => "noone", :remember_me => "0" }
+    assert_redirected_to login_path(:username => "nobody", :remember_me => false)
+    assert_equal(I18n.t("sessions.new.auth failure"), flash[:error])
+  end
+
+  def test_login_invalid_password
+    user = create(:user)
+
+    post login_path, :params => { :username => user.display_name, :password => "s2cr2t", :remember_me => "0" }
+    assert_redirected_to login_path(:username => user.display_name, :remember_me => false)
+    assert_equal(I18n.t("sessions.new.auth failure"), flash[:error])
+  end
+
+  def test_login_expired_password
+    user = create(:user, :pass_crypt => "expired password")
+
+    post login_path, :params => { :username => user.display_name, :password => "s3cr3t", :remember_me => "0" }
+    assert_redirected_to user_forgot_password_path
+    assert_equal(I18n.t("sessions.new.reset_to_login"), flash[:warning])
+  end
+
   def test_logout_without_referer
+    # From logged out
+    post logout_path
+    assert_redirected_to root_path
+
+    # From logged in
+    session_for(create(:user))
     post logout_path
     assert_redirected_to root_path
   end
 
   def test_logout_with_referer
+    # From logged out
+    post logout_path, :params => { :referer => "/test" }
+    assert_redirected_to "/test"
+
+    # From logged in
+    session_for(create(:user))
     post logout_path, :params => { :referer => "/test" }
     assert_redirected_to "/test"
   end

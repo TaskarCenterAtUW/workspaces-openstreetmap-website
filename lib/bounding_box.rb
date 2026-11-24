@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BoundingBox
   attr_reader :min_lon, :min_lat, :max_lon, :max_lat
 
@@ -28,7 +30,7 @@ class BoundingBox
   end
 
   def self.from_lrbt_params(params)
-    bbox_array = [params[:l], params[:b], params[:r], params[:t]] if params[:l] && params[:b] && params[:t] && params[:t]
+    bbox_array = [params[:l], params[:b], params[:r], params[:t]] if params[:l] && params[:b] && params[:r] && params[:t]
     from_bbox_array(bbox_array)
   end
 

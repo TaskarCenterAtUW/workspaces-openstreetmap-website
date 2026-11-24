@@ -78,9 +78,6 @@ ast:
       way_node: Nuedu de vía
       way_tag: Etiqueta de vía
     attributes:
-      client_application:
-        callback_url: URL de retornu
-        support_url: URL de asistencia
       diary_comment:
         body: Cuerpu
       diary_entry:
@@ -1103,14 +1100,13 @@ ast:
       other_issues_against_this_user: Otros problemes con esti usuariu
       no_other_issues: Nun hai otros problemes con esti usuariu.
       comments_on_this_issue: Comentarios d'esti problema
+      comment_from_html: Comentariu de %{user_link} el %{comment_created_at}
     resolve:
       resolved: L'estáu del problema pasó a «Resueltu»
     ignore:
       ignored: L'estáu del problema pasó a «Inoráu»
     reopen:
       reopened: L'estáu del problema pasó a «Abiertu»
-    comments:
-      comment_from_html: Comentariu de %{user_link} el %{comment_created_at}
     reports:
       reported_by_html: Reportáu como %{category} por %{user} el %{updated_at}
     helper:
@@ -1158,28 +1154,29 @@ ast:
   layouts:
     logo:
       alt_text: Logo d'OpenStreetMap
-    home: Dir al llugar d'entamu
-    logout: Salir
-    log_in: Aniciar sesión
-    sign_up: Rexistrase
     start_mapping: Comenzar a mapiar
-    edit: Editar
-    history: Historial
-    export: Esportar
-    issues: Problemes
-    gps_traces: Traces GPS
-    user_diaries: Diarios d'usuariu
-    edit_with: Editar con %{editor}
     intro_header: ¡Afáyate n'OpenStreetMap!
     intro_text: OpenStreetMap ye un mapa del mundu, creáu por persones como tu y d'usu
       llibre baxo una llicencia abierta.
     partners_partners: asociaos
     tou: Condiciones d'usu
-    help: Ayuda
-    about: Tocante a
-    copyright: Drechos d'autor
     learn_more: Más información
-    more: Más
+    header:
+      about: Tocante a
+      copyright: Drechos d'autor
+      edit: Editar
+      edit_with: Editar con %{editor}
+      export: Esportar
+      gps_traces: Traces GPS
+      help: Ayuda
+      history: Historial
+      home: Dir al llugar d'entamu
+      issues: Problemes
+      log_out: Salir
+      log_in: Aniciar sesión
+      more: Más
+      sign_up: Rexistrase
+      user_diaries: Diarios d'usuariu
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} comentó n''una entrada del diariu'
@@ -1396,7 +1393,6 @@ ast:
         keep image: Mantener la imaxe actual
         delete image: Desaniciar la imaxe actual
         replace image: Sustituir la imaxe actual
-        image size hint: (les imaxes cuadraes de polo menos 100x100 funcionen meyor)
     locations:
       show:
         no home location: Nun conseñasti el to llugar d'orixe.
@@ -1415,17 +1411,6 @@ ast:
       title: Salir
       heading: Colar d'OpenStreetMap
       logout_button: Salir
-  shared:
-    pagination:
-      diary_comments:
-        older: Comentarios anteriores
-        newer: Comentarios más nuevos
-      diary_entries:
-        older: Entraes anteriores
-        newer: Entraes más nueves
-      traces:
-        older: Traces más antigües
-        newer: Traces más nueves
   site:
     about:
       used_by_html: '%{name} proporciona datos de mapes a milenta sitios web, aplicaciones
@@ -1786,6 +1771,13 @@ ast:
       wikipedia:
         title: Aniciar sesión con Wikipedia
         alt: Aniciar sesión con una cuenta de Wikipedia
+    pagination:
+      diary_comments:
+        older: Comentarios anteriores
+      diary_entries:
+        newer: Entraes más nueves
+      traces:
+        newer: Traces más nueves
   oauth:
     permissions:
       missing: Nun permitisti l'accesu de l'aplicación a esta instalación
@@ -1838,11 +1830,19 @@ ast:
       create_block: Bloquiar esti usuariu
       activate_user: Activar esti usuariu
       confirm_user: Confirmar esti usuariu
-      hide_user: Anubrir esti usuariu
-      unhide_user: Amosar esti usuariu
-      delete_user: Desaniciar esti usuariu
       confirm: Confirmar
       report: Informar d'esti usuariu
+      title:
+        administrator: Esti usuariu ye alministrador
+        moderator: Esti usuariu ye moderador
+      grant:
+        administrator: Dar accesu d'alministrador
+        moderator: Dar accesu de moderador
+        are_you_sure: ¿Seguro que quies da-y el rol «%{role}» al usuariu «%{name}»?
+      revoke:
+        administrator: Quitar accesu d'alministrador
+        moderator: Quitar accesu de moderador
+        are_you_sure: ¿Seguro que quies quita-y el rol «%{role}» al usuariu «%{name}»?
     go_public:
       flash success: Agora toles ediciones tuyes son públiques, y tienes permisu pa
         editar.
@@ -1862,7 +1862,6 @@ ast:
         heading: Usuarios
       page:
         confirm: Confirmar los usuarios esbillaos
-        hide: Anubrir los usuarios esbillaos
         empty: Nun s'atoparon usuarios que concasen
       user:
         summary_html: '%{name} creáu dende %{ip_address} el %{date}'
@@ -1892,18 +1891,6 @@ ast:
         Si yá tienes una cuenta, puedes aniciar sesión nella
         usando'l to nome d'usuariu y contraseña y llueu asociar
         la cuenta cola ID nes preferencies d'usuariu.
-    role_icons:
-      title:
-        administrator: Esti usuariu ye alministrador
-        moderator: Esti usuariu ye moderador
-      grant:
-        administrator: Dar accesu d'alministrador
-        moderator: Dar accesu de moderador
-        are_you_sure: ¿Seguro que quies da-y el rol «%{role}» al usuariu «%{name}»?
-      revoke:
-        administrator: Quitar accesu d'alministrador
-        moderator: Quitar accesu de moderador
-        are_you_sure: ¿Seguro que quies quita-y el rol «%{role}» al usuariu «%{name}»?
   user_role:
     filter:
       not_a_role: La cadena «%{role}» nun ye un rol válidu.
@@ -2023,11 +2010,11 @@ ast:
       tooltip: Clave del mapa
       tooltip_disabled: La lleenda del mapa nun ta disponible nesta capa
     map:
-      zoom:
-        in: Ampliar
-        out: Amenorgar
-      locate:
-        title: Ver el mio allugamientu
+      NavigationControl:
+        ZoomIn: Ampliar
+        ZoomOut: Amenorgar
+      GeolocateControl:
+        FindMyLocation: Ver el mio allugamientu
         metersPopup:
           one: Tas a menos d'un metru d'esti puntu
           other: Tas a menos de %{count} metros d'esti puntu

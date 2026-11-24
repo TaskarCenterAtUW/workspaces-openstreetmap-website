@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: acls
@@ -12,13 +14,14 @@
 # Indexes
 #
 #  acls_k_idx             (k)
-#  index_acls_on_address  (address) USING gist
+#  index_acls_on_address  (address inet_ops) USING gist
 #  index_acls_on_domain   (domain)
 #  index_acls_on_mx       (mx)
 #
 
 class Acl < ApplicationRecord
   validates :k, :presence => true
+  validates :address, :inet => true
 
   def self.match(address, options = {})
     acls = Acl.where("address >>= ?", address)

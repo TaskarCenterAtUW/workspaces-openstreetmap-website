@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 attrs = {
   "id" => way.id,
   "visible" => way.visible,
@@ -9,8 +11,8 @@ attrs = {
 }
 
 xml.way(attrs) do |w|
-  way.nodes.each do |n|
-    w.nd(:ref => n.id)
+  way.nds.each do |n|
+    w.nd(:ref => n)
   end
 
   way.tags.each do |k, v|

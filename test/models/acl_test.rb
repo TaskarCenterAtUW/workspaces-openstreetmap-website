@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class AclTest < ActiveSupport::TestCase
@@ -6,6 +8,19 @@ class AclTest < ActiveSupport::TestCase
     assert_predicate acl, :valid?
     acl.k = nil
     assert_not_predicate acl, :valid?
+  end
+
+  def test_address_must_be_valid
+    acl = build(:acl, :address => "192.0.2.0/24")
+    assert_predicate acl, :valid?
+
+    acl = build(:acl, :address => "")
+    assert_predicate acl, :valid?
+    assert_nil acl.address
+
+    acl = build(:acl, :address => "not-an-address")
+    assert_not_predicate acl, :valid?
+    assert_includes acl.errors[:address], "is invalid"
   end
 
   def test_no_account_creation_by_subnet
