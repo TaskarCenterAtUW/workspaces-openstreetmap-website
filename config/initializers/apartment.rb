@@ -33,6 +33,7 @@ Apartment.configure do |config|
     "ModerationZone",
     "Oauth2Application",
     "Report",
+    "SocialLink",
     "SpammyPhrase",
     "Team",
     "TeamUser",
