@@ -5,14 +5,14 @@
 # Author: Ahmed-Najib-Biabani-Ibrahimkhel
 # Author: Ajeje Brazorf
 # Author: Amjad Khan
+# Author: McDutchie
+# Author: O.sediqi93
+# Author: باران
 # Author: شاه زمان پټان
 ---
 ps:
   html:
     dir: rtl
-  date:
-    formats:
-      heatmap: '%B %-d'
   time:
     formats:
       friendly: '%e %B %Y په %H:%M'
@@ -24,7 +24,7 @@ ps:
         create: څرگندونه
       diary_entry:
         create: خپرول
-        update: تازه کول
+        update: هم‌مهالول
       issue_comment:
         create: څرگندونه ورگډول
       message:
@@ -33,8 +33,8 @@ ps:
         create: ثبتول
         update: تازه کول
       trace:
-        create: پورته کول
-        update: بدلونونه خوندي کول
+        create: راپورته‌کول
+        update: بدلونونه خوندي‌کول
       user_block:
         create: بنديز جوړول
         update: بنديز وسمهالول
@@ -72,16 +72,13 @@ ps:
       way: لار
       way_tag: لار نښلن
     attributes:
-      client_application:
-        name: نوم (اړين دی)
-        url: ار غوښتنليک وېب‌تړ (اړين دی)
       diary_comment:
         body: جوسه
       diary_entry:
         user: کارن
         title: سکالو
-        latitude: لوړوالی
-        longitude: اوږدوالی
+        latitude: ځمک‌لنډوالی
+        longitude: ځمک‌اوږدوالی
         language_code: ژبه
       doorkeeper/application:
         name: نوم
@@ -94,13 +91,18 @@ ps:
         visible: ښکاره
         name: دوتنې‌نوم
         size: کچه
-        latitude: لوړوالی
-        longitude: اوږدوالی
-        public: ټولگړی
-        description: څرگندونه
+        latitude: ځمک‌لنډوالی
+        longitude: ځمک‌اوږدوالی
+        public: ټولواله
+        description: څرگنداوی
         gpx_file: 'جي‌اېف‌اېکس څار دوتنه غوره‌کول:'
-        visibility: ښکارېدنه
+        visibility: څرگندتيا
         tagstring: نښلنونه
+      moderation_zone:
+        name: نوم
+        reason: لامل
+        zone: سيمه
+        period: دوره
       message:
         sender: لېږونکی
         title: سکالو
@@ -118,12 +120,21 @@ ps:
         display_name: ښکارېدونکی نوم
         description: پېژنيال څرگنداوی
         company: کمپنۍ
-        home_lat: لوړوالی
-        home_lon: اوږدوالی
-        languages: غوره ژبې
+        home_lat: ځمک‌لنډوالی
+        home_lon: ځمک‌اوږدوالی
+        languages: غوره‌شوې ژبې
         preferred_editor: غوره سمونگر
         pass_crypt: پټنوم
         pass_crypt_confirmation: پټنوم تاييدول
+  datetime:
+    distance_in_words_ago:
+      half_a_minute: نيمه دقيقه مخکې
+      less_than_x_minutes:
+        one: تر %{count} دقيقې لږ مخکې
+        other: تر %{count} دقيقو لږ مخکې
+      x_minutes:
+        one: '%{count} دقيقه مخکې'
+        other: '%{count} دقيقې مخکې'
   editor:
     default: تلواليز (اوسنی %{name})
     id:
@@ -132,10 +143,10 @@ ps:
     providers:
       none: هيڅ
       google: گوگل
-      apple: مڼه
+      apple: اپل
       facebook: فيسبوک
       github: گيټ‌هاب
-      wikipedia: ويکيپېډيا
+      wikipedia: ويکي‌پېډيا
   api:
     notes:
       entry:
@@ -149,14 +160,18 @@ ps:
       external auth: بېرونۍ تاييدي
       contributor_terms:
         heading: مرستيالۍ لارښود
+        review: منښتونو بياکتنه
+        review_and_accept: د منښتونو بياکتنه او منل
       terms_of_use:
         heading: کارولو منښتونه
         agreed: تاسو په %{date} د کارونې منښتونو سره همغږيتوب وښود.
         review: منښتونو بياکتنه
         review_and_accept: د منښتونو بياکتنه او منل
       save changes button: بدلونونه خوندي کول
+      delete_account: گڼون ړنگول...
     go_public:
       heading: ټولگړی سمون
+      find_out_why: لامل يې بيامومئ
     destroy:
       success: گڼون ړنگ شو.
     deletions:
@@ -240,11 +255,31 @@ ps:
         created: جوړ شو
         closed: تړل شوی
         belongs_to: ليکوال
+    show:
+      discussion: شننه
+      subscribe: ونډه‌کښل
+      unsubscribe: له ونډې‌وتل
+      hide_comment: پټول
+      unhide_comment: ناپټول
+      comment: څرگندونه
     paging_nav:
       ways_title: لارې
   dashboards:
+    contact:
+      no_edits: (هېڅ سمونونه نه‌شته)
     popup:
       your location: ستاسو ځای
+    show:
+      title: زما ليددړه
+      edit_your_profile: خپل پېژنيال سمول
+      followings: کارنان چې تاسو يې څارئ
+  notifications:
+    gpx_details:
+      filename: دوتنې‌نوم
+      description: څرگنداوی
+      tags: نښلنونه
+    new_follower:
+      headline: نوی څارونکی
   diary_entries:
     form:
       location: ځای
@@ -270,6 +305,9 @@ ps:
       report: د دې څرگندونې راپور ورکول
     location:
       location: 'ځای:'
+  errors:
+    contact:
+      contact: اړيکه
   geocoder:
     search_osm_nominatim:
       prefix:
@@ -337,6 +375,7 @@ ps:
         historic:
           castle: ماڼۍ
           church: کليسا
+          fort: بندر
           house: کور
           tower: برج
         landuse:
@@ -421,16 +460,17 @@ ps:
       miles_yards: ميله، يارډه
       distance_units_settings: واټن يوونونو اوڼنې
   layouts:
-    home: کورځی ته ورتلل
-    logout: وتل
-    log_in: ننوتل
-    sign_up: نوم‌ليکل
-    edit: سمول
-    history: پېښليک
-    help: لارښود
     learn_more: نور مالومات
     header:
-      ok: ښه
+      edit: سمول
+      help: لارښود
+      history: پېښليک
+      home: کورځی ته ورتلل
+      log_out: وتل
+      log_in: ننوتل
+      sign_up: نوم‌لينکه
+    meta:
+      openstreetmap_search: د پرانېستې‌کوڅې‌نخشې پلټل
   user_mailer:
     diary_comment_notification:
       hi: '%{to_user} سلامونه،'
@@ -530,23 +570,6 @@ ps:
     destroy:
       title: وتل
       logout_button: وتل
-  shared:
-    pagination:
-      changeset_comments:
-        oldest: زړې څرگندونې
-        newest: نوې څرگندونې
-      diary_comments:
-        oldest: زړې څرگندونې
-        newest: نوې څرگندونه
-      diary_entries:
-        oldest: زړې ننوتنې
-        newest: نوې ننوتنې
-      issues:
-        oldest: زړې ستونزې
-        newest: نوې ستونزه
-      users:
-        oldest: زاړه کارنان
-        newest: نوي کارنان
   site:
     copyright:
       foreign:
@@ -559,7 +582,7 @@ ps:
         lead_2_osm_community: او اېس اېم ټولنه
         lead_2_osm_foundation: اواېس اېم بنسټ
         lead_2_making_donation: بسپنه ورکول
-        licensing_1_open: پرانيستل
+        licensing_1_open: پرانېستل
         credit_1_html: 'چېرې چې تاسو د پرانېستې کوڅې نخشې اومتوک کاروئ، نو اړينه ده
           چې تاسو لاندې دوه څيزونه ترسره کړئ:'
         services_title_html: زياتي چوپړونه
@@ -572,7 +595,7 @@ ps:
       search_results: د پلټنې پايلې
     search:
       search: پلټل
-      where_am_i: دا چېرته دی؟
+      where_am_i: چېرته دی؟
       submit_text: ورځه
       providers:
         description: لارښوونيزې چوپړتياوې
@@ -598,27 +621,51 @@ ps:
     edit:
       visibility_help: دا څه مانا لري؟
     show:
-      filename: 'د دوتنې نوم:'
-      download: ښکته کول
+      filename: 'د دوتنې‌نوم:'
+      download: راکښته‌کول
       map: نخشه
-      edit: سمول
+      edit: سمونگر کې يې پرانېځئ
       owner: 'خاوند:'
+      tags: 'نښلنونه:'
       none: هېڅ
-      edit_trace: دا څارنه سمول
+      edit_trace: د پل‌څار سپيناوی سمول
+      delete_trace: دا پل‌څار ړنگول
+      trace_not_found: پل‌څار ونه‌موندل شو!
     trace:
-      view_map: نخشه کتل
-      edit_map: نخشه سمول
+      view_map: پر نقشه کې د موقعیت کتل
+      edit_map: سمونگر کې يې پرانېځئ
+      public: ټولگړی
   application:
     auth_providers:
       apple:
         title: ايپل سره ورننوتل
-        alt: ايپل نښان
+        alt: اپل نښان
       github:
         title: د گېټ‌هب له لارې ننوتل
-        alt: گېټ‌هب نښان
+        alt: گيټ‌هاب نښان
+    pagination:
+      changeset_comments:
+        newest: نوې څرگندونې
+      diary_comments:
+        oldest: زړې څرگندونې
+        newest: نوې څرگندونه
+      diary_entries:
+        oldest: زړې ننوتنې
+        newest: نوې ننوتنې
+      issues:
+        oldest: زړې ستونزې
+        newest: نوې ستونزه
+      users:
+        oldest: زاړه کارنان
+        newest: نوي کارنان
+  oauth2_applications:
+    application:
+      edit: سمول
+      delete: ړنگول
+      confirm_delete: دا کاريال ړنگ کړي؟
   users:
     new:
-      title: نومليکنه
+      title: نوم‌لينکه
       by_signing_up:
         tou: کارولو منښتونه
     show:
@@ -630,17 +677,14 @@ ps:
       status: 'دريځ:'
       block_history: فعاله بنديزونه
       moderator_history: لگېدلي بنديزونه
-      comments: تبصرې
+      comments: څرگندونې
       create_block: په دې کارن بنديز لگول
       activate_user: دا کارن فعالول
       confirm_user: همدا کارن تاييدول
-      hide_user: دا کارن پټول
-      unhide_user: دا کارن ښکاره کول
-      delete_user: دا کارن ړنگول
       confirm: تاييد
       edit_profile_details: پېژنيال سپيناوي سمول
       edit_description: څرگنداوی سمول
-      edit_links: تړنې سمول
+      edit_links: تړوني سمول
       change_image: انځور بدلول
       edit_company: کمپنۍ سمول
       edit_location: ځای سمول
@@ -675,24 +719,24 @@ ps:
       comment: تبصره
   javascripts:
     share:
-      filename: نخچه
+      filename: نخشه
     profile:
-      social_link_n: ټولنيزه پېژنيال وېبتړ %{n}
-      remove_social_link_n: د ټولنيزه پېژنيال وېبتړ %{n} لرې‌کول
+      social_link_n: د ټولنیز پېژنيال تړونی %{n}
+      remove_social_link_n: د ټولنيزه پېژنيال تړونی %{n} لرې‌کول
     directions:
       errors:
         no_place:
-          title: پلټل ناکام شو
+          title: لټون بې پایلې دی
       instructions:
         unnamed: بې نومه
     element:
-      wikipedia: ويکيپېډيا
+      wikipedia: ويکي‌پېډيا
     remote_edit:
       failed:
         title: سمون نابريالی شو
   redactions:
     show:
-      description: 'څرگندونه:'
+      description: 'څرگنداوی:'
       user: 'جوړونکی:'
-      confirm: آيا تاسې ډاډه ياست؟
+      confirm: ايا تاسو ډاډه ياست؟
 ...

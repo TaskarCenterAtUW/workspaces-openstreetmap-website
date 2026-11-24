@@ -3,12 +3,13 @@
 # Export driver: phpyaml
 # Author: Eihel
 # Author: L'Arpetani
+# Author: Marwin H.H.
 # Author: Sampi│ϡ
 ---
 frp:
   date:
     formats:
-      heatmap: '%-d %B'
+      contribution_calendar: '%-d %B'
   time:
     formats:
       friendly: '%e %B %Y a %H:%M'
@@ -87,19 +88,6 @@ frp:
       way_node: Nuod du chemin
       way_tag: Atribut du chemin
     attributes:
-      client_application:
-        name: Nom (requis)
-        url: URL de l'aplicacion prencipâla (requis)
-        callback_url: URL de rapèl
-        support_url: URL de l'assistance
-        allow_read_prefs: liére les prèferences de l'usanciér(e)
-        allow_write_prefs: changiér les prèferences de l'usanciér(e)
-        allow_write_diary: crèar d'entrâyes du jornâl et de comentèros
-        allow_write_api: changiér la mapa
-        allow_write_changeset_comments: comentar les bendes de changements
-        allow_read_gpx: liére ses traces GPS privâyes
-        allow_write_gpx: tèlèvèrsar de traces GPS
-        allow_write_notes: changiér les notes
       diary_comment:
         body: Côrp
       diary_entry:
@@ -327,8 +315,9 @@ frp:
         title: Condicions
         heading: Condicions
         heading_ct: Condicions de contribucion
-        read and accept with tou: Mèrci de liére l'acôrd du contributor et les condicions
-          d'usâjo, pués validâd les doves câses et apoyéd adonc sur lo boton « Continuar ».
+        read and accept with tou: Mèrci de liére les condicions du contributor et
+          les condicions d'usâjo, pués validâd les doves câses et apoyéd sur lo boton
+          « Continuar ».
         contributor_terms_explain: Cét acôrd govèrne les condicions de voutres contribucions
           ègzistantes et a venir.
         read_ct: J'é liesu et j'accèpto les Condicions de contribucion cé d'amont
@@ -742,8 +731,6 @@ frp:
         one: '%{count} comentèro'
         other: '%{count} comentèros'
       title_label: Entrâye du jornâl
-      comments_label: Comentèros
-      date_label: Dâta
   diary_comments:
     new:
       heading: Apondre un comentèro a ceta discussion d'entrâye de jornâl ?
@@ -805,6 +792,9 @@ frp:
       title: Valor pas trovâye
       description: S'at pas pu trovar un fichiér, un repèrtouèro ou una opèracion
         de l'API avouéc cél nom sur lo sèrvor OpenStreetMap (HTTP 404)
+  export:
+    show:
+      title: OpenStreetMap entègrâ
   follows:
     show:
       follow:
@@ -963,9 +953,13 @@ frp:
           aboriginal_lands: Tèrritouèros ôtoctonos
           administrative: Limita administrativa
           census: Frontiére statistica
+          low_emission_zone: Zona de bâsses èmissions
           national_park: Parc nacionâl
           political: Circonscripcion èlèctorala
+          postal_code: Codo postâl
           protected_area: Zona protègiêe
+          public_transport: District de transpôrt public
+          timezone: Fus horèro
           "yes": Frontiére
         bridge:
           aqueduct: Égoueduc
@@ -1141,6 +1135,7 @@ frp:
           milestone: Borna historica
           mine: Mina
           mine_shaft: Pouéts de mina
+          monastery: Monastèro historico
           monument: Monument
           railway: Chemin de fèr historico
           roman_road: Chemin romen
@@ -1231,7 +1226,7 @@ frp:
           sports_centre: Centro sportif
           stadium: Stado
           swimming_pool: Piscena
-          track: Pista de corsa
+          track: Pista de corsa (nan motorisâye)
           water_park: Parc d'égoua
           "yes": Lèsirs
         lock:
@@ -1267,6 +1262,7 @@ frp:
           mineshaft: Pouéts de mina
           monitoring_station: Stacion de survelyence
           petroleum_well: Pouéts de pètrole
+          planter: Jardiniére
           pier: Avanciêe sur l'égoua
           pipeline: Canalisacion
           pumping_station: Stacion de pompâjo
@@ -1407,6 +1403,7 @@ frp:
           abandoned: Chemin de fêr abandonâ
           buffer_stop: Butor
           construction: Chemin de fèr en construccion
+          crossing: Passâjo a nivél
           disused: Chemin de fèr dèsafèctâ
           funicular: Funiculèro
           halt: Stacion de tren
@@ -1668,6 +1665,7 @@ frp:
       download: Tèlèchargiér la rota en GeoJSON
       filename: rota
       directions_courtesy_html: Rota fornia per %{link}
+      check_demo_html: Més de dètalys dês %{link}
   issues:
     index:
       title: Problèmos
@@ -1720,16 +1718,15 @@ frp:
       other_issues_against_this_user: Ôtros problèmos que regârdont cét(a) usanciér(e)
       no_other_issues: Gins d'ôtro problèmo avouéc cét(a) usanciér(e).
       comments_on_this_issue: Comentèros sur cét problèmo
+      comment_from_html: Comentèro de %{user_link} sur %{comment_created_at}
+      reassign_to_moderators: Tornar afèctar lo problèmo ux modèrators
+      reassign_to_administrators: Tornar afèctar lo problèmo ux administrators
     resolve:
       resolved: L'ètat du problèmo at étâ metu a « Rèsolu »
     ignore:
       ignored: L'ètat du problèmo at étâ metu a « Ignorâ »
     reopen:
       reopened: L'ètat du problèmo at étâ metu a « Uvèrt »
-    comments:
-      comment_from_html: Comentèro de %{user_link} sur %{comment_created_at}
-      reassign_to_moderators: Tornar afèctar lo problèmo ux modèrators
-      reassign_to_administrators: Tornar afèctar lo problèmo ux administrators
     reports:
       reported_by_html: Signalâ coment %{category} per %{user} lo %{updated_at}
     helper:
@@ -1789,21 +1786,128 @@ frp:
     create:
       successful_report: Voutron rapôrt at ben étâ encartâ
       provide_details: Mèrci de fornir los dètalys ègzigiês
+  languages_panes:
+    select_language_list:
+      search_language: Rechèrche...
+      languages:
+        af: Afrikâns
+        gsw: Tuche
+        frp: Arpetan
+        ast: Asturien
+        az: Azèri
+        id: Endonèsien
+        ms: Malês
+        bcl: Bikol centrâl
+        bs: Bosnien
+        br: Breton
+        ca: Catalan
+        cs: Tchèco
+        cy: Galouès
+        da: Danouès
+        de: Alemand
+        dsb: Bâs sorabo
+        et: Èstonien
+        en: Angllès
+        en-GB: Angllès (Royômo-Uni)
+        es: Èspagnol
+        eo: Èsperanto
+        eu: Bâsco
+        fr: Francês
+        fy: Frison du cuchient
+        fur: Friôlan
+        ga: Irlandês
+        gd: Gaèlico ècocês
+        gl: Galicien
+        aln: Gheg
+        hsb: Hôt sorabo
+        hr: Croato
+        ia: Interlingua
+        is: Islandês
+        it: Étalien
+        kw: Cornico
+        gcf: Crèolo goadeloupèen
+        ku-Latn: Kurdo (latin)
+        lv: Lèton
+        lb: Luxemborgês
+        lkt: Lakota
+        lt: Lituanien
+        hu: Hongrouès
+        fit: Meänkieli
+        nl: Nêrlandês
+        nb: Norvègien Bokmål
+        nn: Norvègien Nynorsk
+        oc: Occitan
+        nds: Bâs alemand
+        pl: Polonês
+        pt-PT: Português
+        pt: Português brèsilien
+        ksh: Kölsch
+        ro: Roumen
+        sc: Sârdo
+        sco: Ècocês
+        sq: Albanês
+        scn: Sicilien
+        sk: Slovaco
+        sl: Slovèno
+        sr-Latn: Sèrbo (latin)
+        sh: Serbo-croato (Latin)
+        fi: Finouès
+        sv: Suèdouès
+        tl: Tagalog
+        kab: Kabilo
+        vi: Viètnamien
+        tr: Turco
+        yo: Yoruba
+        diq: Dimli
+        el: Grèco
+        ba: Bashkir
+        be: Bièlorusso
+        be-Tarask: Bièlorusso Tarachkievitch
+        bg: Bulgaro
+        mk: Macèdonien
+        mo: Moldavo
+        ce: Tchètchèno
+        ru: Russo
+        sr: Sèrbo (Cirilico)
+        tt: Tatar (Cirilico)
+        uk: Ucrènien
+        kk-cyrl: Kazakh (Cirilico)
+        yi: Yidiche
+        he: Hèbrèo
+        ar: Arabo
+        skr-arab: Saraiki
+        fa: Pèrsan
+        arz: Arabo ègipcien
+        pnb: Pendjabi
+        ps: Pashto
+        nqo: N'ko
+        ne: Nèpalês
+        mr: Marathi
+        hi: Hindi
+        bn: Bengali
+        pa: Pendjabi
+        gu: Gujarati
+        ta: Tamil
+        te: Telugu
+        kn: Kannada
+        th: Tayi
+        my: Birman
+        shn: Shan
+        xmf: Mingrèlien
+        ka: Jorgien
+        km: Khmer
+        sat: Santali
+        zh-CN: Chinouès simplifiâ
+        zh-TW: Chinouès (tradicionâl)
+        zh-HK: Chinouès de Hong Kong
+        ja: Japonês
+        ko: Corèen
   layouts:
     logo:
       alt_text: Simbolo d'OpenStreetMap
-    home: Alar u luè de voutron domicilo
-    logout: Sè dèbranchiér
-    log_in: Sè branchiér
-    sign_up: S'encartar
+    main_navigation: Principâl
+    layer_info: Enformacions de la cuche
     start_mapping: Comenciér a mapar
-    edit: Changiér
-    history: Historico
-    export: Èxportar
-    issues: Problèmos
-    gps_traces: Traces GPS
-    user_diaries: Jornâls de l'usanciér(e)
-    edit_with: Changiér avouéc %{editor}
     intro_header: Benvenua dens OpenStreetMap !
     intro_text: OpenStreetMap est una mapa du mondo, fâte per des gens come vos, et
       libra d'usâjo sot licence libra.
@@ -1811,17 +1915,33 @@ frp:
       et d'ôtros %{partners}.
     partners_corpmembers: de membros de l'entreprêsa OSMF
     partners_partners: partenèros
+    welcome_tou_notice_html: En utilisant ceti sito de malyâjo ou ben una ôtra enfrastructura
+      fornia per la Fondacion OpenStreetMap, vos accèptâd les %{terms_link}
+    terms_of_use: Condicions d’usâjo
     tou: Condicions d’usâjo
     nothing_to_preview: É y at ren a prè-vêre.
-    help: Éde
-    about: A propôs
-    copyright: Drêts d'ôtor
-    communities: Comunôtâts
     learn_more: Nen savêr més
-    more: Més
     header:
-      ok: D’acôrd
+      about: A propôs
+      communities: Comunôtâts
+      copyright: Drêts d'ôtor
+      donate: Balyér
+      edit: Changiér
+      edit_with: Changiér avouéc %{editor}
+      export: Èxportar
+      gps_traces: Traces GPS
+      help: Éde
+      history: Historico
+      home: Alar u luè de voutron domicilo
+      issues: Problèmos
+      log_out: Sè dèbranchiér
+      log_in: Sè branchiér
+      more: Més
       select_language: Chouèsir la lengoua
+      sign_up: S'encartar
+      user_diaries: Jornâls de l'usanciér(e)
+    meta:
+      openstreetmap_search: OpenStreetMap Rechèrche
     select_language_button:
       title: Chouèsir la lengoua
     offline_flash:
@@ -2125,23 +2245,42 @@ frp:
       update_success_flash:
         message: Prèferences betâyes a jorn.
       navigation:
-        preferences: Prèferences
-        advanced_preferences: Prèferences avanciêes
+        preferences: Entèrface
+        notification_preferences: Notificacions
+        advanced_preferences: Avanciê
     basic_preferences:
       show:
         title: Mes prèferences
         preferred_language: Lengoua prèferâye
-        preferred_site_color_scheme: Sistèmo de colors prèferâ por lo sito vouèbe
+        preferred_site_color_scheme: Sistèmo de colors prèfèrâ por lo sito vouèbe
         site_color_schemes:
           auto: Ôtô
           light: Cllâr
           dark: Sombro
         preferred_map_color_scheme: Sistèmo de colors prèferâ por la mapa
         map_color_schemes:
-          auto: Ôtô
+          auto: Mémo que lo sito vouèbe
+          light: Cllâr
+          dark: Sombro
+        preferred_editor_color_scheme: Èditor prèfèrâ por la color du sistèmo
+        editor_color_schemes:
+          auto: Mémo que lo sito vouèbe
           light: Cllâr
           dark: Sombro
         save: Betar a jorn les prèferences
+    notification_preferences:
+      show:
+        title: Prèfèrences de notificacions
+        changeset_comment: Comentèros de la benda de changements
+        diary_comment: Comentèro du jornâl
+        direct_message: Mèssâjos dirècts
+        gpx_import_failure: Fôta d'emport de trace GPS
+        gpx_import_success: La trace GPS at ètâ emportâye corrèctament
+        new_follower: Siuvors novéls
+        note_comment: Comentèros de nota
+        save: Betar a jorn les prèferences
+        delivery_mechanisms:
+          email: Adrèce èlèctronica
     advanced_preferences:
       show:
         title: Mes prèferences avanciêes
@@ -2154,6 +2293,7 @@ frp:
         image: Émâge
         company: Entreprêsa
         location: Emplacement
+        contribution_calendar: Calendriér de contribucions
     descriptions:
       show:
         title: Changiér lo profil
@@ -2181,14 +2321,11 @@ frp:
         cancel: Anular
         gravatar:
           gravatar: Sèrvir Gravatar
-          link: https://wiki.openstreetmap.org/wiki/Gravatar
           what_is_gravatar: Qu'est que Gravatar ?
         new image: Apondre una émâge
         keep image: Gouardar l'émâge actuèla
         delete image: Suprimar l'émâge actuèla
         replace image: Remplaciér l'émâge actuèla
-        image size hint: (les émâges carrâyes de més de 100×100 pixèls fonccionont
-          mielx)
       update:
         success: Émâge de profil betâye a jorn.
         failure: L'émâge du profil at pas povu étre betâye a jorn.
@@ -2214,6 +2351,16 @@ frp:
       update:
         success: Luè du profil betâ a jorn.
         failure: Lo luè du profil at pas povu étre betâ a jorn.
+    heatmaps:
+      show:
+        title: Configurar lo calendriér de contribucions
+        show_contribution_calendar_in_public: Montrar lo calendriér de contribucions
+          dens voutra pâge de profil
+        save: Betar a jorn la configuracion du calendriér de contribucions
+        cancel: Anular
+      update:
+        success: Calendriér de contribucions betâ a jorn.
+        failure: Lo calendriér de contribucions at pas povu étre betâ a jorn.
   sessions:
     new:
       tab_title: Sè branchiér
@@ -2231,6 +2378,8 @@ frp:
       login_button: Sè branchiér
       with external: ou sè branchiér avouéc un sèrviço tièrs
       or: ou ben
+      reset_to_login: Dèsolâ, voutron mot de passa at èxpirâ. Mèrci de refâre voutron
+        mot de passa por vos branchiér.
       auth failure: Dèsolâ, les enformacions fornies ant pas pèrmês de vos branchiér.
     destroy:
       title: Sè dèbranchiér
@@ -2241,62 +2390,6 @@ frp:
       contact_support_html: Mèrci de contactar lo %{support_link} se vos voléd en
         discutar.
       support: assistance
-  shared:
-    markdown_help:
-      heading_html: Analisâ avouéc %{kramdown_link}
-      headings: Titros
-      heading: Titro
-      subheading: Sot-titro
-      unordered: Lista pas ordonâye
-      ordered: Lista ordonâye
-      first: Premiér èlèment
-      second: Second èlèment
-      link: Lim
-      text: Tèxto
-      image: Émâge
-      alt: Tèxto altèrnatif
-      url: URL
-      codeblock: Bloc de codo
-    richtext_field:
-      edit: Changiér
-      preview: Apèrçu
-      help: Éde
-    pagination:
-      changeset_comments:
-        older: Comentèros més ancians
-        newer: Novéls comentèros
-        oldest: Comentèros los més ancians
-        newest: Comentèros los més novéls
-      diary_comments:
-        older: Comentèros més ancians
-        newer: Novéls comentèros
-        oldest: Comentèros los més ancians
-        newest: Comentèros los més novéls
-      diary_entries:
-        older: Entrâyes més ancianes
-        newer: Entrâyes més novèles
-        oldest: Entrâyes les més ancianes
-        newest: Entrâyes les més novèles
-      issues:
-        older: Problèmos més ancians
-        newer: Problèmos més novéls
-        oldest: Problèmos los més ancians
-        newest: Problèmos los més novéls
-      traces:
-        older: Traces més ancianes
-        newer: Traces més novèles
-        oldest: Traces les més ancianes
-        newest: Traces les més novèles
-      user_blocks:
-        older: Blocs més ancians
-        newer: Blocs més novéls
-        oldest: Blocs los més ancians
-        newest: Blocs los més novéls
-      users:
-        older: Usanciér(e)s més ancian(e)s
-        newer: Usanciér(e)s més novél(e)s
-        oldest: Usanciér(e)s los més ancian(e)s
-        newest: Usanciér(e)s los més novél(e)s
   site:
     about:
       heading_html: '%{copyright}contributors%{br} d''OpenStreetMap'
@@ -2315,12 +2408,9 @@ frp:
         La comunôtât d'OpenStreetMap est divèrsa, passionâye et crêt châque jorn. Noutros contributors sont de mapors motivâs, de profèssionèls du SIG, d'engèniors que font marchiér los sèrvors d'OSM, d'humanitèros que mapont les zones dèvastâyes per una catastrofa et ben d'ôtros.
         Por en savêr més sur la comunôtât, vêde lo %{osm_blog_link}, los %{user_diaries_link}, los %{community_blogs_link} et lo sito vouèbe de la %{osm_foundation_link}.
       community_driven_osm_blog: Blogo d'OpenStreetMap
-      community_driven_osm_blog_url: https://blog.openstreetmap.org
       community_driven_user_diaries: Jornâls de l'usanciér(e)
       community_driven_community_blogs: blogos de la comunôtât
-      community_driven_community_blogs_url: https://blogs.openstreetmap.org/
       community_driven_osm_foundation: Fondacion OSM
-      community_driven_osm_foundation_url: https://www.osmfoundation.org/
       open_data_title: Balyês uvèrtes
       open_data_1_html: 'OpenStreetMap est en %{open_data} : vos pouéde y sèrvir quârque
         seye la ciba, tant que vos crèditâd OpenStreetMap et sos contributors. Se
@@ -2335,21 +2425,30 @@ frp:
         de tôs los sèrviços ofèrts per l'OSMF se fêt sos noutrens %{terms_of_use_link},
         noutres %{aup_link} pués noutres %{privacy_policy_link}.
       legal_1_1_openstreetmap_foundation: Fondacion OpenStreetMap
-      legal_1_1_openstreetmap_foundation_url: https://osmfoundation.org/
       legal_1_1_terms_of_use: Condicions d’usâjo
-      legal_1_1_terms_of_use_url: https://osmfoundation.org/wiki/Terms_of_Use
       legal_1_1_aup: Usâjos accèptâs
-      legal_1_1_aup_url: https://wiki.openstreetmap.org/wiki/Acceptable_Use_Policy
       legal_1_1_privacy_policy: Politica de confidencialitât
-      legal_1_1_privacy_policy_url: https://osmfoundation.org/wiki/Privacy_Policy
-      legal_2_1_html: Mèrci de %{contact_the_osmf_link} se vos éd de demandes sur
-        les condicions de licence, los drêts d'ôtor ou d'ôtres demandes lègâles.
+      legal_1_2_html: Se vos voléd utilisar les mapes ou ben les balyês d'OpenStreetMap,
+        mèrci d'atribuar OpenStreetMap – vêre les %{attribution_guidelines_link} por
+        plles d'enformacions.
+      legal_attribution_guidelines_title: dirèctives d'atribucion
+      legal_attribution_guidelines_url: https://wiki.osmfoundation.org/wiki/Licence/Attribution_Guidelines
+      legal_1_3_html: Spècificament per utilisar una captura d'ècran depués OpenStreetMap
+        dirèctament dens voutron livro, publicacion, film ou ben a la tèlèvision,
+        pas besouen de demandar la pèrmission porce que les balyês d'OpenStreetMap
+        sont d'utilisacion uvèrta por tot lo mondo. Vêre les %{attribution_guidelines_link}
+        pués los ègzemplos qu'ègzistont dèja dens %{attribution_example_film} puis
+        %{attribution_example_tv}.
+      legal_attribution_example_film_title: Film
+      legal_attribution_example_film_url: https://wiki.openstreetmap.org/wiki/Films
+      legal_attribution_example_tv_title: Tèlèvision
+      legal_attribution_example_tv_url: https://wiki.openstreetmap.org/wiki/TV_series
+      legal_2_1_html: Mèrci de %{contact_the_osmf_link} por les quèstions sur les
+        condicions de licence, los drêts d'ôtor ou d'ôtres demandes lègâles.
       legal_2_1_contact_the_osmf: contactar l'OSMF
-      legal_2_1_contact_the_osmf_url: https://osmfoundation.org/Contact
       legal_2_2_html: OpenStreetMap, lo simbolo avouéc la loupa, et pués State of
         the Map sont de %{registered_trademarks_link}.
       legal_2_2_registered_trademarks: mârques comèrciales encartâyes de l'OSMF
-      legal_2_2_registered_trademarks_url: https://osmfoundation.org/wiki/Trademark_Policy
       partners_title: Partenèros
     copyright:
       title: 'Drêts d’ôtor et licence :'
@@ -2375,33 +2474,25 @@ frp:
           Trovâd d'ôtros mapors dens voutron %{osm_community_link} du cârro.
           Sotenéd lo projèt en rejuendent la %{osm_foundation_link} et en %{making_donation_link}.
         lead_2_learn_more_about_osm: Vêre més sur OpenStreetMap
-        lead_2_learn_more_about_osm_url: https://wiki.openstreetmap.org/wiki/About_OpenStreetMap
         lead_2_get_started_mapping: comenciéd a mapar
         lead_2_osm_blog: blogo d'OpenStreetMap
-        lead_2_osm_blog_url: https://blog.openstreetmap.org/
         lead_2_weeklyosm: semanaOSM
-        lead_2_weeklyosm_url: https://weeklyosm.eu/
         lead_2_osm_community: comunôtât OSM
         lead_2_osm_foundation: fondacion OSM
-        lead_2_osm_foundation_url: https://osmfoundation.org/
         lead_2_making_donation: balyent d'argent
-        lead_2_making_donation_url: https://supporting.openstreetmap.org/
         licensing_title: Licence OpenStreetMap
         licensing_1_html: |-
           Les balyês d'OpenStreetMap sont %{open}, sot la
           %{odc_odbl_link} (ODbL) de la %{osm_foundation_link} (OSMF). En rèsumâ :
         licensing_1_open: uvèrtes
         licensing_1_odc_odbl: licence de bâsa de balyês uvèrta Open Data Commons
-        licensing_1_odc_odbl_url: https://opendatacommons.org/licenses/odbl/
         licensing_1_osm_foundation: fondacion OpenStreetMap
-        licensing_1_osm_foundation_url: https://osmfoundation.org/
         licensing_2_html: Vos pouede copiyér, distribuar, transmetre et adaptar noutres
           balyês, se vos crèditâvâd OpenStreetMap et sos contributors. Se vos changiéd
           ou utilisâd noutres balyês dens d'ôtres ôvres dèrivâyes, vos pouede y distribuar
           que sot la méma licence. Lo %{legal_code_link} complèt dètalye voutros drêts
           et rèsponsabilitâts.
         licensing_2_legal_code: codo lègâl entiér sur Open Data Commons
-        licensing_2_legal_code_url: https://opendatacommons.org/licenses/odbl/1-0/
         licensing_3_html: Noutra documentacion est sot licence %{creative_commons_license_link}
           (CC BY-SA 2.0).
         licensing_3_creative_commons_license: Creative Commons patèrnitât - partâjo
@@ -2409,7 +2500,6 @@ frp:
         licensing_3_creative_commons_license_url: https://creativecommons.org/licenses/by-sa/2.0/
         licensing_4_html: Por vêre més sur l'usâjo de noutres bayês, liére la %{osmf_license_page_link}.
         licensing_4_osmf_license_page: pâge de licence d'OSMF
-        licensing_4_osmf_license_page_url: https://osmfoundation.org/Licence
         credit_title_html: Coment crèditar OpenStreetMap
         credit_1_html: 'Quand vos utilisâd de balyês d''OpenStreetMap, vos dête fâre
           ces doves chouses :'
@@ -2424,11 +2514,8 @@ frp:
           %{licensing_requirements_link}.
         credit_3_v2025_requirements_on_how_displayed: ègzigences sur la maniére d'y
           afichiér
-        credit_3_v2025_requirements_on_how_displayed_url: https://wiki.osmfoundation.org/wiki/Licence/Attribution_Guidelines
         credit_3_v2025_attribution_guidelines: dirèctives d'atribucion
-        credit_3_v2025_attribution_guidelines_url: https://wiki.osmfoundation.org/wiki/Licence/Attribution_Guidelines
         credit_3_v2025_licensing_requirements: ègzigences des licences
-        credit_3_v2025_licensing_requirements_url: https://wiki.osmfoundation.org/wiki/Licence
         credit_4_v2025_html: |-
           En gènèrâl, por prècisar que les balyês sont
           disponibles sot la licence de bâsa de balyês uvèrtes, vos pouede
@@ -2440,7 +2527,7 @@ frp:
         credit_5_v2025_html: 'Dens cét ègzemplo, los crèdits aparêssont dens lo cantonâ
           de la mapa :'
         attribution_example:
-          alt: Ègzemplo d'atribucion d'OpenStreetMap sur una pâge vouebe
+          alt: Ègzemplo d'atribucion d'OpenStreetMap sur una pâge vouèbe
           title: Ègzemplo d'atribucion
         infringement_title_html: Violacion des drêts d'ôtor
         infringement_1_html: Nos rapelens ux contributors d'OSM qu'ils dêvont jamés
@@ -2463,11 +2550,8 @@ frp:
           OpenStreetMap est fât de balyês uvèrtes, mas nos povens pas fornir d'API de mapâjo ou de carrons de mapes gratuites por de tièrs.
           Vêde noutron %{api_usage_policy_link}, cela des %{tile_usage_policy_link} et cela de %{nominatim_usage_policy_link}.
         services_1_api_usage_policy: politica d'usâjo de l'API
-        services_1_api_usage_policy_url: https://operations.osmfoundation.org/policies/api/
         services_1_tile_usage_policy: politica d'usâjo des tioles grafiques
-        services_1_tile_usage_policy_url: https://operations.osmfoundation.org/policies/tiles/
         services_1_nominatim_usage_policy: politica d'usâjo de Nominatim
-        services_1_nominatim_usage_policy_url: https://operations.osmfoundation.org/policies/nominatim/
         contributors_title_html: Noutrons contributors
         contributors_intro_html: 'Noutrons contributors sont de milyérs de pèrsones.
           Nos betens dedens asse-ben de balyês publeyêes sot licence uvèrta per d''agences
@@ -2508,8 +2592,8 @@ frp:
         contributors_hr_croatia: Croacie
         contributors_hr_dgu: Administracion Gèodèsica de l'Ètât de Croacie
         contributors_hr_open_data_portal: Portâl nacionâl des balyês uvèrtes
-        contributors_nl_credit_html: '%{netherlands} : contint de balyês © AND, 2007
-          (%{and_link}).'
+        contributors_nl_credit_new_html: '%{netherlands} : contint de balyês &copy;
+          AND, 2007'
         contributors_nl_netherlands: Payis-Bâs
         contributors_nz_credit_html: |-
           %{new_zealand} : contint de balyês venent du %{linz_data_service_link}
@@ -2589,6 +2673,12 @@ frp:
           description: Sôrses de més listâyes sur lo vouiqui d'OpenStreetMap
       export_button: Èxportar
       export_download: Tèlèchargement...
+      confirmation:
+        header: Tèlèchargiér les balyês XML
+        body: 'Vos voléd tèlèchargiér les balyês de mapa de cét endrêt u format XML
+          ? Atencion : les grandes zones sont longues a tèlèchargiér.'
+        cancel: Anular
+        download: Tèlèchargiér
     fixthemap:
       title: Signalar un problèmo /Corregiér la mapa
       how_to_help:
@@ -2866,6 +2956,15 @@ frp:
       image_dimensions_html: L'émâge montrerat la betâye en fôrma %{layer} de %{width} × %{height}
       download: Tèlèchargiér
       downloading: Tèlèchargement...
+  webgl_error_panes:
+    show:
+      compact_message: Fôt WebGL por ceta mapa.
+      description_html: Dèsolâ, semble que %{your_browser_does_not_support_webgl},
+        un outil por afichiér de graficos 3D sur lo vouebe.
+      your_browser_does_not_support_webgl: voutron navigator supôrte pas WebGL
+      webgl_is_required_for_this_map: Fôt WebGL por afichiér ceta mapa.
+      read_more_about_webgl: En vêre més
+      read_more_about_webgl_url: https://wiki.openstreetmap.org/wiki/This_map_requires_WebGL
   traces:
     visibility:
       private: Privâ (partagiê ren que de façon anonima, pouents pas ordonâs)
@@ -2910,13 +3009,13 @@ frp:
       points: 'Pouents :'
       start_coordinates: 'Coordonâyes de dèpârt :'
       coordinates_html: '%{latitude} ; %{longitude}'
-      map: mapa
-      edit: changiér
+      map: Afichiér l'emplacement sur la mapa
+      edit: Uvrir dens l'èditor
       owner: 'Propriètèro :'
       description: 'Dèscripcion :'
       tags: 'Balises :'
       none: Nion
-      edit_trace: Changiér ceta trace
+      edit_trace: Modifiar los dètalys de la mârca
       delete_trace: Suprimar ceta trace
       trace_not_found: Trace pas trovâye !
       visibility: Visibilitât
@@ -2928,8 +3027,8 @@ frp:
         other: '%{count} pouents'
       more: més
       trace_details: Vêre los dètalys de la trace
-      view_map: Vêre la mapa
-      edit_map: Changiér la mapa
+      view_map: Afichiér l'emplacement sur la mapa
+      edit_map: Uvrir dens l'èditor
       public: PUBLICA
       identifiable: IDENTIFIÂBLA
       private: PRIVÂYE
@@ -3030,6 +3129,48 @@ frp:
       x:
         title: Partagiér sur X
         alt: Icôna de X
+    markdown_help:
+      heading_html: Analisâ avouéc %{kramdown_link}
+      headings: Titros
+      heading: Titro
+      subheading: Sot-titro
+      unordered: Lista pas ordonâye
+      first: Premiér èlèment
+      second: Second èlèment
+      link: Lim
+      text: Tèxto
+      image: Émâge
+      url: URL
+      codeblock: Bloc de codo
+    richtext_field:
+      preview: Apèrçu
+    pagination:
+      changeset_comments:
+        newest: Comentèros los més novéls
+      diary_comments:
+        older: Comentèros més ancians
+        oldest: Comentèros los més ancians
+        newest: Comentèros los més novéls
+      diary_entries:
+        newer: Entrâyes més novèles
+        oldest: Entrâyes les més ancianes
+        newest: Entrâyes les més novèles
+      issues:
+        newer: Problèmos més novéls
+        oldest: Problèmos los més ancians
+        newest: Problèmos los més novéls
+      traces:
+        newer: Traces més novèles
+        oldest: Traces les més ancianes
+        newest: Traces les més novèles
+      user_blocks:
+        newer: Blocs més novéls
+        oldest: Blocs los més ancians
+      users:
+        older: Usanciér(e)s més ancian(e)s
+        newer: Usanciér(e)s més novél(e)s
+        oldest: Usanciér(e)s los més ancian(e)s
+        newest: Usanciér(e)s los més novél(e)s
   oauth:
     permissions:
       missing: Vos éd pas permèssu a l'aplicacion d'arrevar a ceta fonccionalitât
@@ -3107,9 +3248,8 @@ frp:
       tab_title: S'encartar
       signup_to_authorize_html: Sè branchiér avouéc OpenStreetMap por arrevar a %{client_app_name}.
       no_auto_account_create: Nos ans pas pu vos crèar de compto ôtomaticament.
-      please_contact_support_html: Mèrci de contactar lo %{support_link} por maneyér
-        la crèacion d'un compto - nos èproverens de trètar la demanda tant rapidament
-        que possiblo.
+      please_contact_support_html: Mèrci de contactar lo %{support_link} por maneyance
+        - nos èproverens de trètar la demanda tant rapidament que possiblo.
       support: assistance
       about:
         header: Libro pués modifiâblo.
@@ -3140,6 +3280,10 @@ frp:
           por més d'enformacions.
       or: ou ben
       use external auth: ou sè branchiér avouéc un sèrviço tièrs
+      verify_human: Vèrifiâd que vos étes un humen
+    create:
+      not_human: Dèsolâ, nos povens pas confirmar que vos étes humen. Y'est nècèssèro
+        por fâre un compto.
     no_such_user:
       title: Cét(a) usanciér(e) ègziste pas
       heading: L'usanciér(e) « %{user} » ègziste pas
@@ -3187,10 +3331,9 @@ frp:
       activate_user: Activar cét(a) usanciér(e)
       confirm_user: Confirmar cét(a) usanciér(e)
       unconfirm_user: Rèvocar la confirmacion de cét(a) usanciér(e)
+      suspend_user: Suspendre cét usanciér
       unsuspend_user: Rèvocar la suspension de cét(a) usanciér(e)
-      hide_user: Betar cét(a) usanciér(e) en sordina
-      unhide_user: Rebranchiér lo son de cét(a) usanciér(e)
-      delete_user: Suprimar cét(a) usanciér(e)
+      undelete_user: Anular la suprèssion de cét usanciér
       confirm: Confirmar
       report: Signalar cét(a) usanciér(e)
       edit_profile_details: Changiér los dètalys du profil
@@ -3199,9 +3342,26 @@ frp:
       change_image: Changiér l'émâge
       edit_company: Changiér l'entreprêsa
       edit_location: Changiér lo luè
+      edit_contribution_calendar: Configurar lo calendriér de contribucions
       contributions:
         one: Una contribucion pendent l'an passâ
         other: '%{count} contribucions pendent l''an passâ'
+      title:
+        administrator: O est un administrator ou una administratrice
+        moderator: O est un modèrator ou una modèratrice
+        importer: O est un importator
+      grant:
+        administrator: Acordar l'accès administrator
+        moderator: Acordar l'accès modèrator
+        importer: Acordar lo drêt d'emportacion
+        are_you_sure: Vos étes sûr de volêr acordar lo rolo « %{role} » a l'usanciér(e)
+          « %{name} » ?
+      revoke:
+        administrator: Acordar l'accès administrator
+        moderator: Rèvocar l'accès modèrator
+        importer: Rèvocar lo drêt d'emportacion
+        are_you_sure: Vos étes sûr de volêr rèvocar lo rolo « %{role} » a l'usanciér(e)
+          « %{name} » ?
     sidebar_section:
       home_location: Luè de rèsidence
       company: Entreprêsa
@@ -3252,7 +3412,7 @@ frp:
           one: '%{count} usanciér(e) trovâ(ye)'
           other: '%{count} usanciér(e)s trovâ(ye)s'
         confirm: Confirmar los usanciér(e)s sèlèccionâ(ye)s
-        hide: Mâscar los usanciér(e)s sèlèccionâ(ye)s
+        suspend: Suspendre los usanciérs sèlèccionâs
         empty: Gins d'usanciér(e) corrèspondent at étâ trovâ(ye)
       user:
         summary_html: '%{name} crèâ dês %{ip_address} lo %{date}'
@@ -3299,23 +3459,6 @@ frp:
       option_2: Se vos éd ja un compto, vos pouede vos y reliyér avouéc voutron nom
         d'usanciér(e) et voutron constresegno, pués associyér lo compto avouéc voutron
         identifeyent dens voutres prèferences d'usanciér(e).
-    role_icons:
-      title:
-        administrator: O est un administrator ou una administratrice
-        moderator: O est un modèrator ou una modèratrice
-        importer: O est un importator
-      grant:
-        administrator: Acordar l'accès administrator
-        moderator: Acordar l'accès modèrator
-        importer: Acordar lo drêt d'emportacion
-        are_you_sure: Vos étes sûr de volêr acordar lo rolo « %{role} » a l'usanciér(e)
-          « %{name} » ?
-      revoke:
-        administrator: Acordar l'accès administrator
-        moderator: Rèvocar l'accès modèrator
-        importer: Rèvocar lo drêt d'emportacion
-        are_you_sure: Vos étes sûr de volêr rèvocar lo rolo « %{role} » a l'usanciér(e)
-          « %{name} » ?
   user_role:
     filter:
       not_a_role: « %{role} » est pas un rolo valido.
@@ -3543,11 +3686,18 @@ frp:
       tooltip: Lègenda
       tooltip_disabled: La lègenda est pas disponibla por ceta cuche
     map:
-      zoom:
-        in: S'aprochiér
-        out: S'èluegnér
-      locate:
-        title: Afichiér mon emplacement
+      Map:
+        Title: Mapa
+      Marker:
+        Title: Repèro sur la mapa
+      Popup:
+        Close: Cllôre
+      NavigationControl:
+        ZoomIn: S'aprochiér
+        ZoomOut: S'èluegnér
+      GeolocateControl:
+        FindMyLocation: Afichiér mon emplacement
+        LocationNotAvailable: Localisacion pas disponibla
         metersPopup:
           one: Vos éte a muens de %{count} mètro de cét pouent
           other: Vos éte a muens de %{count} mètros de cét pouent
@@ -3581,8 +3731,6 @@ frp:
       hotosm_name: L'Èquipa OpenStreetMap Humanitèra
       openmaptiles_credit: Tioles vèctorièles de %{openmaptiles_link} hèbèrgiêes per
         %{maptiler_link}
-      openmaptiles_name: OpenMapTiles
-      maptiler_name: MapTiler
     site:
       edit_tooltip: Changiér la mapa
       edit_disabled_tooltip: S'aprochiér por changiér la mapa
@@ -3701,7 +3849,7 @@ frp:
     home:
       marker_title: Luè de rèsidence
       not_set: Lo luè de rèsidence est pas dèfeni por voutron compto
-    heatmap:
+    contribution_calendar:
       tooltip:
         no_contributions: Gins de contribucions lo %{date}
         contributions:

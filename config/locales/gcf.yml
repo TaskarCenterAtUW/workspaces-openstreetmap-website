@@ -38,9 +38,6 @@ gcf:
       user_preference: Sa itilizatè-la simyé
       way: Chimen
     attributes:
-      client_application:
-        name: Non (oblijé)
-        allow_write_api: Modifyé kat-la
       diary_comment:
         body: Kò
       diary_entry:
@@ -72,6 +69,9 @@ gcf:
   auth:
     providers:
       none: Pon
+      google: Google
+      apple: Apple
+      facebook: Facebook
       wikipedia: Wikipédya
   api:
     notes:
@@ -114,6 +114,7 @@ gcf:
           Davwa ou sòti modifyé biten, nou pé pa néyantizé kont a-w ankò.
           Nou ké pé fè-y adan %{time}
         confirm_delete: Ès ou sèkten?
+        cancel: Annilé
     terms:
       show:
         continue: Kontinyé
@@ -121,6 +122,9 @@ gcf:
           france: Frans
           italy: Itali
           rest_of_world: Larèstan a lèmonn-la
+    pd_declarations:
+      show:
+        confirm: Konfirmé
   browse:
     no_comment: (pon komantasyon)
     download_xml: Chantyé XML
@@ -442,21 +446,22 @@ gcf:
         note:
           other_label: Dòt
   layouts:
-    home: Ay akaz
-    logout: Chapé
-    log_in: Rantré
-    sign_up: Enskri-w
     start_mapping: Koumansé kataj-la
-    edit: Modifié
-    history: Istwa sa ou fè
-    export: Voyé déwò
-    gps_traces: Chimen GPS
-    user_diaries: Jounal
     intro_header: Kontan vwè-w asi OpenStreetMap!
     intro_text: Openstreetmap, sé on kat a lèmonn-la ki fèt parapòt a moun kon-w é
       lib pou sèvi épi-y évè on lisans lib.
-    help: Anmwé
-    more: Plis
+    header:
+      edit: Modifié
+      export: Voyé déwò
+      gps_traces: Chimen GPS
+      help: Anmwé
+      history: Istwa sa ou fè
+      home: Ay akaz
+      log_out: Chapé
+      log_in: Rantré
+      more: Plis
+      sign_up: Enskri-w
+      user_diaries: Jounal
   user_mailer:
     diary_comment_notification:
       hi: Yéla %{to_user},
@@ -538,14 +543,6 @@ gcf:
       remember: Sonjé-mwen
       lost password link: Ou pèd kòd a-w?
       login_button: Konnékté-w
-  shared:
-    pagination:
-      diary_comments:
-        older: Pli vyé komantasyon
-        newer: Sé komantasyon pli nèf la
-      diary_entries:
-        older: Nouvèl rasi
-        newer: Nouvèl pi fré
   site:
     copyright:
       native:
@@ -638,6 +635,11 @@ gcf:
     auth_providers:
       wikipedia:
         title: Konèkté-w épi Wikipédya
+    pagination:
+      diary_comments:
+        older: Pli vyé komantasyon
+      diary_entries:
+        newer: Nouvèl pi fré
   oauth:
     scopes:
       write_api: Modifyé kat-la
@@ -686,8 +688,8 @@ gcf:
     share:
       title: Simé
     map:
-      locate:
-        title: Montré la ou yé
+      GeolocateControl:
+        FindMyLocation: Montré la ou yé
     site:
       edit_tooltip: Modifyé kat-la
       createnote_tooltip: Jouté on komantasyon asi kat-la

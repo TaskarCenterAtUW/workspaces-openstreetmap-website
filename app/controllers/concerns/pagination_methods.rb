@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
 module PaginationMethods
   extend ActiveSupport::Concern
+
+  Paginator = Struct.new(:items, :newer_items_cursor, :older_items_cursor)
 
   private
 
@@ -20,15 +24,15 @@ module PaginationMethods
 
     page_items = page_items.limit(limit)
     page_items = page_items.includes(includes)
-    page_items = page_items.sort.reverse
+    page_items = page_items.sort_by(&cursor_column).reverse
 
     newer_items_cursor = page_items.first&.send cursor_column
     older_items_cursor = page_items.last&.send cursor_column
 
-    [
-      page_items,
-      (newer_items_cursor if page_items.any? && items.exists?(["#{qualified_cursor_column} > ?", newer_items_cursor])),
-      (older_items_cursor if page_items.any? && items.exists?(["#{qualified_cursor_column} < ?", older_items_cursor]))
-    ]
+    Paginator.new(
+      :items => page_items,
+      :newer_items_cursor => (newer_items_cursor if page_items.any? && items.exists?(["#{qualified_cursor_column} > ?", newer_items_cursor])),
+      :older_items_cursor => (older_items_cursor if page_items.any? && items.exists?(["#{qualified_cursor_column} < ?", older_items_cursor]))
+    )
   end
 end

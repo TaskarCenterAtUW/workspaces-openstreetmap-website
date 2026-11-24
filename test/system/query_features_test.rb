@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class QueryFeaturesSystemTest < ApplicationSystemTestCase
@@ -212,6 +214,7 @@ class QueryFeaturesSystemTest < ApplicationSystemTestCase
                 elements = data.includes("is_in") ? #{enclosing_elements.to_json} : #{nearby_elements.to_json};
 
           return Promise.resolve({
+            ok: true,
             json: () => Promise.resolve({ elements })
           });
         }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Accounts
@@ -45,6 +47,40 @@ module Accounts
       session_for(user)
 
       get account_terms_path(:referer => "/test")
+      assert_response :success
+    end
+
+    def test_show_in_french
+      user = create(:user, :terms_seen => true, :terms_agreed => Date.yesterday)
+      session_for(user)
+
+      get account_terms_path(:legale => "FR")
+      assert_response :success
+    end
+
+    def test_show_with_bogus_legale
+      user = create(:user, :terms_seen => true, :terms_agreed => Date.yesterday)
+      session_for(user)
+
+      get account_terms_path(:legale => "..")
+      assert_response :redirect
+      assert_redirected_to :controller => "/errors", :action => :bad_request
+    end
+
+    def test_show_with_multiline_legale
+      user = create(:user, :terms_seen => true, :terms_agreed => Date.yesterday)
+      session_for(user)
+
+      get account_terms_path(:legale => "../../config/settings\nGB")
+      assert_response :redirect
+      assert_redirected_to :controller => "/errors", :action => :bad_request
+    end
+
+    def test_show_xhr
+      user = create(:user, :terms_seen => true, :terms_agreed => Date.yesterday)
+      session_for(user)
+
+      get account_terms_path(:legale => "FR"), :xhr => true
       assert_response :success
     end
 

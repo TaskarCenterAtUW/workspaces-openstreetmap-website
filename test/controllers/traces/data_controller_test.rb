@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Traces
@@ -23,7 +25,7 @@ module Traces
 
     # Test downloading a trace
     def test_show
-      public_trace_file = create(:trace, :visibility => "public", :fixture => "a")
+      public_trace_file = create(:trace, :visibility => "identifiable", :fixture => "a")
 
       # First with no auth, which should work since the trace is public
       get trace_data_path(public_trace_file)
@@ -67,7 +69,7 @@ module Traces
 
     # Check an anonymous trace can't be downloaded by another user
     def test_show_anon
-      anon_trace_file = create(:trace, :visibility => "private", :fixture => "b")
+      anon_trace_file = create(:trace, :visibility => "trackable", :fixture => "b")
 
       # First with no auth
       get trace_data_path(anon_trace_file)
@@ -101,11 +103,21 @@ module Traces
     end
 
     def test_show_offline
-      public_trace_file = create(:trace, :visibility => "public", :fixture => "a")
+      public_trace_file = create(:trace, :visibility => "identifiable", :fixture => "a")
       with_settings(:status => "gpx_offline") do
         get trace_data_path(public_trace_file)
         assert_response :success
         assert_template :offline
+      end
+    end
+
+    # Check that trace data can't be downloaded when the traces feature is disabled
+    def test_show_disabled
+      public_trace_file = create(:trace, :visibility => "identifiable", :fixture => "a")
+
+      with_settings(:traces_disabled => true) do
+        get trace_data_path(public_trace_file)
+        assert_response :not_found
       end
     end
 

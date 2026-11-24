@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class LoginTest < ActionDispatch::IntegrationTest
@@ -23,7 +25,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     _uppercase_user = build(:user, :email => user.email.upcase).tap { |u| u.save(:validate => false) }
 
-    try_password_login user.email, "test"
+    try_password_login user.email, "s3cr3t"
 
     assert_template "changesets/history"
     assert_select "span.username", user.display_name
@@ -34,7 +36,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     uppercase_user = build(:user, :email => user.email.upcase).tap { |u| u.save(:validate => false) }
 
-    try_password_login uppercase_user.email, "test"
+    try_password_login uppercase_user.email, "s3cr3t"
 
     assert_template "changesets/history"
     assert_select "span.username", uppercase_user.display_name
@@ -45,7 +47,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     _uppercase_user = build(:user, :email => user.email.upcase).tap { |u| u.save(:validate => false) }
 
-    try_password_login user.email.titlecase, "test"
+    try_password_login user.email.titlecase, "s3cr3t"
 
     assert_template "sessions/new"
     assert_select "span.username", false
@@ -55,7 +57,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_email_password
     user = create(:user)
 
-    try_password_login user.email, "test"
+    try_password_login user.email, "s3cr3t"
 
     assert_template "changesets/history"
     assert_select "span.username", user.display_name
@@ -64,7 +66,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_email_password_upcase
     user = create(:user)
 
-    try_password_login user.email.upcase, "test"
+    try_password_login user.email.upcase, "s3cr3t"
 
     assert_template "changesets/history"
     assert_select "span.username", user.display_name
@@ -73,7 +75,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_email_password_titlecase
     user = create(:user)
 
-    try_password_login user.email.titlecase, "test"
+    try_password_login user.email.titlecase, "s3cr3t"
 
     assert_template "changesets/history"
     assert_select "span.username", user.display_name
@@ -82,7 +84,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_email_password_pending
     user = create(:user, :pending)
 
-    try_password_login user.email, "test"
+    try_password_login user.email, "s3cr3t"
 
     assert_template "confirm"
     assert_select "span.username", false
@@ -91,7 +93,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_email_password_pending_upcase
     user = create(:user, :pending)
 
-    try_password_login user.email.upcase, "test"
+    try_password_login user.email.upcase, "s3cr3t"
 
     assert_template "confirm"
     assert_select "span.username", false
@@ -100,7 +102,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_email_password_pending_titlecase
     user = create(:user, :pending)
 
-    try_password_login user.email.titlecase, "test"
+    try_password_login user.email.titlecase, "s3cr3t"
 
     assert_template "confirm"
     assert_select "span.username", false
@@ -109,7 +111,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_email_password_suspended
     user = create(:user, :suspended)
 
-    try_password_login user.email, "test"
+    try_password_login user.email, "s3cr3t"
 
     assert_template "sessions/new"
     assert_select "span.username", false
@@ -121,7 +123,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_email_password_suspended_upcase
     user = create(:user, :suspended)
 
-    try_password_login user.email.upcase, "test"
+    try_password_login user.email.upcase, "s3cr3t"
 
     assert_template "sessions/new"
     assert_select "span.username", false
@@ -133,7 +135,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_email_password_suspended_titlecase
     user = create(:user, :suspended)
 
-    try_password_login user.email.titlecase, "test"
+    try_password_login user.email.titlecase, "s3cr3t"
 
     assert_template "sessions/new"
     assert_select "span.username", false
@@ -146,7 +148,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     create(:user_block, :needs_view, :user => user)
 
-    try_password_login user.email, "test"
+    try_password_login user.email, "s3cr3t"
 
     assert_template "user_blocks/show"
     assert_select "span.username", user.display_name
@@ -156,7 +158,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     create(:user_block, :needs_view, :user => user)
 
-    try_password_login user.email.upcase, "test"
+    try_password_login user.email.upcase, "s3cr3t"
 
     assert_template "user_blocks/show"
     assert_select "span.username", user.display_name
@@ -166,7 +168,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     create(:user_block, :needs_view, :user => user)
 
-    try_password_login user.email.titlecase, "test"
+    try_password_login user.email.titlecase, "s3cr3t"
 
     assert_template "user_blocks/show"
     assert_select "span.username", user.display_name
@@ -180,7 +182,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     _uppercase_user = build(:user, :display_name => user.display_name.upcase).tap { |u| u.save(:validate => false) }
 
-    try_password_login user.display_name, "test"
+    try_password_login user.display_name, "s3cr3t"
 
     assert_template "changesets/history"
     assert_select "span.username", user.display_name
@@ -191,7 +193,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     uppercase_user = build(:user, :display_name => user.display_name.upcase).tap { |u| u.save(:validate => false) }
 
-    try_password_login uppercase_user.display_name, "test"
+    try_password_login uppercase_user.display_name, "s3cr3t"
 
     assert_template "changesets/history"
     assert_select "span.username", uppercase_user.display_name
@@ -202,7 +204,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     _uppercase_user = build(:user, :display_name => user.display_name.upcase).tap { |u| u.save(:validate => false) }
 
-    try_password_login user.display_name.downcase, "test"
+    try_password_login user.display_name.downcase, "s3cr3t"
 
     assert_template "sessions/new"
     assert_select "span.username", false
@@ -212,7 +214,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_username_password
     user = create(:user)
 
-    try_password_login user.display_name, "test"
+    try_password_login user.display_name, "s3cr3t"
 
     assert_template "changesets/history"
     assert_select "span.username", user.display_name
@@ -221,7 +223,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_username_password_upcase
     user = create(:user)
 
-    try_password_login user.display_name.upcase, "test"
+    try_password_login user.display_name.upcase, "s3cr3t"
 
     assert_template "changesets/history"
     assert_select "span.username", user.display_name
@@ -230,7 +232,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_username_password_downcase
     user = create(:user)
 
-    try_password_login user.display_name.downcase, "test"
+    try_password_login user.display_name.downcase, "s3cr3t"
 
     assert_template "changesets/history"
     assert_select "span.username", user.display_name
@@ -239,7 +241,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_username_password_pending
     user = create(:user, :pending)
 
-    try_password_login user.display_name, "test"
+    try_password_login user.display_name, "s3cr3t"
 
     assert_template "confirm"
     assert_select "span.username", false
@@ -248,7 +250,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_username_password_pending_upcase
     user = create(:user, :pending)
 
-    try_password_login user.display_name.upcase, "test"
+    try_password_login user.display_name.upcase, "s3cr3t"
 
     assert_template "confirm"
     assert_select "span.username", false
@@ -257,7 +259,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_username_password_pending_downcase
     user = create(:user, :pending)
 
-    try_password_login user.display_name.downcase, "test"
+    try_password_login user.display_name.downcase, "s3cr3t"
 
     assert_template "confirm"
     assert_select "span.username", false
@@ -266,7 +268,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_username_password_suspended
     user = create(:user, :suspended)
 
-    try_password_login user.display_name, "test"
+    try_password_login user.display_name, "s3cr3t"
 
     assert_template "sessions/new"
     assert_select "span.username", false
@@ -278,7 +280,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_username_password_suspended_upcase
     user = create(:user, :suspended)
 
-    try_password_login user.display_name.upcase, "test"
+    try_password_login user.display_name.upcase, "s3cr3t"
 
     assert_template "sessions/new"
     assert_select "span.username", false
@@ -290,7 +292,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_username_password_suspended_downcase
     user = create(:user, :suspended)
 
-    try_password_login user.display_name.downcase, "test"
+    try_password_login user.display_name.downcase, "s3cr3t"
 
     assert_template "sessions/new"
     assert_select "span.username", false
@@ -303,7 +305,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     create(:user_block, :needs_view, :user => user)
 
-    try_password_login user.display_name.upcase, "test"
+    try_password_login user.display_name.upcase, "s3cr3t"
 
     assert_template "user_blocks/show"
     assert_select "span.username", user.display_name
@@ -313,7 +315,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     create(:user_block, :needs_view, :user => user)
 
-    try_password_login user.display_name, "test"
+    try_password_login user.display_name, "s3cr3t"
 
     assert_template "user_blocks/show"
     assert_select "span.username", user.display_name
@@ -323,7 +325,7 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user)
     create(:user_block, :needs_view, :user => user)
 
-    try_password_login user.display_name.downcase, "test"
+    try_password_login user.display_name.downcase, "s3cr3t"
 
     assert_template "user_blocks/show"
     assert_select "span.username", user.display_name
@@ -332,7 +334,7 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_email_password_remember_me
     user = create(:user)
 
-    try_password_login user.email, "test", "yes"
+    try_password_login user.email, "s3cr3t", "yes"
 
     assert_template "changesets/history"
     assert_select "span.username", user.display_name
@@ -342,11 +344,32 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_username_password_remember_me
     user = create(:user)
 
-    try_password_login user.display_name, "test", "yes"
+    try_password_login user.display_name, "s3cr3t", "yes"
 
     assert_template "changesets/history"
     assert_select "span.username", user.display_name
     assert session.key?(:_remember_for)
+  end
+
+  def test_login_upgrade_password
+    user = create(
+      :user,
+      :pass_crypt => "ApT/28+FsTBLa/J8paWfgU84SoRiTfeY8HjKWhgHy08=",
+      :pass_salt => "sha512!1000!HR4z+hAvKV2ra1gpbRybtoNzm/CNKe4cf7bPKwdUNrk="
+    )
+    try_password_login user.display_name, "password"
+
+    user.reload
+    assert_match(/\A\$argon2id\$v=19\$m=65536,t=3,p=4\$/, user.pass_crypt)
+    assert_nil user.pass_salt
+  end
+
+  def test_login_page_cookie_test
+    get "/login", :params => { :referer => "/history" }
+    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
+    follow_redirect!
+    assert_response :success
+    assert_template "sessions/new"
   end
 
   def test_login_google_success
@@ -355,11 +378,6 @@ class LoginTest < ActionDispatch::IntegrationTest
                                :id_info => { "openid_id" => "http://localhost:1123/fred.bloggs" }
                              })
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "google", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "google")
     follow_redirect!
@@ -376,11 +394,6 @@ class LoginTest < ActionDispatch::IntegrationTest
                                :id_info => { "openid_id" => "http://localhost:1123/fred.bloggs" }
                              })
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "google", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "google")
     follow_redirect!
@@ -396,11 +409,6 @@ class LoginTest < ActionDispatch::IntegrationTest
                                :id_info => { "openid_id" => "http://localhost:1123/fred.bloggs" }
                              })
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "google", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "google")
     follow_redirect!
@@ -421,11 +429,6 @@ class LoginTest < ActionDispatch::IntegrationTest
                                :id_info => { "openid_id" => "http://localhost:1123/fred.bloggs" }
                              })
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "google", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "google")
     follow_redirect!
@@ -439,11 +442,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_google_connection_failed
     OmniAuth.config.mock_auth[:google] = :connection_failed
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "google", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "google")
     follow_redirect!
@@ -460,11 +458,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_google_invalid_credentials
     OmniAuth.config.mock_auth[:google] = :invalid_credentials
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "google", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "google")
     follow_redirect!
@@ -483,11 +476,6 @@ class LoginTest < ActionDispatch::IntegrationTest
                                :id_info => { "openid_id" => "http://localhost:1123/fred.bloggs" }
                              })
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "google", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "google")
     follow_redirect!
@@ -504,11 +492,6 @@ class LoginTest < ActionDispatch::IntegrationTest
                                :id_info => { "openid_id" => user.auth_uid }
                              })
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "google", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "google")
     follow_redirect!
@@ -529,11 +512,6 @@ class LoginTest < ActionDispatch::IntegrationTest
                                :id_info => { "openid_id" => "http://localhost:1123/fred.bloggs" }
                              })
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "apple", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "apple")
     follow_redirect!
@@ -550,11 +528,6 @@ class LoginTest < ActionDispatch::IntegrationTest
                                :id_info => { "openid_id" => "http://localhost:1123/fred.bloggs" }
                              })
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "apple", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "apple")
     follow_redirect!
@@ -570,11 +543,6 @@ class LoginTest < ActionDispatch::IntegrationTest
                                :id_info => { "openid_id" => "http://localhost:1123/fred.bloggs" }
                              })
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "apple", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "apple")
     follow_redirect!
@@ -595,11 +563,6 @@ class LoginTest < ActionDispatch::IntegrationTest
                                :id_info => { "openid_id" => "http://localhost:1123/fred.bloggs" }
                              })
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "apple", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "apple")
     follow_redirect!
@@ -613,11 +576,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_apple_connection_failed
     OmniAuth.config.mock_auth[:apple] = :connection_failed
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "apple", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "apple")
     follow_redirect!
@@ -634,11 +592,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_apple_invalid_credentials
     OmniAuth.config.mock_auth[:apple] = :invalid_credentials
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "apple", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "apple")
     follow_redirect!
@@ -657,11 +610,6 @@ class LoginTest < ActionDispatch::IntegrationTest
                                :id_info => { "openid_id" => "http://localhost:1123/fred.bloggs" }
                              })
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "apple", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "apple")
     follow_redirect!
@@ -676,11 +624,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :auth_provider => "facebook", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:facebook, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "facebook", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "facebook")
     follow_redirect!
@@ -695,11 +638,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :pending, :auth_provider => "facebook", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:facebook, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "facebook", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "facebook")
     follow_redirect!
@@ -713,11 +651,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :suspended, :auth_provider => "facebook", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:facebook, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "facebook", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "facebook")
     follow_redirect!
@@ -736,11 +669,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     create(:user_block, :needs_view, :user => user)
     OmniAuth.config.add_mock(:facebook, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "facebook", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "facebook")
     follow_redirect!
@@ -754,11 +682,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_facebook_connection_failed
     OmniAuth.config.mock_auth[:facebook] = :connection_failed
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "facebook", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "facebook")
     follow_redirect!
@@ -775,11 +698,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_facebook_invalid_credentials
     OmniAuth.config.mock_auth[:facebook] = :invalid_credentials
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "facebook", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "facebook")
     follow_redirect!
@@ -796,11 +714,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_facebook_unknown
     OmniAuth.config.add_mock(:facebook, :uid => "987654321")
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "facebook", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "facebook")
     follow_redirect!
@@ -815,11 +728,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :auth_provider => "microsoft", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:microsoft, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "microsoft", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "microsoft")
     follow_redirect!
@@ -834,11 +742,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :pending, :auth_provider => "microsoft", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:microsoft, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "microsoft", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "microsoft")
     follow_redirect!
@@ -852,11 +755,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :suspended, :auth_provider => "microsoft", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:microsoft, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "microsoft", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "microsoft")
     follow_redirect!
@@ -875,11 +773,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     create(:user_block, :needs_view, :user => user)
     OmniAuth.config.add_mock(:microsoft, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "microsoft", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "microsoft")
     follow_redirect!
@@ -893,11 +786,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_microsoft_connection_failed
     OmniAuth.config.mock_auth[:microsoft] = :connection_failed
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "microsoft", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "microsoft")
     follow_redirect!
@@ -914,11 +802,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_microsoft_invalid_credentials
     OmniAuth.config.mock_auth[:microsoft] = :invalid_credentials
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "microsoft", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "microsoft")
     follow_redirect!
@@ -935,11 +818,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_microsoft_unknown
     OmniAuth.config.add_mock(:microsoft, :uid => "987654321")
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "microsoft", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "microsoft")
     follow_redirect!
@@ -954,11 +832,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :auth_provider => "github", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:github, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "github", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "github")
     follow_redirect!
@@ -973,11 +846,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :pending, :auth_provider => "github", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:github, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "github", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "github")
     follow_redirect!
@@ -991,11 +859,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :suspended, :auth_provider => "github", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:github, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "github", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "github")
     follow_redirect!
@@ -1014,11 +877,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     create(:user_block, :needs_view, :user => user)
     OmniAuth.config.add_mock(:github, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "github", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "github")
     follow_redirect!
@@ -1032,11 +890,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_github_connection_failed
     OmniAuth.config.mock_auth[:github] = :connection_failed
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "github", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "github")
     follow_redirect!
@@ -1053,11 +906,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_github_invalid_credentials
     OmniAuth.config.mock_auth[:github] = :invalid_credentials
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "github", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "github")
     follow_redirect!
@@ -1074,11 +922,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_github_unknown
     OmniAuth.config.add_mock(:github, :uid => "987654321")
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "github", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "github")
     follow_redirect!
@@ -1093,11 +936,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :auth_provider => "wikipedia", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:wikipedia, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     follow_redirect!
@@ -1112,11 +950,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :pending, :auth_provider => "wikipedia", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:wikipedia, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     follow_redirect!
@@ -1130,11 +963,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     user = create(:user, :suspended, :auth_provider => "wikipedia", :auth_uid => "1234567890")
     OmniAuth.config.add_mock(:wikipedia, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     follow_redirect!
@@ -1153,11 +981,6 @@ class LoginTest < ActionDispatch::IntegrationTest
     create(:user_block, :needs_view, :user => user)
     OmniAuth.config.add_mock(:wikipedia, :uid => user.auth_uid)
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     follow_redirect!
@@ -1171,11 +994,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_wikipedia_connection_failed
     OmniAuth.config.mock_auth[:wikipedia] = :connection_failed
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     follow_redirect!
@@ -1192,11 +1010,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_wikipedia_invalid_credentials
     OmniAuth.config.mock_auth[:wikipedia] = :invalid_credentials
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     follow_redirect!
@@ -1213,11 +1026,6 @@ class LoginTest < ActionDispatch::IntegrationTest
   def test_login_wikipedia_unknown
     OmniAuth.config.add_mock(:wikipedia, :uid => "987654321")
 
-    get "/login", :params => { :referer => "/history" }
-    assert_redirected_to login_path("cookie_test" => "true", "referer" => "/history")
-    follow_redirect!
-    assert_response :success
-    assert_template "sessions/new"
     post auth_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     assert_redirected_to auth_success_path(:provider => "wikipedia", :origin => "/login?referer=%2Fhistory", :referer => "/history")
     follow_redirect!

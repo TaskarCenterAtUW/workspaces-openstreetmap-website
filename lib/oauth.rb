@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Oauth
   SCOPES = %w[
     read_prefs write_prefs write_diary
@@ -12,10 +14,6 @@ module Oauth
 
     def initialize(name)
       @name = name
-    end
-
-    def description
-      I18n.t("oauth.scopes.#{name}")
     end
   end
 

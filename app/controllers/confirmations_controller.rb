@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConfirmationsController < ApplicationController
   include SessionMethods
   include UserMethods
@@ -58,7 +60,10 @@ class ConfirmationsController < ApplicationController
     if user.nil? || user.id != session[:pending_user]
       flash[:error] = t ".failure", :name => params[:display_name]
     else
-      UserMailer.signup_confirm(user, user.generate_token_for(:new_user)).deliver_later
+      UserMailer.with(
+        :user => user,
+        :token => user.generate_token_for(:new_user)
+      ).signup_confirm.deliver_later
       flash[:notice] = { :partial => "confirmations/resend_success_flash", :locals => { :email => user.email, :sender => Settings.email_from } }
     end
 
@@ -67,25 +72,25 @@ class ConfirmationsController < ApplicationController
 
   def confirm_email
     if request.post?
-      self.current_user = User.find_by_token_for(:new_email, params[:confirm_string])
+      user = User.find_by_token_for(:new_email, params[:confirm_string])
 
-      if current_user&.new_email?
-        current_user.email = current_user.new_email
-        current_user.new_email = nil
-        current_user.email_valid = true
-        gravatar_enabled = current_user.gravatar_enable!
-        if current_user.save
+      if user&.new_email?
+        user.email = user.new_email
+        user.new_email = nil
+        user.email_valid = true
+        gravatar_enabled = user.gravatar_enable!
+        if user.save
           flash[:notice] = if gravatar_enabled
-                             "#{t('.success')} #{gravatar_status_message(current_user)}"
+                             "#{t('.success')} #{gravatar_status_message(user)}"
                            else
                              t(".success")
                            end
         else
-          flash[:errors] = current_user.errors
+          flash[:errors] = user.errors
         end
-        session[:user] = current_user.id
-        session[:fingerprint] = current_user.fingerprint
-      elsif current_user
+        session[:user] = user.id
+        session[:fingerprint] = user.fingerprint
+      elsif user
         flash[:error] = t ".failure"
       else
         flash[:error] = t ".unknown_token"

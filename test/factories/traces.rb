@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :trace do
     sequence(:name) { |n| "Trace #{n}.gpx" }
@@ -11,6 +13,12 @@ FactoryBot.define do
 
     trait :deleted do
       visible { false }
+    end
+
+    # Insert a trace with a legacy visibility (public/private) by skipping
+    # validations, so tests can check that old traces still work.
+    trait :without_validations do
+      to_create { |instance| instance.save(:validate => false) }
     end
 
     transient do

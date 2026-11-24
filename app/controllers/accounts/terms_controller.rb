@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Accounts
   class TermsController < ApplicationController
     include SessionMethods
@@ -11,13 +13,15 @@ module Accounts
     authorize_resource :class => :account_terms
 
     def show
+      param! :legale, String, :format => /\A[A-Z]+\z/
+
       @legale = params[:legale] || OSM.ip_to_country(request.remote_ip) || Settings.default_legale
       @text = OSM.legal_text_for_country(@legale)
       @text_legale = @legale
       @text_legale = "GB" unless @legale == "FR" || @legale == "IT"
 
       if request.xhr?
-        render :partial => "terms"
+        render :partial => "terms", :locals => { :text => @text }
       else
         @title = t ".title"
       end

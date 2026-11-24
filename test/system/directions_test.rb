@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class DirectionsSystemTest < ApplicationSystemTestCase
   test "updates route output on mode change" do
     visit directions_path
-    stub_straight_routing(:start_instruction => "Start popup text")
 
     find_by_id("route_from").set("60 30").send_keys :enter
+    stub_straight_routing(:start_instruction => "Start popup text")
     find_by_id("route_to").set("61 31").send_keys :enter
 
     within "#sidebar" do
@@ -21,9 +23,10 @@ class DirectionsSystemTest < ApplicationSystemTestCase
 
   test "swaps route endpoints on reverse button click" do
     visit directions_path
-    stub_straight_routing(:start_instruction => "Start popup text")
 
     find_by_id("route_from").set("60 30").send_keys :enter
+    stub_straight_routing(:start_instruction => "Start popup text")
+    stub_disable_reverse_geocoding
     find_by_id("route_to").set("61 31").send_keys :enter
 
     click_on :class => "reverse_directions"
@@ -39,9 +42,9 @@ class DirectionsSystemTest < ApplicationSystemTestCase
 
   test "removes popup on sidebar close" do
     visit directions_path
-    stub_straight_routing(:start_instruction => "Start popup text")
 
     find_by_id("route_from").set("60 30").send_keys :enter
+    stub_straight_routing(:start_instruction => "Start popup text")
     find_by_id("route_to").set("61 31").send_keys :enter
 
     within "#map" do
@@ -85,11 +88,26 @@ class DirectionsSystemTest < ApplicationSystemTestCase
   def stub_routing(callback_code)
     execute_script <<~SCRIPT
       $(() => {
-        for (const engine of OSM.Directions.engines) {
+        for (const engine of OSM.directionsEngines) {
           engine.getRoute = function(points, signal) {
               #{callback_code}
           };
         }
+      });
+    SCRIPT
+  end
+
+  def stub_disable_reverse_geocoding
+    execute_script <<~SCRIPT
+      $(() => {
+        const originalFetch = window.fetch;
+        window.fetch = function(input, init) {
+          if (!input?.url?.startsWith(OSM.NOMINATIM_URL)) return originalFetch.apply(this, arguments);
+          return Promise.resolve(new Response(JSON.stringify({}), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        };
       });
     SCRIPT
   end

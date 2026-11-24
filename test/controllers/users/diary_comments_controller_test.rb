@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Users
@@ -53,6 +55,19 @@ module Users
       # Test a deleted user
       get user_diary_comments_path(deleted_user)
       assert_response :not_found
+    end
+
+    def test_index_multiple_entries
+      user = create(:user)
+      entries = create_list(:diary_entry, 3)
+      entries.each { |entry| create(:diary_comment, :user => user, :diary_entry => entry) }
+
+      get user_diary_comments_path(user)
+      assert_response :success
+      assert_select "table.table-striped tbody tr", :count => 3
+      entries.each do |entry|
+        assert_select "a[href='#{diary_entry_path(entry.user, entry)}']", :text => entry.title
+      end
     end
 
     def test_index_invalid_paged

@@ -1,6 +1,6 @@
-class ApplicationController < ActionController::Base
-  require "timeout"
+# frozen_string_literal: true
 
+class ApplicationController < ActionController::Base
   include SessionPersistence
 
   protect_from_forgery :with => :exception
@@ -78,6 +78,8 @@ class ApplicationController < ActionController::Base
 
   def require_user
     unless current_user
+      response.headers["Cache-Control"] = "private, no-store"
+
       if request.get?
         redirect_to login_path(:referer => request.fullpath)
       else
@@ -175,8 +177,8 @@ class ApplicationController < ActionController::Base
     if request.headers["X-Error-Format"]&.casecmp?("xml")
       result = OSM::API.new.xml_doc
       result.root.name = "osmError"
-      result.root << (XML::Node.new("status") << "#{Rack::Utils.status_code(status)} #{Rack::Utils::HTTP_STATUS_CODES[status]}")
-      result.root << (XML::Node.new("message") << message)
+      result.root << (LibXML::XML::Node.new("status") << "#{Rack::Utils.status_code(status)} #{Rack::Utils::HTTP_STATUS_CODES[status]}")
+      result.root << (LibXML::XML::Node.new("message") << message)
 
       render :xml => result.to_s
     else
@@ -206,7 +208,7 @@ class ApplicationController < ActionController::Base
 
     I18n.locale = Locale.available.preferred(preferred_languages)
 
-    response.headers["Vary"] = "Accept-Language"
+    response.headers["Vary"] = response.headers["Vary"].present? ? "#{response.headers['Vary']}, Accept-Language" : "Accept-Language"
     response.headers["Content-Language"] = I18n.locale.to_s
   end
 
@@ -251,9 +253,10 @@ class ApplicationController < ActionController::Base
     policy = request.content_security_policy.clone
     policy.connect_src(*policy.connect_src, "http://127.0.0.1:8111", "https://vector.openstreetmap.org", "https://api.maptiler.com",
                        "https://tile.thunderforest.com", "https://render.openstreetmap.org", Settings.nominatim_url, Settings.overpass_url,
-                       Settings.fossgis_osrm_url, Settings.graphhopper_url, Settings.fossgis_valhalla_url, Settings.wikidata_api_url)
+                       Settings.fossgis_osrm_url, Settings.graphhopper_url, Settings.fossgis_valhalla_url, Settings.wikidata_api_url,
+                       Settings.wikimedia_commons_url)
     policy.form_action(*policy.form_action, "render.openstreetmap.org", "tile.thunderforest.com")
-    policy.img_src(*policy.img_src, Settings.wikimedia_commons_url, "upload.wikimedia.org")
+    policy.img_src(*policy.img_src, Settings.wikimedia_commons_url, "upload.wikimedia.org", "thumb.wikimedia.org")
     policy.script_src(*policy.script_src, :wasm_unsafe_eval)
     policy.style_src(*policy.style_src, :unsafe_inline)
 
@@ -261,7 +264,8 @@ class ApplicationController < ActionController::Base
 
     flash.now[:warning] = { :partial => "layouts/offline_flash" } unless api_status == "online"
 
-    request.xhr? ? "xhr" : "map"
+    response.headers["Vary"] = response.headers["Vary"].present? ? "#{response.headers['Vary']}, Turbo-Frame" : "Turbo-Frame"
+    turbo_frame_request? ? "xhr" : "map"
   end
 
   def preferred_editor
@@ -274,22 +278,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def preferred_color_scheme(subject)
-    if current_user
-      current_user.preferences.find_by(:k => "#{subject}.color_scheme")&.v || "auto"
-    else
-      "auto"
-    end
-  end
-
-  helper_method :preferred_editor, :preferred_color_scheme
+  helper_method :preferred_editor
 
   def update_totp
     if Settings.key?(:totp_key)
       cookies["_osm_totp_token"] = {
         :value => ROTP::TOTP.new(Settings.totp_key, :interval => 3600).now,
-        :domain => "openstreetmap.org",
-        :expires => 1.hour.from_now
+        :domain => Settings.totp_domain,
+        :expires => 1.hour.from_now,
+        :secure => Settings.server_protocol == "https",
+        :httponly => true
       }
     end
   end
@@ -298,7 +296,7 @@ class ApplicationController < ActionController::Base
     Ability.new(current_user)
   end
 
-  def deny_access(_exception)
+  def deny_access(_exception = nil)
     if current_user
       set_locale
       respond_to do |format|

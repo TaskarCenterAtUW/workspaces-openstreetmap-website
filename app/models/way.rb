@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: current_ways
@@ -18,8 +20,6 @@
 #
 
 class Way < ApplicationRecord
-  require "xml/libxml"
-
   include ConsistencyValidations
   include NotRedactable
 

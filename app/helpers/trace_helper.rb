@@ -1,21 +1,41 @@
+# frozen_string_literal: true
+
 module TraceHelper
+  def trace_image(trace, animated: false, only_path: true, **options)
+    args = [trace.user, trace, { :only_path => only_path }]
+    src = animated ? trace_picture_url(*args) : trace_icon_url(*args)
+    image_tag(src, { :class => "trace_image", :alt => "" }.merge(options))
+  end
+
   def link_to_tag(tag)
     link_to(tag, :tag => tag, :page => nil)
   end
 
   def trace_icon(trace, options = {})
-    options[:class] ||= "trace_image"
-    options[:alt] ||= ""
-
-    image_tag trace_icon_path(trace.user, trace),
-              options.merge(:size => 50)
+    trace_image(trace, :size => 50, **options)
   end
 
   def trace_picture(trace, options = {})
-    options[:class] ||= "trace_image"
-    options[:alt] ||= ""
+    trace_image(trace, :animated => true, :size => 250, **options)
+  end
 
-    image_tag trace_picture_path(trace.user, trace),
-              options.merge(:size => 250)
+  def trace_visibility_options(trace)
+    trace_visibility_select_options(trace.selectable_visibilities)
+  end
+
+  def trace_visibility_options_for_filter
+    trace_visibility_select_options(Trace::LEGACY_VISIBILITIES)
+  end
+
+  def trace_visibility_options_for_update
+    trace_visibility_select_options(Trace::VISIBILITIES)
+  end
+
+  private
+
+  def trace_visibility_select_options(visibilities)
+    visibilities.map do |visibility|
+      [t("traces.visibility.#{visibility}"), visibility]
+    end
   end
 end

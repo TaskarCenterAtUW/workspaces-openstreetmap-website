@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class SearchesControllerTest < ActionDispatch::IntegrationTest
@@ -15,9 +17,13 @@ class SearchesControllerTest < ActionDispatch::IntegrationTest
   def test_identify_error
     get search_path
     assert_response :bad_request
+  end
 
-    get search_path, :xhr => true
-    assert_response :bad_request
+  ##
+  # Test identification with bogus format argument
+  def test_identify_format
+    get search_path(:query => "test", :format => "json")
+    assert_response :not_acceptable
   end
 
   ##
@@ -315,18 +321,54 @@ class SearchesControllerTest < ActionDispatch::IntegrationTest
   # Test the nominatim reverse JSON search
   def test_search_osm_nominatim_reverse_json
     with_http_stubs "nominatim" do
-      post search_nominatim_reverse_query_path(:lat => 51.7632, :lon => -0.0076, :zoom => 15, :format => "json"), :xhr => true
+      post search_nominatim_reverse_query_path(:lat => 51.7632, :lon => -0.0076, :zoom => 15, :format => "json")
       result_name_check_json("Broxbourne, Hertfordshire, East of England, England, United Kingdom")
 
-      post search_nominatim_reverse_query_path(:lat => 51.7632, :lon => -0.0076, :zoom => 17, :format => "json"), :xhr => true
+      post search_nominatim_reverse_query_path(:lat => 51.7632, :lon => -0.0076, :zoom => 17, :format => "json")
       result_name_check_json("Dinant Link Road, Broxbourne, Hertfordshire, East of England, England, EN11 8HX, United Kingdom")
 
-      post search_nominatim_reverse_query_path(:lat => 13.7709, :lon => 100.50507, :zoom => 19, :format => "json"), :xhr => true
+      post search_nominatim_reverse_query_path(:lat => 13.7709, :lon => 100.50507, :zoom => 19, :format => "json")
       result_name_check_json("MM Steak&Grill, ถนนศรีอยุธยา, บางขุนพรหม, กรุงเทพมหานคร, เขตดุสิต, กรุงเทพมหานคร, 10300, ประเทศไทย")
     end
   end
 
+  ##
+  # A coordinate search with an explicit zoom links to Nominatim reverse with that zoom
+  def test_nominatim_reverse_link_with_zoom
+    get search_path(:query => "51.7632, -0.0076", :zoom => 15)
+    assert_response :success
+    assert_select "a[href*='/reverse?'][href*='zoom=15']"
+  end
+
+  ##
+  # The reported URL has no viewport, so zoom is absent. A blank zoom= must be
+  # omitted too: both render as "zoom=" and Nominatim answers 400.
+  def test_nominatim_reverse_link_without_zoom
+    get search_path(:query => "51.7632, -0.0076")
+    assert_response :success
+    assert_reverse_links_omit_zoom
+
+    get search_path(:query => "51.7632, -0.0076", :zoom => "")
+    assert_response :success
+    assert_reverse_links_omit_zoom
+  end
+
+  ##
+  # Zoom 0 is a real zoom and stays on the sidebar link
+  def test_nominatim_reverse_link_with_zero_zoom
+    get search_path(:query => "51.7632, -0.0076", :zoom => 0)
+    assert_response :success
+    assert_select "a[href*='/reverse?'][href*='zoom=0']"
+  end
+
   private
+
+  def assert_reverse_links_omit_zoom
+    assert_select "a[href*='/reverse?']" do |links|
+      assert_predicate links, :any?
+      links.each { |link| assert_no_match(/[?&]zoom=/, link["href"]) }
+    end
+  end
 
   def latlon_check(query, lat, lon)
     get search_path(:query => query)
@@ -340,7 +382,7 @@ class SearchesControllerTest < ActionDispatch::IntegrationTest
     assert_in_delta lat, @controller.params[:lat].to_f
     assert_in_delta lon, @controller.params[:lon].to_f
 
-    get search_path(:query => query), :xhr => true
+    get search_path(:query => query), :headers => { "Turbo-Frame" => "sidebar_content_frame" }
     assert_response :success
     assert_template :show
     assert_template :layout => "xhr"
@@ -359,7 +401,7 @@ class SearchesControllerTest < ActionDispatch::IntegrationTest
     assert_template :layout => "map"
     assert_equal sources, assigns(:sources).pluck(:name)
 
-    get search_path(:query => query), :xhr => true
+    get search_path(:query => query), :headers => { "Turbo-Frame" => "sidebar_content_frame" }
     assert_response :success
     assert_template :show
     assert_template :layout => "xhr"

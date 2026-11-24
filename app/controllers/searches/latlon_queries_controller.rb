@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Searches
   class LatlonQueriesController < QueriesController
     def create
-      lat = params[:lat].to_f
-      lon = params[:lon].to_f
+      lat = params.expect(:lat).to_f
+      lon = params.expect(:lon).to_f
 
       if params[:latlon_digits]
         # We've got two nondescript numbers for a query, which can mean both "lat, lon" or "lon, lat".

@@ -10,26 +10,23 @@
   to route controller objects. Path templates can contain placeholders
   (`/note/:id`) and optional segments (`/:type/:id(/history)`).
 
-  Route controller objects can define four methods that are called at defined
+  Route controller objects can define three methods that are called at defined
   times during routing:
 
-     * The `load` method is called by the router when a path which matches the
+     * The `init` method is called by the router when a path which matches the
        route's path template is loaded via a normal full page load. It is passed
        as arguments the URL path plus any matching arguments for placeholders
        in the path template.
 
-     * The `pushstate` method is called when a page which matches the route's path
-       template is loaded via pushState. It is passed the same arguments as `load`.
-
-     * The `popstate` method is called when returning to a previously
-       pushState-loaded page via popstate (i.e. browser back/forward buttons).
+     * The `load` method is called when a supported and matching page is
+       loaded via pushState or popstate. It is passed the same arguments as `init`.
 
      * The `unload` method is called on the exiting route controller when navigating
        via pushState or popstate to another route.
 
-   Note that while `load` is not called by the router for pushState-based loads,
+   Note that while `init` is not called by the router for pushState-based loads,
    it's frequently useful for route controllers to call it manually inside their
-   definition of the `pushstate` and `popstate` methods.
+   definition of the `load` method.
 
    An instance of OSM.Router is assigned to `OSM.router`. To navigate to a new page
    via pushState (with automatic full-page load fallback), call `OSM.router.route`:
@@ -53,6 +50,7 @@ OSM.Router = function (map, rts) {
   const splatParam = /\*\w+/g;
 
   function Route(path, controller) {
+    let controllerInstance = null;
     const regexp = new RegExp("^" +
       path.replace(escapeRegExp, "\\$&")
         .replace(optionalParam, "(?:$1)?")
@@ -67,7 +65,7 @@ OSM.Router = function (map, rts) {
       return regexp.test(path);
     };
 
-    route.run = function (action, path, ...args) {
+    route.run = async function (action, path, ...args) {
       let params = [];
 
       if (path) {
@@ -76,63 +74,72 @@ OSM.Router = function (map, rts) {
         });
       }
 
-      return controller[action]?.(...params, ...args);
+      if (!controllerInstance) {
+        const moduleName = typeof controller === "string" ? "index_" + controller : controller.module;
+        const select = controller.part || (m => m.default);
+        controllerInstance = await import(OSM.MODULE_PATHS[moduleName]).then(select).then(m => m(map));
+      }
+
+      return controllerInstance[action]?.(...params, ...args);
     };
 
     return route;
   }
 
   const routes = Object.entries(rts)
-    .map(([path, controller]) => new Route(path, controller(map)));
+    .map(([path, controller]) => new Route(path, controller));
 
-  routes.recognize = function (path) {
-    for (const route of this) {
-      if (route.match(path)) return route;
-    }
-  };
+  routes.recognize = path => routes.find(route => route.match(path));
 
   let currentPath = location.pathname.replace(/(.)\/$/, "$1") + location.search,
       currentRoute = routes.recognize(currentPath),
       currentHash = location.hash || OSM.formatHash(map);
+  let routingInProgress = Promise.resolve();
 
   const router = {};
 
   function updateSecondaryNav() {
-    $("header nav.secondary > ul > li > a").each(function () {
-      const active = $(this).attr("href") === location.pathname;
+    $("header ul.nav > li > a").each(function () {
+      const active = new URL($(this).attr("href"), location.href).pathname === location.pathname;
 
       $(this)
+        .toggleClass("active", active)
         .toggleClass("text-secondary", !active)
         .toggleClass("text-secondary-emphasis", active);
     });
   }
 
-  $(window).on("popstate", function (e) {
-    if (!e.originalEvent.state) return; // Is it a real popstate event or just a hash change?
-    const path = location.pathname + location.search,
-          route = routes.recognize(path);
+  function transition(path, beforeEnter = () => {}) {
+    const route = routes.recognize(path);
+    if (!route) return false;
+    routingInProgress = routingInProgress
+      .catch(() => {})
+      .then(async () => {
+        await currentRoute.run("unload", null, route === currentRoute);
+        beforeEnter();
+        currentPath = path;
+        currentRoute = route;
+        await currentRoute.run("load", currentPath);
+        updateSecondaryNav();
+      });
+    return routingInProgress;
+  }
+
+  addEventListener("popstate", function ({ state }) {
+    if (!state) return; // Is it a real popstate event or just a hash change?
+    const path = location.pathname + location.search;
     if (path === currentPath) return;
-    currentRoute.run("unload", null, route === currentRoute);
-    currentPath = path;
-    currentRoute = route;
-    currentRoute.run("popstate", currentPath);
-    updateSecondaryNav();
-    map.setState(e.originalEvent.state, { animate: false });
+    const done = transition(path);
+    if (done) done.then(() => map.setState(state, { animate: false }));
   });
 
   router.route = function (url) {
-    const path = url.replace(/#.*/, ""),
-          route = routes.recognize(path);
-    if (!route) return false;
-    currentRoute.run("unload", null, route === currentRoute);
+    const path = url.replace(/#.*/, "");
     const state = OSM.parseHash(url);
-    map.setState(state);
-    window.history.pushState(state, document.title, url);
-    currentPath = path;
-    currentRoute = route;
-    currentRoute.run("pushstate", currentPath);
-    updateSecondaryNav();
-    return true;
+    return Boolean(transition(path, () => {
+      map.setState(state);
+      window.history.pushState(state, document.title, url);
+    }));
   };
 
   router.replace = function (url) {
@@ -173,8 +180,8 @@ OSM.Router = function (map, rts) {
     map.off("movestart", disableMoveListener);
   };
 
-  router.load = function () {
-    const loadState = currentRoute.run("load", currentPath);
+  router.load = async function () {
+    const loadState = await currentRoute.run("init", currentPath);
     router.stateChange(loadState || {});
   };
 
@@ -189,12 +196,15 @@ OSM.Router = function (map, rts) {
     const clickEvent = new (event.constructor)("click", eventOptions);
     const link = document.createElement("a");
     link.href = href;
+    link.hash = location.hash;
     document.body.appendChild(link);
     link.dispatchEvent(clickEvent);
     document.body.removeChild(link);
   };
 
-  map.on("moveend baselayerchange overlayadd overlayremove", router.updateHash);
+  for (const e of ["moveend", "baselayerchange", "overlayadd", "overlayremove"]) {
+    map.on(e, router.updateHash);
+  }
   $(window).on("hashchange", router.hashUpdated);
 
   return router;

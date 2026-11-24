@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class IndexTest < ApplicationSystemTestCase
@@ -46,7 +48,7 @@ class IndexTest < ApplicationSystemTestCase
 
     within "#map" do
       click_on "Share"
-      click_on "Map Key"
+      click_on "Legend"
     end
 
     assert_no_selector "#content.overlay-right-sidebar"
@@ -58,13 +60,13 @@ class IndexTest < ApplicationSystemTestCase
     assert_no_selector "#content.overlay-right-sidebar"
 
     within "#map" do
-      click_on "Map Key"
+      click_on "Legend"
     end
 
     assert_no_selector "#content.overlay-right-sidebar"
 
     within "#map" do
-      click_on "Map Key"
+      click_on "Legend"
     end
 
     assert_selector "#content.overlay-right-sidebar"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module Ways
     class RelationsController < ApiController
@@ -8,6 +10,7 @@ module Api
       def index
         @relations = Relation
                      .visible
+                     .includes(:relation_members, :changeset => :user)
                      .where(:id => RelationMember.where(
                        :member_type => "Way",
                        :member_id => params[:way_id]

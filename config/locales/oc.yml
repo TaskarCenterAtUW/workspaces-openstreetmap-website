@@ -9,7 +9,9 @@
 # Author: Guilhelma
 # Author: Lhanars
 # Author: Macofe
+# Author: Maro21
 # Author: Marwin H.H.
+# Author: Nicolas Eynaud
 # Author: OpenStreetMap-oc
 # Author: Quentí
 ---
@@ -57,6 +59,7 @@ oc:
       message: Messatge
       node: Nos
       node_tag: Etiqueta de nos
+      note: Nòta
       old_node: Node Ancian
       old_node_tag: Etiqueta de node anciana
       old_relation: Relacion anciana
@@ -80,19 +83,6 @@ oc:
       way_node: Nos de la linha
       way_tag: Etiqueta de la linha
     attributes:
-      client_application:
-        name: Nom (Obligatòri)
-        url: URL de l'aplicacion principala (Obligatòri)
-        callback_url: URL de rampèu
-        support_url: URL de supòrt
-        allow_read_prefs: consultar lei preferéncias d'utilizaire.
-        allow_write_prefs: modificar lei preferéncias d'utilizaire.
-        allow_write_diary: creatz d'intradas dins lo jornau, de comentaris e fasètz-vos
-          d'amics.
-        allow_write_api: modificar la mapa
-        allow_read_gpx: legir vòstrei traças GPS privadas.
-        allow_write_gpx: telecargar de traças GPS.
-        allow_write_notes: modificar lei nòtas
       diary_comment:
         body: Còrs
       diary_entry:
@@ -141,6 +131,7 @@ oc:
         active: Actiu
         display_name: Nom afichat
         description: Descripcion dau perfiu
+        company: Societat
         home_lat: 'Latitud :'
         home_lon: 'Longitud :'
         languages: Lengas preferidas
@@ -254,7 +245,7 @@ oc:
         agreed_with_pd: Declaratz tanben que consideratz que vòstrei modificacions
           son de domeni public.
       save changes button: Enregistrar lei modificacions
-      delete_account: Suprimir lo còmpte
+      delete_account: Suprimir lo compte
     go_public:
       heading: 'Modificacion publica :'
       make_edits_public_button: Rendre totei lei modificacions publicas
@@ -264,20 +255,21 @@ oc:
         e-mail.
       success: Informacions sus l'utilizaire actualizadas amb succès.
     destroy:
-      success: Còmpte suprimit...
+      success: Supression del compte efectuada amb succès.
     deletions:
       show:
-        title: Suprimir lo còmpte
-        warning: Avís! Lo procès de supression dau còmpte es definitiu e pòt pas anullar.
-        delete_account: Suprimir lo còmpte
-        delete_introduction: 'Podètz suprimir vòstre còmpte OpenStreetMap en emplegant
-          lo boton dessota. Prenetz en compte lei detalhs seguents:'
+        title: Suprimir lo compte
+        warning: Avís! Lo procès de supression de compte es definitiu e non pòt èsser
+          pas anullar.
+        delete_account: Suprimir lo compte
+        delete_introduction: 'Podètz suprimir vòstre compte OpenStreetMap en emplegant
+          lo boton dessota. Prenetz en compte los detalhs seguents:'
         delete_profile: S'eliminarà l'informacion de perfiu, comprés vòstre avatar,
           la descripcion e la localizacion de vòstra demòra.
         delete_display_name: S'eliminarà lo nom mostrat e se podrà utilizar per d'autrei
           còmptes.
-        retain_caveats: 'Quauqueis informacions, pasmens, demoraràn a OpenStreetMap,
-          emai lo còmpte suprimit :'
+        retain_caveats: 'Qualques informacions, pasmens, demoraràn a OpenStreetMap,
+          emai lo compte suprimit:'
         retain_edits: Lei modificacions fachas a la mapa, se n'avètz agut fachas,
           seràn mantengudas.
         retain_traces: Lei traças GPS se n'avètz agut telecargadas, seràn mantengudas.
@@ -294,8 +286,11 @@ oc:
         cancel: Anullar
     terms:
       show:
-        title: Tèrmes del contributor
-        heading: Tèrmes del contributor
+        title: Condicions
+        heading: Condicions
+        heading_ct: Tèrmes de collaboracion
+        read and accept with tou: Legètz l'acòrdi de collaborator e lei condicions
+          d'usatge, crosatz puei lei dos carrèus e quichatz lo boton contuniar.
         continue: Contunhar
         you need to accept or decline: Legissètz e puèi, siá acceptatz o refusatz
           las novèlas condicions de contributor per contunhar.
@@ -439,17 +434,29 @@ oc:
       changesetxml: Grop de modificacions XML
       osmchangexml: osmChange XML
     paging_nav:
+      nodes_title: Nos
       nodes_paginated: Nos (%{x} a %{y} sus %{count})
+      ways_title: Camins
       ways_paginated: Linhas (%{x} a %{y} sus %{count})
+      relations_title: Relacions
       relations_paginated: Relacions (%{x} a %{y} sus %{count})
+      range: Linhas (%{x} a %{y} sus %{count})
+    not_found_message:
+      sorry: 'O planhèm, #%{id} es pas estat trobat.'
     timeout:
       sorry: O planhèm, la lista deis gropes de modificacions qu'avètz demandada met
         tròp de temps per èsser recuperada.
+  changeset_subscriptions:
+    heading:
+      title: Grop de modificacions %{id}
+      created_by_html: Creat per %{link_user} de %{created}.
+    no_such_entry:
+      heading: 'Ges d''entrada amb l''id : %{id}'
   dashboards:
     contact:
       km away: '%{count} km'
       m away: distant de %{count} m
-      latest_edit_html: 'Darrièra modificacion %{ago} :'
+      latest_edit_html: 'Darriera modificacion %{ago} :'
       no_edits: (sensa modificacion)
       view_changeset_details: Mostrar per lo menut lo grop de modificacions
     popup:
@@ -497,12 +504,14 @@ oc:
     diary_entry:
       posted_by_html: Postat per %{link_user} a %{created} en %{language_link}
       updated_at_html: Darriera actualizacion de %{updated}
+      full_entry: Veire l'intrada completa
       comment_link: Comentar aquesta entrada
       reply_link: Respòndre a aquesta intrada
       comment_count:
         one: '%{count} comentari'
         zero: Pas de comentari
         other: '%{count} comentaris'
+      no_comments: (sensa comentaris)
       edit_link: Modificar aquesta entrada
       hide_link: Amagar aquesta entrada
       unhide_link: Mostrar aquesta intrada
@@ -868,6 +877,11 @@ oc:
           wayside_shrine: Orador
           wreck: Varatge
           "yes": Site istoric
+        information:
+          map: Mapa
+          office: Oficina de Torisme
+          terminal: Terminau d'informacion
+          sign: Aficha informativa
         junction:
           "yes": Interseccion / Caireforc
         landuse:
@@ -1280,6 +1294,16 @@ oc:
           building_passage: Passatge de bastissa
           culvert: Pontet
           "yes": Galariá
+        water:
+          lake: Lac
+          pond: Pesquier
+          reservoir: Sèrva
+          basin: Bacin d'aiga
+          fishpond: Estanh de peis
+          lagoon: Launa
+          wastewater: Aigas residualas
+          oxbow: Braç mòrt
+          lock: Resclausa
         waterway:
           artificial: Riu artificial
           boatyard: Obrdor de construccion navala
@@ -1304,12 +1328,15 @@ oc:
         level3: Limit regionau
         level4: Frontiera de l’estat
         level5: Frontiera de la region
-        level6: Frontiera del comtat
+        level6: Frontiera de comtat
         level7: Limit municipau
         level8: Limit de la vila
         level9: Limit dau vilatge
         level10: Limit de la banlèga
         level11: Limit de quartier
+      border_types:
+        arrondissement: Limit d’arrondiment
+        borough: Limit de quartier exterior
   searches:
     queries:
       create:
@@ -1322,7 +1349,9 @@ oc:
       time: Temps
       ascend: Creissent
       descend: Descreissent
+      filename: percors
       directions_courtesy_html: Itinerari peovesit per %{link}
+      check_demo_html: Mai de detalh de  %{link}
   issues:
     index:
       title: Incidéncias
@@ -1345,11 +1374,19 @@ oc:
         one: 1 rapòrt
         other: '%{count} rapòrts'
       reported_item: Element raportat
+      states:
+        open: Dubèrt
+        resolved: Reglat
     show:
+      title:
+        open: 'Problèma dubèrt #%{issue_id}'
+        ignored: Problèma ignorat %{issue_id}
+        resolved: Problèma reglat %{issue_id}
       reports:
         zero: Ges de rapòrt
         one: 1 rapport
         other: '%{count} rapòrts'
+      no_reports: Ges de rapòrt
       report_created_at_html: Raportat per premier còp lo %{datetime}
       last_resolved_at_html: Reglat per darrier còp lo %{datetime}
       last_updated_at_html: Actualizat per darrier còp lo %{datetime} per %{displayname}
@@ -1362,14 +1399,13 @@ oc:
       other_issues_against_this_user: Autreis incidéncias còntra d'aqueste usatgier
       no_other_issues: I a pas d'autras incidéncias còntra d'aqueste usatgier.
       comments_on_this_issue: Comentaris sus aquesta incidéncia
+      comment_from_html: Comentari de %{user_link} sus %{comment_created_at}
     resolve:
       resolved: L'estat de l'incidéncia s'es establit en 'Reglat'
     ignore:
       ignored: L'estat de l'incidéncia s'es establit en 'Ignorat'
     reopen:
       reopened: L'estat de l'incidéncia s'es establit en 'Dobèrt'.
-    comments:
-      comment_from_html: Comentari de %{user_link} sus %{comment_created_at}
     reports:
       reported_by_html: Raportat coma %{category} per %{user} lo %{updated_at}
     helper:
@@ -1414,31 +1450,42 @@ oc:
     create:
       successful_report: Avètz capitat d’enregistrar lo rapòrt
       provide_details: Se vos platz, fornissètz lei detalhs demandats
+  languages_panes:
+    select_language_list:
+      search_language: Recèrca en cors...
+      languages:
+        frp: Arpitan
+        oc: Occitan
+        nds: Alemand bas
+        pl: Polonés
+        pt-PT: Portugués
+        pt: Portugués (Brasil)
   layouts:
     logo:
       alt_text: Lògo d'OpenStreetMap
-    home: Anar a l'emplaçament de mon domicili
-    logout: Se desconnectar
-    log_in: Se connectar
-    sign_up: Crear un compte
     start_mapping: Començar de cartografiar
-    edit: Modificar
-    history: Istoric
-    export: Exportar
-    issues: Incidéncias
-    gps_traces: Traças GPS
-    user_diaries: Jornals
-    edit_with: Modificar amb %{editor}
     intro_header: Benvenguda dins OpenStreetMap !
     intro_text: OpenStreetMap es una mapa dau monde, creada per de personas coma vos
       e liura d’utilizacion sota licéncia liura.
     partners_partners: partenaris
     tou: Condicions d'utilizacion
-    help: Ajuda
-    about: A prepaus
-    copyright: Dreits d’autor
     learn_more: Ne saber mai
-    more: Mai
+    header:
+      about: A prepaus
+      copyright: Dreits d’autor
+      edit: Modificar
+      edit_with: Modificar amb %{editor}
+      export: Exportar
+      gps_traces: Traças GPS
+      help: Ajuda
+      history: Istoric
+      home: Anar a l'emplaçament de mon domicili
+      issues: Incidéncias
+      log_out: Se desconnectar
+      log_in: Se connectar
+      more: Mai
+      sign_up: Crear un compte
+      user_diaries: Jornals
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} a postat un comentari sus un article de jornal'
@@ -1478,11 +1525,11 @@ oc:
       greeting: Bonjorn !
       created: Qualqu'un (vos, amb un pauc d'astre) ven juste de crear un compte sus
         %{site_url}.
-      confirm: 'Primier de tot devèm confirmar qu''aquela demanda es estada facha
-        per vos, s''es ansin, se vos plai, quichatz sus lo ligam seguent per confirmar
-        la demanda de creacion de còmpte d''usatgier:'
+      confirm: 'Primièr de tot devèm confirmar qu''aquela demanda es estada facha
+        per vos, s''es ansin, se vos platz, quichatz sus lo ligam seguent per confirmar
+        la demanda de creacion de compte d''utilizator:'
       welcome: Un còp confirmat lo còmpte, vos donarem quauqua informacion adicionala
-        perque poscatz començar.
+        per que poscatz començar.
     email_confirm:
       subject: '[OpenStreetMap] Confirmacion de vòstra adreiça de corrier electronic'
       greeting: Bonjorn,
@@ -1672,10 +1719,20 @@ oc:
         failure: Se son pas pogudas actualizar lei preferéncias.
       update_success_flash:
         message: Preferéncias actualizadas
+      navigation:
+        preferences: Interfàcia
+        advanced_preferences: Avançat
     basic_preferences:
       show:
         title: Preferéncias
         save: Actualizar lei preferéncias
+    notification_preferences:
+      show:
+        title: Preferéncias dei notificacions
+        direct_message: Messatges dirèctes
+        save: Actualizar lei preferéncias
+        delivery_mechanisms:
+          email: Corrièr electronic
   profiles:
     profile_sections:
       navigation:
@@ -1689,13 +1746,11 @@ oc:
       show:
         gravatar:
           gravatar: Utilizar Gravatar
-          link: https://wiki.openstreetmap.org/wiki/OC:Cargar
           what_is_gravatar: Qu'es aquò Grava(ta)r?
         new image: Ajustar un imatge
         keep image: Gardar l'imatge actual
         delete image: Suprimir l'imatge actual
         replace image: Remplaçar l'imatge actuala
-        image size hint: (los imatges carrats d'al mens 100×100 pixèls foncionan melhor)
     locations:
       show:
         no home location: Avètz pas indicat l'emplaçament de vòstre domicili.
@@ -1717,32 +1772,6 @@ oc:
       title: Desconnexion
       heading: Desconnexion d'OpenStreetMap
       logout_button: Desconnexion
-  shared:
-    markdown_help:
-      headings: Títols
-      subheading: Sostítol
-      unordered: Lista sens ordenar
-      ordered: Lista ordenada
-      first: Premier element
-      second: Element segond
-      link: Li(g)ame
-      text: Tèxte
-      image: Imatge
-      alt: Ajustar de tèxte
-      url: URL
-    richtext_field:
-      edit: Modificar
-      preview: Previsualizacion
-    pagination:
-      diary_comments:
-        older: Comentaris pus ancians
-        newer: Comentaris pus recents
-      diary_entries:
-        older: Entradas pus ancianas
-        newer: Entradas pus recentas
-      traces:
-        older: Ancianas traças
-        newer: Traças novèlas
   site:
     about:
       used_by_html: '%{name} fornís de donadas cartograficas sus de milierats de sites
@@ -2087,6 +2116,25 @@ oc:
       wikipedia:
         title: Se connectar amb Wikipèdia
         alt: Se connectar amb un compte de Wikipèdia
+    markdown_help:
+      headings: Títols
+      subheading: Sostítol
+      unordered: Lista sens ordenar
+      first: Premier element
+      second: Element segond
+      link: Li(g)ame
+      text: Tèxte
+      image: Imatge
+      url: URL
+    richtext_field:
+      preview: Previsualizacion
+    pagination:
+      diary_comments:
+        older: Comentaris pus ancians
+      diary_entries:
+        newer: Entradas pus recentas
+      traces:
+        newer: Traças novèlas
   users:
     new:
       title: S’inscriure
@@ -2129,11 +2177,19 @@ oc:
       create_block: Blocar aqueste utilizaire
       activate_user: Activar aqueste utilizaire
       confirm_user: Confirmar aqueste utilizaire
-      hide_user: Amagar aqueste utilizaire
-      unhide_user: Reafichar aqueste utilizaire
-      delete_user: Suprimir aqueste utilizaire
       confirm: Confirmar
       report: Denonciatz aquel usatgièr
+      title:
+        administrator: Aqueste utilizaire es un administrator
+        moderator: Aqueste utilizaire es un moderator
+      grant:
+        administrator: Autrejar l'accès administrator
+        moderator: Autrejar l'accès moderator
+        are_you_sure: Sètz segur que volètz atribuir lo ròtle `%{role}' a l'utilizaire
+          `%{name}'?
+      revoke:
+        administrator: Revocar l'accès administrator
+        moderator: Revocar l'accès moderador
     issued_blocks:
       show:
         title: Blocatges per %{name}
@@ -2150,7 +2206,6 @@ oc:
         heading: Utilizaires
       page:
         confirm: Confirmar los utilizaires seleccionats
-        hide: Amagar los utilizaires seleccionats
         empty: Cap d'utilizaire correspondent es pas estat trobat
       user:
         summary_html: '%{name} creat dempuèi %{ip_address} lo %{date}'
@@ -2175,18 +2230,6 @@ oc:
       invalid_scope: Espandida invalida
     auth_association:
       heading: Vòstre ID es pas encara associat a un compte OpenStreetMap.
-    role_icons:
-      title:
-        administrator: Aqueste utilizaire es un administrator
-        moderator: Aqueste utilizaire es un moderator
-      grant:
-        administrator: Autrejar l'accès administrator
-        moderator: Autrejar l'accès moderator
-        are_you_sure: Sètz segur que volètz atribuir lo ròtle `%{role}' a l'utilizaire
-          `%{name}'?
-      revoke:
-        administrator: Revocar l'accès administrator
-        moderator: Revocar l'accès moderador
   user_role:
     filter:
       not_a_role: La cadena « %{role} » es un ròtle valid.
@@ -2300,11 +2343,11 @@ oc:
       tooltip: Legenda
       tooltip_disabled: La legenda es pas disponibla que per aqueste jaç
     map:
-      zoom:
-        in: Zoom avant
-        out: Zoom arrièr
-      locate:
-        title: Mostrar mon emplaçament
+      NavigationControl:
+        ZoomIn: Zoom avant
+        ZoomOut: Zoom arrièr
+      GeolocateControl:
+        FindMyLocation: Mostrar mon emplaçament
         metersPopup:
           one: Siatz a mens d'un mètre dau ponch
           other: Siatz a mens de %{count} de mètres dau ponch

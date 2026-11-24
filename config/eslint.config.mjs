@@ -29,10 +29,11 @@ export default [
         L: "readonly",
         Matomo: "readonly",
         OSM: "writable",
+        Popper: "readonly",
         Turbo: "readonly",
         bootstrap: "readonly",
         maplibregl: "readonly",
-        plurals: "readonly",
+        polyline: "readonly",
         updateLinks: "readonly"
       }
     },
@@ -164,6 +165,16 @@ export default [
         assert: "readonly",
         should: "readonly"
       }
+    }
+  },
+  {
+    // Additional configuration for index modules
+    files: ["app/**/index_modules/*.js"],
+    languageOptions: {
+      sourceType: "module"
+    },
+    rules: {
+      "no-invalid-this": "off"
     }
   },
   {

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SearchesController < ApplicationController
   include NominatimMethods
 
@@ -25,7 +27,9 @@ class SearchesController < ApplicationController
     if @sources.empty?
       head :bad_request
     else
-      render :layout => map_layout
+      respond_to do |format|
+        format.html { render :layout => map_layout }
+      end
     end
   end
 

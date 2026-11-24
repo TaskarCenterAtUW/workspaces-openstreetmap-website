@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class UserBlocksHelperTest < ActionView::TestCase
@@ -68,6 +70,29 @@ class UserBlocksHelperTest < ActionView::TestCase
 
       short_status_dom = Rails::Dom::Testing.html_document.parse(block_short_status(block))
       assert_dom short_status_dom, ":root", :text => "read at #{read_date}"
+    end
+  end
+
+  def test_block_short_time_in_future
+    freeze_time do
+      html = block_short_time_in_future(Time.now.utc + 1.hour)
+      assert_match(/title="[^"]*; in about 1 hour"/, html)
+
+      html = block_short_time_in_future(Time.now.utc + 1.year)
+      assert_match(/title="[^"]*; in about 1 year"/, html)
+
+      html = block_short_time_in_future(Time.now.utc + 20.seconds)
+      assert_match(/title="[^"]*; in less than 1 minute"/, html)
+    end
+  end
+
+  def test_block_short_time_in_past
+    freeze_time do
+      html = block_short_time_in_past(Time.now.utc - 1.hour)
+      assert_match(/title="[^"]*; about 1 hour ago"/, html)
+
+      html = block_short_time_in_past(Time.now.utc - 1.year)
+      assert_match(/title="[^"]*; about 1 year ago"/, html)
     end
   end
 

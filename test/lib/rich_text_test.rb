@@ -1,7 +1,13 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class RichTextTest < ActiveSupport::TestCase
   include Rails::Dom::Testing::Assertions::SelectorAssertions
+
+  def setup
+    RichText.reset_state
+  end
 
   def test_html_to_html
     r = RichText.new("html", "foo http://example.com/ bar")
@@ -76,11 +82,6 @@ class RichTextTest < ActiveSupport::TestCase
   def test_html_to_text
     r = RichText.new("html", "foo <a href='http://example.com/'>bar</a> baz")
     assert_equal "foo <a href='http://example.com/'>bar</a> baz", r.to_text
-  end
-
-  def test_html_spam_score
-    r = RichText.new("html", "foo <a href='http://example.com/'>bar</a> baz")
-    assert_equal 55, r.spam_score.round
   end
 
   def test_markdown_to_html
@@ -216,13 +217,8 @@ class RichTextTest < ActiveSupport::TestCase
     assert_equal "foo [bar](http://example.com/) baz", r.to_text
   end
 
-  def test_markdown_spam_score
-    r = RichText.new("markdown", "foo [bar](http://example.com/) baz")
-    assert_equal 50, r.spam_score.round
-  end
-
   def test_text_to_html_linkify
-    with_settings(:linkify_hosts => ["replace-me.example.com"], :linkify_hosts_replacement => "repl.example.com") do
+    with_settings(:linkify => { :normalisation_rules => [{ :hosts => ["replace-me.example.com"], :host_replacement => "repl.example.com" }] }) do
       r = RichText.new("text", "foo http://example.com/ bar")
       assert_html r do
         assert_dom "a", :count => 1, :text => "http://example.com/" do
@@ -234,7 +230,7 @@ class RichTextTest < ActiveSupport::TestCase
   end
 
   def test_text_to_html_linkify_replace
-    with_settings(:linkify_hosts => ["replace-me.example.com"], :linkify_hosts_replacement => "repl.example.com") do
+    with_settings(:linkify => { :normalisation_rules => [{ :hosts => ["replace-me.example.com"], :host_replacement => "repl.example.com" }] }) do
       r = RichText.new("text", "foo https://replace-me.example.com/some/path?query=te<st&limit=20>10#result12 bar")
       assert_html r do
         assert_dom "a", :count => 1, :text => "repl.example.com/some/path?query=te<st&limit=20>10#result12" do
@@ -245,8 +241,20 @@ class RichTextTest < ActiveSupport::TestCase
     end
   end
 
+  def test_text_to_html_linkify_recognize
+    with_settings(:linkify => { :normalisation_rules => [{ :hosts => ["replace-me.example.com"], :host_replacement => "repl.example.com" }] }) do
+      r = RichText.new("text", "foo repl.example.com/some/path?query=te<st&limit=20>10#result12 bar")
+      assert_html r do
+        assert_dom "a", :count => 1, :text => "repl.example.com/some/path?query=te<st&limit=20>10#result12" do
+          assert_dom "> @href", "http://replace-me.example.com/some/path?query=te<st&limit=20>10#result12"
+          assert_dom "> @rel", "nofollow noopener noreferrer"
+        end
+      end
+    end
+  end
+
   def test_text_to_html_linkify_replace_other_scheme
-    with_settings(:linkify_hosts => ["replace-me.example.com"], :linkify_hosts_replacement => "repl.example.com") do
+    with_settings(:linkify => { :normalisation_rules => [{ :hosts => ["replace-me.example.com"], :host_replacement => "repl.example.com" }] }) do
       r = RichText.new("text", "foo ftp://replace-me.example.com/some/path?query=te<st&limit=20>10#result12 bar")
       assert_html r do
         assert_dom "a", :count => 1, :text => "ftp://replace-me.example.com/some/path?query=te<st&limit=20>10#result12" do
@@ -258,7 +266,7 @@ class RichTextTest < ActiveSupport::TestCase
   end
 
   def test_text_to_html_linkify_replace_undefined
-    with_settings(:linkify_hosts => ["replace-me.example.com"], :linkify_hosts_replacement => nil) do
+    with_settings(:linkify => { :normalisation_rules => [{ :hosts => ["replace-me.example.com"] }] }) do
       r = RichText.new("text", "foo https://replace-me.example.com/some/path?query=te<st&limit=20>10#result12 bar")
       assert_html r do
         assert_dom "a", :count => 1, :text => "https://replace-me.example.com/some/path?query=te<st&limit=20>10#result12" do
@@ -270,8 +278,7 @@ class RichTextTest < ActiveSupport::TestCase
   end
 
   def test_text_to_html_linkify_wiki_replace_prefix
-    with_settings(:linkify_wiki_hosts => ["replace-me-wiki.example.com"], :linkify_wiki_hosts_replacement => "wiki.example.com",
-                  :linkify_wiki_optional_path_prefix => "^/wiki(?=/[A-Z])") do
+    with_settings(:linkify => { :normalisation_rules => [{ :hosts => ["replace-me-wiki.example.com"], :host_replacement => "wiki.example.com", :optional_path_prefix => "^/wiki(?=/[A-Z])" }] }) do
       r = RichText.new("text", "foo https://replace-me-wiki.example.com/wiki/Tag:surface%3Dmetal bar")
       assert_html r do
         assert_dom "a", :count => 1, :text => "wiki.example.com/Tag:surface%3Dmetal" do
@@ -283,8 +290,7 @@ class RichTextTest < ActiveSupport::TestCase
   end
 
   def test_text_to_html_linkify_wiki_replace_prefix_undefined
-    with_settings(:linkify_wiki_hosts => ["replace-me-wiki.example.com"], :linkify_wiki_hosts_replacement => "wiki.example.com",
-                  :linkify_wiki_optional_path_prefix => nil) do
+    with_settings(:linkify => { :normalisation_rules => [{ :hosts => ["replace-me-wiki.example.com"], :host_replacement => "wiki.example.com" }] }) do
       r = RichText.new("text", "foo https://replace-me-wiki.example.com/wiki/Tag:surface%3Dmetal bar")
       assert_html r do
         assert_dom "a", :count => 1, :text => "wiki.example.com/wiki/Tag:surface%3Dmetal" do
@@ -296,8 +302,7 @@ class RichTextTest < ActiveSupport::TestCase
   end
 
   def test_text_to_html_linkify_wiki_replace_undefined_prefix
-    with_settings(:linkify_wiki_hosts => ["replace-me-wiki.example.com"], :linkify_wiki_hosts_replacement => nil,
-                  :linkify_wiki_optional_path_prefix => "^/wiki(?=/[A-Z])") do
+    with_settings(:linkify => { :normalisation_rules => [{ :hosts => ["replace-me-wiki.example.com"], :optional_path_prefix => "^/wiki(?=/[A-Z])" }] }) do
       r = RichText.new("text", "foo https://replace-me-wiki.example.com/wiki/Tag:surface%3Dmetal bar")
       assert_html r do
         assert_dom "a", :count => 1, :text => "https://replace-me-wiki.example.com/Tag:surface%3Dmetal" do
@@ -309,14 +314,267 @@ class RichTextTest < ActiveSupport::TestCase
   end
 
   def test_text_to_html_linkify_wiki_replace_prefix_no_match
-    with_settings(:linkify_wiki_hosts => ["replace-me-wiki.example.com"], :linkify_wiki_hosts_replacement => "wiki.example.com",
-                  :linkify_wiki_optional_path_prefix => "^/wiki(?=/[A-Z])") do
+    with_settings(:linkify => { :normalisation_rules => [{ :hosts => ["replace-me-wiki.example.com"], :host_replacement => "wiki.example.com", :optional_path_prefix => "^/wiki(?=/[A-Z])" }] }) do
       r = RichText.new("text", "foo https://replace-me-wiki.example.com/wiki/w bar")
       assert_html r do
         assert_dom "a", :count => 1, :text => "wiki.example.com/wiki/w" do
           assert_dom "> @href", "https://replace-me-wiki.example.com/wiki/w"
           assert_dom "> @rel", "nofollow noopener noreferrer"
         end
+      end
+    end
+  end
+
+  def test_text_to_html_linkify_recognize_wiki
+    with_settings(:linkify => { :normalisation_rules => [{ :hosts => ["replace-me-wiki.example.com"], :host_replacement => "wiki.example.com", :optional_path_prefix => "^/wiki(?=/[A-Z])" }] }) do
+      r = RichText.new("text", "foo wiki.example.com/Tag:surface%3Dmetal bar")
+      assert_html r do
+        assert_dom "a", :count => 1, :text => "wiki.example.com/Tag:surface%3Dmetal" do
+          assert_dom "> @href", "http://replace-me-wiki.example.com/Tag:surface%3Dmetal"
+          assert_dom "> @rel", "nofollow noopener noreferrer"
+        end
+      end
+    end
+  end
+
+  def test_text_to_html_linkify_idempotent
+    with_settings(:linkify => { :normalisation_rules => [{ :hosts => ["test.host"], :host_replacement => "test.host" }] }) do
+      t0 = "foo https://test.host/way/123456789 bar"
+
+      r1 = RichText.new("text", t0)
+      t1 = Nokogiri::HTML.fragment(r1.to_html).text
+
+      r2 = RichText.new("text", t1)
+      t2 = Nokogiri::HTML.fragment(r2.to_html).text
+
+      assert_equal t1, t2
+    end
+  end
+
+  def test_text_to_html_linkify_recognize_path
+    with_settings(:linkify => { :detection_rules => [{ :patterns => ["@(?<username>\\w+)"], :path_template => "user/\\k<username>" }] }) do
+      r = RichText.new("text", "foo @example bar")
+      assert_html r do
+        assert_dom "a", :count => 1, :text => "http://test.host/user/example" do
+          assert_dom "> @href", "http://test.host/user/example"
+          assert_dom "> @rel", "nofollow noopener noreferrer"
+        end
+      end
+    end
+  end
+
+  def test_text_to_html_linkify_recognize_path_no_partial_match
+    with_settings(:linkify => { :detection_rules => [{ :patterns => ["@(?<username>\\w+)"], :path_template => "user/\\k<username>" }] }) do
+      r = RichText.new("text", "foo example@example.com bar")
+      assert_html r do
+        assert_select "a", 0
+      end
+    end
+  end
+
+  def test_text_to_html_linkify_openstreetmap_links
+    with_settings(:server_url => "www.openstreetmap.org", :server_protocol => "https") do
+      cases = {
+        "https://www.openstreetmap.org/note/4655490" =>
+          ["note/4655490", "https://www.openstreetmap.org/note/4655490"],
+
+        "https://www.openstreetmap.org/changeset/163353772" =>
+          ["changeset/163353772", "https://www.openstreetmap.org/changeset/163353772"],
+
+        "https://www.openstreetmap.org/way/1249366504" =>
+          ["way/1249366504", "https://www.openstreetmap.org/way/1249366504"],
+
+        "https://www.openstreetmap.org/way/1249366504/history" =>
+          ["way/1249366504/history", "https://www.openstreetmap.org/way/1249366504/history"],
+
+        "https://www.openstreetmap.org/way/1249366504/history/2" =>
+          ["way/1249366504/history/2", "https://www.openstreetmap.org/way/1249366504/history/2"],
+
+        "https://www.openstreetmap.org/node/12639964186" =>
+          ["node/12639964186", "https://www.openstreetmap.org/node/12639964186"],
+
+        "https://www.openstreetmap.org/relation/7876483" =>
+          ["relation/7876483", "https://www.openstreetmap.org/relation/7876483"],
+
+        "https://www.openstreetmap.org/user/aharvey" =>
+          ["@aharvey", "https://www.openstreetmap.org/user/aharvey"],
+
+        "@aharvey" =>
+          ["@aharvey", "https://www.openstreetmap.org/user/aharvey"],
+
+        "node/12639964186" =>
+          ["node/12639964186", "https://www.openstreetmap.org/node/12639964186"],
+
+        "node 12639964186" =>
+          ["node/12639964186", "https://www.openstreetmap.org/node/12639964186"],
+
+        "n12639964186" =>
+          ["node/12639964186", "https://www.openstreetmap.org/node/12639964186"],
+
+        "way/1249366504" =>
+          ["way/1249366504", "https://www.openstreetmap.org/way/1249366504"],
+
+        "way 1249366504" =>
+          ["way/1249366504", "https://www.openstreetmap.org/way/1249366504"],
+
+        "w1249366504" =>
+          ["way/1249366504", "https://www.openstreetmap.org/way/1249366504"],
+
+        "relation/7876483" =>
+          ["relation/7876483", "https://www.openstreetmap.org/relation/7876483"],
+
+        "relation 7876483" =>
+          ["relation/7876483", "https://www.openstreetmap.org/relation/7876483"],
+
+        "r7876483" =>
+          ["relation/7876483", "https://www.openstreetmap.org/relation/7876483"],
+
+        "changeset/163353772" =>
+          ["changeset/163353772", "https://www.openstreetmap.org/changeset/163353772"],
+
+        "changeset 163353772" =>
+          ["changeset/163353772", "https://www.openstreetmap.org/changeset/163353772"],
+
+        "note/4655490" =>
+          ["note/4655490", "https://www.openstreetmap.org/note/4655490"],
+
+        "note 4655490" =>
+          ["note/4655490", "https://www.openstreetmap.org/note/4655490"]
+      }
+
+      cases.each do |input, (expected_text, expected_href)|
+        r = RichText.new("text", input)
+        assert_html r do
+          assert_dom "a[href='#{expected_href}']", :count => 1, :text => expected_text
+        end
+      end
+    end
+  end
+
+  def test_text_to_html_linkify_no_year_misinterpretation
+    r = RichText.new("text", "We thought there was no way 2020 could be worse than 2019. We were wrong. Please note 2025 is the first square year since OSM started. In that year, some osmlab repos switched from node 22 to bun 1.3.")
+    assert_html r do
+      assert_select "a", 0
+    end
+  end
+
+  def test_text_to_html_dont_linkify_too_easily
+    # We used to allow this, but removed it because it
+    # caused issues in some languages.
+    # Eg: example below is Polish for "Reverted in 12345"
+    r = RichText.new("text", "Wycofane w 12345")
+
+    assert_html r do
+      assert_select "a", 0
+    end
+  end
+
+  def test_deactivated_linkify_expansion_in_markdown
+    t0 = "foo `surface=metal` bar"
+
+    r1 = RichText.new("markdown", t0)
+    t1 = Nokogiri::HTML.fragment(r1.to_html).text
+
+    assert_equal t0.delete("`"), t1.strip
+  end
+
+  def test_text_to_html_linkify_links_keys
+    r = RichText.new("text", "foo boundary=* bar")
+    assert_html r do
+      assert_dom "a", :count => 1
+      assert_dom "a[href*='Key:boundary']", :text => "boundary"
+    end
+  end
+
+  def test_text_to_html_linkify_trims_punctuation
+    r = RichText.new("text", "foo `surface=metal) bar inscription=🙂 baz")
+    assert_html r do
+      assert_dom "a", :count => 2
+      assert_dom "a[href*='Key:surface']", :text => "surface"
+      assert_dom "a[href*='Tag:surface=metal']", :text => "metal"
+    end
+  end
+
+  def test_text_to_html_linkify_ignores_unknown_values
+    r = RichText.new("text", "foo `highway=residence` bar `surface=unknown` baz")
+    assert_html r do
+      assert_dom "a", :count => 2
+      assert_dom "a[href*='Key:highway']", :text => "highway"
+      assert_dom "a[href*='Key:surface']", :text => "surface"
+    end
+  end
+
+  def test_text_to_html_linkify_uses_tag_linker
+    r = RichText.new("text", "foo `wikidata=Q123` bar")
+    assert_html r do
+      assert_dom "a", :count => 2
+      assert_dom "a[href*='Key:wikidata']", :text => "wikidata"
+      assert_dom "a[href*='wikidata.org']", :text => "Q123"
+    end
+  end
+
+  def test_text_to_html_linkify_uses_tag2link
+    r = RichText.new("text", "foo `mapillary=123;456` bar")
+    assert_html r do
+      assert_dom "a", :count => 3
+      assert_dom "a[href*='Key:mapillary']", :text => "mapillary"
+      assert_dom "a[href*='mapillary.com']", :text => "123"
+      assert_dom "a[href*='mapillary.com']", :text => "456"
+    end
+  end
+
+  def test_text_to_html_linkify_localises_tag_links
+    I18n.with_locale "tr" do
+      r = RichText.new("text", "foo highway=* and specifically highway=primary bar")
+      assert_html r do
+        assert_dom "a", :count => 3
+        assert_dom "a[href*='/Tr:Key:highway']", :text => "highway", :count => 2
+        assert_dom "a[href*='/Tr:Tag:highway=primary']", :text => "primary"
+      end
+    end
+  end
+
+  def test_text_to_html_linkify_keeps_wiki_link_destinations
+    I18n.with_locale "tr" do
+      r = RichText.new("text", "foo osm.wiki/wiki/Key:highway and specifically osm.wiki/DE:Tag:highway=primary bar")
+      assert_html r do
+        assert_dom "a", :count => 2
+        assert_dom "a[href*='/Key:highway']", :text => "osm.wiki/Key:highway"
+        assert_dom "a[href*='/DE:Tag:highway=primary']", :text => "osm.wiki/DE:Tag:highway=primary"
+      end
+    end
+  end
+
+  def test_text_to_html_linkify_skips_punctuation
+    r = RichText.new("text", "These ways represent the geometries of main river channels, the very definition of waterway=river. They are not theoretical routing constructs.")
+    assert_html r do
+      assert_dom "a", :count => 2
+      assert_dom "a[href*='Key:waterway']", :text => "waterway"
+      assert_dom "a[href*='Tag:waterway=river']", :text => "river"
+    end
+  end
+
+  def test_text_to_html_linkify_recognizes_non_standard_wiki_pages
+    r_us = RichText.new("text", "foo public_transport=stop_position bar")
+    assert_html r_us do
+      assert_dom "a[href*='Key:public_transport']", :text => "public_transport"
+      assert_dom "a[href*='Tag:public_transport=stop_position']", :text => "stop_position"
+    end
+    r_latin_ext = RichText.new("text", "foo cuisine=açaí bar")
+    assert_html r_latin_ext do
+      assert_dom "a[href*='Key:cuisine']", :text => "cuisine"
+      assert_dom "a[href*='Tag:cuisine']", :text => "açaí"
+    end
+    r_cyrillic = RichText.new("text", "foo name=Продукты bar")
+    assert_html r_cyrillic do
+      assert_dom "a[href*='Key:name']", :text => "name"
+      assert_dom "a[href*='Tag:name']", :text => "Продукты"
+    end
+    I18n.with_locale "ja" do
+      r_cjk = RichText.new("text", "foo shop=園芸店 bar")
+      assert_html r_cjk do
+        assert_dom "a[href*='Key:shop']", :text => "shop"
+        assert_dom "a[href*='Tag:shop']", :text => "園芸店"
       end
     end
   end
@@ -338,11 +596,6 @@ class RichTextTest < ActiveSupport::TestCase
   def test_text_to_text
     r = RichText.new("text", "foo http://example.com/ bar")
     assert_equal "foo http://example.com/ bar", r.to_text
-  end
-
-  def test_text_spam_score
-    r = RichText.new("text", "foo http://example.com/ bar")
-    assert_equal 141, r.spam_score.round
   end
 
   def test_text_no_opengraph_properties
@@ -499,6 +752,32 @@ class RichTextTest < ActiveSupport::TestCase
 
     r = RichText.new("markdown", "#{'x' * (t - o)}  #{'y' * (m - (t - o - 1))}")
     assert_equal "#{'x' * (t - o)}...", r.description
+  end
+
+  def test_auto_link
+    %w[http://example.com/test ftp://example.com/test https://example.com/test].each do |link|
+      text = "Test #{link} is <b>made</b> into a link"
+
+      html = RichText.auto_link(text)
+      assert_predicate html, :html_safe?
+      assert_equal "Test <a href=\"#{link}\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">#{link}</a> is &lt;b&gt;made&lt;/b&gt; into a link", html
+
+      html = RichText.auto_link(text.html_safe)
+      assert_predicate html, :html_safe?
+      assert_equal "Test <a href=\"#{link}\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">#{link}</a> is <b>made</b> into a link", html
+    end
+
+    %w[test@example.com mailto:test@example.com].each do |link|
+      text = "Test #{link} is not <b>made</b> into a link"
+
+      html = RichText.auto_link(text)
+      assert_predicate html, :html_safe?
+      assert_equal "Test #{link} is not &lt;b&gt;made&lt;/b&gt; into a link", html
+
+      html = RichText.auto_link(text.html_safe)
+      assert_predicate html, :html_safe?
+      assert_equal "Test #{link} is not <b>made</b> into a link", html
+    end
   end
 
   private
