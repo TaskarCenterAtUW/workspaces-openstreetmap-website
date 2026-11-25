@@ -32,12 +32,12 @@ jobs:
             contents: read
         steps:
             - name: Checkout source
-              uses: actions/checkout@v3
+              uses: actions/checkout@v7
               with:
                 ref: ${{ github.base_ref }}
             - name: Login to Azure Container Registry
               if: ${{ needs.setup-github-environment.outputs.DEPLOY_ENV != '' }}
-              uses: azure/docker-login@v1
+              uses: azure/docker-login@v2
               with:
                 login-server: ${{ vars.DOCKERHUB_REGISTRY }}
                 username: ${{ vars.DOCKERHUB_USERNAME }}
