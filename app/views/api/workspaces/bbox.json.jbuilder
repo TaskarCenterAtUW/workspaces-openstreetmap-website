@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.min_lat GeoRecord::Coord.new(@bbox.to_unscaled.min_lat)
 json.min_lon GeoRecord::Coord.new(@bbox.to_unscaled.min_lon)
 json.max_lat GeoRecord::Coord.new(@bbox.to_unscaled.max_lat)

@@ -73,18 +73,6 @@ fy:
       way_node: Linepunt
       way_tag: Linelebel
     attributes:
-      client_application:
-        name: Namme (ferplichte)
-        url: Haad-URL applikaasje (ferplichte)
-        callback_url: Weromrop-URL
-        support_url: Stipe-URL
-        allow_read_prefs: meidoggerfoarkarren lêzen
-        allow_write_prefs: meidoggerfoarkarren wizigjen
-        allow_write_diary: deiboekstikken, reäksjes en freonen meitsjen
-        allow_write_api: kaart wizigjen
-        allow_read_gpx: privee-GPS-trajekten lêzen
-        allow_write_gpx: GPS-trajekten opladen
-        allow_write_notes: notysjes wizigjen
       diary_comment:
         body: Ynhâld
       diary_entry:
@@ -1352,14 +1340,13 @@ fy:
       other_issues_against_this_user: Oare problemen mei dizze meidogger
       no_other_issues: Gjin oare problemen mei dizze meidogger.
       comments_on_this_issue: Reäksjes by dit probleem
+      comment_from_html: Reäksje fan %{user_link} op %{comment_created_at}
     resolve:
       resolved: De probleemstatus is op 'Oplost' set
     ignore:
       ignored: De probleemstatus is op 'Negearre' set
     reopen:
       reopened: De probleemstatus is op 'Iepen' set
-    comments:
-      comment_from_html: Reäksje fan %{user_link} op %{comment_created_at}
     reports:
       reported_by_html: Meld as %{category} troch %{user} op %{updated_at}
     helper:
@@ -1410,28 +1397,29 @@ fy:
   layouts:
     logo:
       alt_text: OpenStreetMap-logo
-    home: Nei jo fêste lokaasje
-    logout: Ofmelde
-    log_in: Oanmelde
-    sign_up: Ynskriuwe
     start_mapping: Set útein
-    edit: Bewurkje
-    history: Skiednis
-    export: Eksportearje
-    issues: Problemen
-    gps_traces: GPS-trajekten
-    user_diaries: Meidoggerdeiboeken
-    edit_with: Bewurkje mei %{editor}
     intro_header: Wolkom by OpenStreetMap!
     intro_text: OpenStreetMap is in wrâldkaart makke troch minsken krekt as jo, en
       frij te brûken ûnder in iepen lisinsje.
     partners_partners: partners
     tou: Gebrûksbetingsten
-    help: Help
-    about: Oer
-    copyright: Auteursrjochten
     learn_more: Mear witte
-    more: Mear
+    header:
+      about: Oer
+      copyright: Auteursrjochten
+      edit: Bewurkje
+      edit_with: Bewurkje mei %{editor}
+      export: Eksportearje
+      gps_traces: GPS-trajekten
+      help: Help
+      history: Skiednis
+      home: Nei jo fêste lokaasje
+      issues: Problemen
+      log_out: Ofmelde
+      log_in: Oanmelde
+      more: Mear
+      sign_up: Ynskriuwe
+      user_diaries: Meidoggerdeiboeken
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} hat op in deiboekstik reägearre'
@@ -1703,7 +1691,6 @@ fy:
         keep image: Hjoeddeisk ôfbyld hâlde
         delete image: Hjoeddeisk ôfbyld wiskje
         replace image: Hjoeddeisk ôfbyld ferfange
-        image size hint: (fjouwerkante plaatsjes fan teminsten 100x100 eagje kreazer)
     locations:
       show:
         no home location: Jo hawwe jo fêste lokaasje net opjûn.
@@ -1722,33 +1709,6 @@ fy:
       title: Ofmelde
       heading: Ofmelde by OpenStreetMap
       logout_button: Ofmelde
-  shared:
-    markdown_help:
-      headings: Koppen
-      heading: Kop
-      subheading: Subkop
-      unordered: Puntelist
-      ordered: Nûmere list
-      first: Earste rigel
-      second: Twadde rigel
-      link: Keppeling
-      text: Tekst
-      image: Ofbyld
-      alt: Alternative tekst
-      url: URL
-    richtext_field:
-      edit: Bewurkje
-      preview: Proefbyld
-    pagination:
-      diary_comments:
-        older: Aldere reäksjes
-        newer: Nijere reäksjes
-      diary_entries:
-        older: Aldere stikken
-        newer: Nijere stikken
-      traces:
-        older: Aldere trajekten
-        newer: Nijere trajekten
   site:
     about:
       used_by_html: '%{name} leveret kaartdata foar tûzenen websteeën, mobile apps
@@ -2126,6 +2086,26 @@ fy:
       wikipedia:
         title: Oanmelde mei de Wikipedy
         alt: Meld jo oan mei in Wikipedy-akkount
+    markdown_help:
+      headings: Koppen
+      heading: Kop
+      subheading: Subkop
+      unordered: Puntelist
+      first: Earste rigel
+      second: Twadde rigel
+      link: Keppeling
+      text: Tekst
+      image: Ofbyld
+      url: URL
+    richtext_field:
+      preview: Proefbyld
+    pagination:
+      diary_comments:
+        older: Aldere reäksjes
+      diary_entries:
+        newer: Nijere stikken
+      traces:
+        newer: Nijere trajekten
   oauth:
     permissions:
       missing: Jo hawwe de applikaasje de tagong ta dizze foarsjenning net tastien
@@ -2238,11 +2218,21 @@ fy:
       confirm_user: Dizze meidogger befêstigje
       unconfirm_user: Dizze meidogger ûnbefêstigje
       unsuspend_user: Dizze meidogger ûntskoattelje
-      hide_user: Dizze meidogger ferbergje
-      unhide_user: Dizze meidogger werompleatse
-      delete_user: Dizze meidogger wiskje
       confirm: Befêstigje
       report: Dizze meidogger melde
+      title:
+        administrator: Dizze meidogger is behearder
+        moderator: Dizze meidogger is tafersjochhâlder
+      grant:
+        administrator: Behearder meitsje
+        moderator: Tafersjochhâlder meitsje
+        are_you_sure: Witte jo seker dat jo de rol fan '%{role}' oan 'e meidogger
+          '%{name}' takenne wolle?
+      revoke:
+        administrator: Behearderskip ynlûke
+        moderator: Tafersjochhâlderskip ynlûke
+        are_you_sure: Witte jo seker dat jo de rol fan '%{role}' fan 'e meidogger
+          '%{name}' ynlûke wolle?
     go_public:
       flash success: Al jo bewurkings binne no iepenbier, en jo meie fan no ôf bewurkje.
     issued_blocks:
@@ -2261,7 +2251,6 @@ fy:
         heading: Meidoggers
       page:
         confirm: Selektearre meidoggers befêstigje
-        hide: Selektearre meidoggers ferbergje
         empty: Gjin oerienkommende meidoggers fûn
       user:
         summary_html: '%{name} oanmakke fan %{ip_address} op %{date}'
@@ -2295,20 +2284,6 @@ fy:
         At jo al in akkount hawwe, kinne jo jo oanmelde op jo akkount
         mei jo meidochnamme en wachtwurd, en dan it akkount ferbine
         oan jo ID yn jo meidoggerynstellings.
-    role_icons:
-      title:
-        administrator: Dizze meidogger is behearder
-        moderator: Dizze meidogger is tafersjochhâlder
-      grant:
-        administrator: Behearder meitsje
-        moderator: Tafersjochhâlder meitsje
-        are_you_sure: Witte jo seker dat jo de rol fan '%{role}' oan 'e meidogger
-          '%{name}' takenne wolle?
-      revoke:
-        administrator: Behearderskip ynlûke
-        moderator: Tafersjochhâlderskip ynlûke
-        are_you_sure: Witte jo seker dat jo de rol fan '%{role}' fan 'e meidogger
-          '%{name}' ynlûke wolle?
   user_role:
     filter:
       not_a_role: De tekenrige '%{role}' is net in jildige rol.
@@ -2434,11 +2409,11 @@ fy:
       tooltip: Leginda
       tooltip_disabled: Gjin leginda beskikber foar dizze laach
     map:
-      zoom:
-        in: Ynsûme
-        out: Utsûme
-      locate:
-        title: Myn lokaasje oanjaan
+      NavigationControl:
+        ZoomIn: Ynsûme
+        ZoomOut: Utsûme
+      GeolocateControl:
+        FindMyLocation: Myn lokaasje oanjaan
         metersPopup:
           one: Jo sitte binnen ien meter fan dit punt
           other: Jo sitte binnen %{count} meter fan dit punt

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: current_nodes
@@ -22,8 +24,6 @@
 #
 
 class Node < ApplicationRecord
-  require "xml/libxml"
-
   include GeoRecord
   include ConsistencyValidations
   include NotRedactable

@@ -1,4 +1,4 @@
-FROM ruby:3.2-bookworm
+FROM ruby:3.3-trixie
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -56,6 +56,8 @@ WORKDIR /app
 COPY . .
 
 COPY config/example.storage.yml config/storage.yml
+# The database settings come from WS_OSM_DB_* (see config/workspaces.database.yml).
+COPY config/workspaces.database.yml config/database.yml
 
 # https://help.openstreetmap.org/questions/69887/actionviewtemplateerror-couldnt-find-file-settingslocalyml
 RUN touch config/settings.local.yml
@@ -69,3 +71,9 @@ RUN bundle exec bin/yarn install
 # Build frontend assets
 #RUN RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec i18n export
 #RUN RAILS_ENV=production SECRET_KEY_BASE=dummy rails assets:precompile
+
+# docker/memwatch.sh logs loudly when the kernel kills a process for running out
+# of memory, then runs the command unchanged. A deployment "command" override
+# replaces this ENTRYPOINT and bypasses it, so deployments should set "args".
+ENTRYPOINT ["/bin/sh", "/app/docker/memwatch.sh"]
+CMD ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]

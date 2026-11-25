@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TracesController < ApplicationController
   include UserMethods
   include PaginationMethods
@@ -61,14 +63,15 @@ class TracesController < ApplicationController
 
     @params = params.permit(:display_name, :tag, :before, :after)
 
-    @traces, @newer_traces_id, @older_traces_id = get_page_items(traces, :includes => [:user, :tags])
+    @traces = get_page_items(traces, :includes => [:user, :tags])
 
     # final helper vars for view
     @target_user = target_user
+    @legacy_traces_exist = current_user.traces.visible.exists?(:visibility => Trace::LEGACY_VISIBILITIES) if current_user
   end
 
   def show
-    @trace = Trace.visible.find(params[:id])
+    @trace = Trace.visible.find(params.expect(:id))
 
     if @trace.public? || @trace.user == current_user
       @title = t ".title", :name => @trace.name
@@ -83,11 +86,11 @@ class TracesController < ApplicationController
 
   def new
     @title = t ".upload_trace"
-    @trace = Trace.new(:visibility => default_visibility)
+    @trace = Trace.new(:visibility => current_user.default_trace_visibility)
   end
 
   def edit
-    @trace = Trace.visible.find(params[:id])
+    @trace = Trace.visible.find(params.expect(:id))
 
     if current_user.nil? || @trace.user != current_user
       head :forbidden
@@ -116,7 +119,7 @@ class TracesController < ApplicationController
       else
         flash.now[:error] = t(".upload_failed") if @trace.valid?
 
-        render :action => "new"
+        render :action => "new", :status => :unprocessable_content
       end
     else
       @trace = Trace.new(:name => "Dummy",
@@ -133,7 +136,7 @@ class TracesController < ApplicationController
   end
 
   def update
-    @trace = Trace.visible.find(params[:id])
+    @trace = Trace.visible.find(params.expect(:id))
 
     if current_user.nil? || @trace.user != current_user
       head :forbidden
@@ -142,14 +145,14 @@ class TracesController < ApplicationController
       redirect_to :action => "show", :display_name => current_user.display_name
     else
       @title = t "traces.edit.title", :name => @trace.name
-      render :action => "edit"
+      render :action => "edit", :status => :unprocessable_content
     end
   rescue ActiveRecord::RecordNotFound
     head :not_found
   end
 
   def destroy
-    trace = Trace.visible.find(params[:id])
+    trace = Trace.visible.find(params.expect(:id))
 
     if current_user.nil? || (trace.user != current_user && !current_user.administrator? && !current_user.moderator?)
       head :forbidden
@@ -206,18 +209,6 @@ class TracesController < ApplicationController
 
   def offline_redirect
     render :action => :offline if Settings.status == "gpx_offline"
-  end
-
-  def default_visibility
-    visibility = current_user.preferences.find_by(:k => "gps.trace.visibility")
-
-    if visibility
-      visibility.v
-    elsif current_user.preferences.find_by(:k => "gps.trace.public", :v => "default").nil?
-      "private"
-    else
-      "public"
-    end
   end
 
   def trace_params

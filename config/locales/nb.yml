@@ -108,18 +108,6 @@ nb:
       way_node: Veinode
       way_tag: Linjemerkelapp
     attributes:
-      client_application:
-        name: Navn (påkrevd)
-        url: Hovedapplikasjons-URL (påkrevd)
-        callback_url: 'URL for tilbakekall:'
-        support_url: Støtte-URL
-        allow_read_prefs: lese brukeralternativ deres
-        allow_write_prefs: endre brukeralternativ deres
-        allow_write_diary: opprette dagbokoppføringer og kommentarer
-        allow_write_api: endre kartet
-        allow_read_gpx: lese deres private GPS-spor
-        allow_write_gpx: laste opp GPS-spor
-        allow_write_notes: endre merknader
       diary_comment:
         body: Brødtekst
       diary_entry:
@@ -1284,14 +1272,13 @@ nb:
       other_issues_against_this_user: Andre saker mot denne brukeren
       no_other_issues: Ingen andre saker mot denne brukeren.
       comments_on_this_issue: Kommentarer om denne saken
+      comment_from_html: Kommentar fra %{user_link} %{comment_created_at}
     resolve:
       resolved: Saksstatus har blitt satt til 'Løst'
     ignore:
       ignored: Saksstatus har blitt satt til 'Sett bort fra'
     reopen:
       reopened: Saksstatus har blitt satt til 'Åpen'
-    comments:
-      comment_from_html: Kommentar fra %{user_link} %{comment_created_at}
     reports:
       reported_by_html: Reportert som %{category} av %{user} %{updated_at}
     helper:
@@ -1336,32 +1323,39 @@ nb:
     create:
       successful_report: Din rapport har blitt vellykket registrert
       provide_details: Vær vennlig å angi de påkrevde detaljer
+  languages_panes:
+    select_language_list:
+      search_language: Søk…
   layouts:
     logo:
       alt_text: OpenStreetMap-logo
-    home: Gå til din brukers hjemmeadresse
-    logout: Logg ut
-    log_in: Logg inn
-    sign_up: Registrer deg
     start_mapping: Start kartlegging
-    edit: Rediger
-    history: Historikk
-    export: Eksporter
-    issues: Problemer
-    gps_traces: GPS-spor
-    user_diaries: Brukerdagbok
-    edit_with: Rediger med %{editor}
     intro_header: Velkommen til OpenStreetMap!
     intro_text: OpenStreetMap er et kart over verden, skapt av mennesker som deg,
       og gratis å bruke under en åpen lisens.
     partners_partners: partnere
     tou: Bruksvilkår
-    help: Hjelp
-    about: Om
-    copyright: Opphavsrett
-    communities: Fellesskap
     learn_more: Lær mer
-    more: Mer
+    header:
+      about: Om
+      communities: Fellesskap
+      copyright: Opphavsrett
+      edit: Rediger
+      edit_with: Rediger med %{editor}
+      export: Eksporter
+      gps_traces: GPS-spor
+      help: Hjelp
+      history: Historikk
+      home: Gå til din brukers hjemmeadresse
+      issues: Problemer
+      log_out: Logg ut
+      log_in: Logg inn
+      more: Mer
+      select_language: Velg språk
+      sign_up: Registrer deg
+      user_diaries: Brukerdagbok
+    select_language_button:
+      title: Velg språk
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} kommenterte et dagbokinnlegg'
@@ -1597,7 +1591,6 @@ nb:
         keep image: Behold gjeldende bilde
         delete image: Fjern gjeldende bilde
         replace image: Erstatt gjeldende bilde
-        image size hint: (kvadratiske bilder som er minst 100x100 fungerer best)
     locations:
       show:
         no home location: Du har ikke angitt din hjemmeposisjon.
@@ -1620,24 +1613,6 @@ nb:
       title: Logg ut
       heading: Logg ut fra OpenStreetMap
       logout_button: Logg ut
-  shared:
-    markdown_help:
-      text: Tekst
-    richtext_field:
-      edit: Rediger
-    pagination:
-      diary_comments:
-        older: Eldre kommentarer
-        newer: Nyere kommentarer
-      diary_entries:
-        older: Eldre innlegg
-        newer: Nyere innlegg
-      traces:
-        older: Eldre spor
-        newer: Nyere spor
-      users:
-        older: Eldre brukere
-        newer: Nyere brukere
   site:
     about:
       used_by_html: Tusenvis av nettsteder, mobilapper og maskinvareenheter bruker
@@ -2040,6 +2015,21 @@ nb:
       wikipedia:
         title: Logg inn med Wikipedia
         alt: Logg inn med en Wikipedia-konto
+    share:
+      share:
+        title: Del
+    markdown_help:
+      text: Tekst
+    pagination:
+      diary_comments:
+        older: Eldre kommentarer
+      diary_entries:
+        newer: Nyere innlegg
+      traces:
+        newer: Nyere spor
+      users:
+        older: Eldre brukere
+        newer: Nyere brukere
   oauth:
     permissions:
       missing: Du har ikke latt applikasjonen få tilgang til denne fasiliteten
@@ -2110,11 +2100,20 @@ nb:
       create_block: Blokker Denne Brukeren
       activate_user: Aktiver denne Brukeren
       confirm_user: Bekreft denne brukeren
-      hide_user: Skjul denne brukeren
-      unhide_user: Slutt å skjule denne brukeren
-      delete_user: Slett denne brukeren
       confirm: Bekreft
       report: Rapporter denne brukeren
+      title:
+        administrator: Denne brukeren er en administrator
+        moderator: Denne brukeren er en moderator
+      grant:
+        administrator: Gi administrator-tilgang
+        moderator: Gi moderator-tilgang
+        are_you_sure: Er du sikker på at du vil gi rollen `%{role}' til brukeren `%{name}'?
+      revoke:
+        administrator: Fjern administrator-tilgang
+        moderator: Fjern moderator-tilgang
+        are_you_sure: Er du sikker på at du vil fjerne rollen "%{role}" fra brukeren
+          "%{name}"?
     go_public:
       flash success: Alle dine redigeringer er nå offentlig, og du har lov til å redigere.
     issued_blocks:
@@ -2133,7 +2132,6 @@ nb:
         heading: Brukere
       page:
         confirm: Bekreft valgte brukere
-        hide: Skjul valgte brukere
         empty: Ingen samsvarende brukere funnet
       user:
         summary_html: '%{name} opprettet fra %{ip_address} den %{date}'
@@ -2159,19 +2157,6 @@ nb:
       option_1: Opprett konto i skjemaet nedenfor.
       option_2: Logg inn med brukernavn og passord, du kan tilknytte kontoen til din
         ID i brukerinnstillingene.
-    role_icons:
-      title:
-        administrator: Denne brukeren er en administrator
-        moderator: Denne brukeren er en moderator
-      grant:
-        administrator: Gi administrator-tilgang
-        moderator: Gi moderator-tilgang
-        are_you_sure: Er du sikker på at du vil gi rollen `%{role}' til brukeren `%{name}'?
-      revoke:
-        administrator: Fjern administrator-tilgang
-        moderator: Fjern moderator-tilgang
-        are_you_sure: Er du sikker på at du vil fjerne rollen "%{role}" fra brukeren
-          "%{name}"?
   user_role:
     filter:
       not_a_role: Strengen "%{role}" er ikke en gyldig rolle.
@@ -2293,11 +2278,11 @@ nb:
       tooltip: Kartsymbol
       tooltip_disabled: Kartnøkkel ikke tilgjengelig for dette laget
     map:
-      zoom:
-        in: Forstørr utvalg
-        out: Forminsk utvalg
-      locate:
-        title: Vis posisjonen min
+      NavigationControl:
+        ZoomIn: Forstørr utvalg
+        ZoomOut: Forminsk utvalg
+      GeolocateControl:
+        FindMyLocation: Vis posisjonen min
         metersPopup:
           one: Du er innenfor én meter fra dette punktet
           other: Du er innenfor %{count} meter fra dette punktet

@@ -11,19 +11,26 @@ L.OSM.Map = L.Map.extend({
     L.Map.prototype.initialize.call(this, id, options);
 
     this.baseLayers = OSM.LAYER_DEFINITIONS.map((
-      { credit, nameId, leafletOsmId, leafletOsmDarkId, ...layerOptions }
+      { credit, nameId, leafletOsmId, leafletOsmDarkId, style, styleDark, ...layerOptions }
     ) => {
       if (credit) layerOptions.attribution = makeAttribution(credit);
       if (nameId) layerOptions.name = OSM.i18n.t(`javascripts.map.base.${nameId}`);
-      const layerConstructor =
-        (OSM.isDarkMap() && L.OSM[leafletOsmDarkId]) ||
-        L.OSM[leafletOsmId] ||
-        L.OSM.TileLayer;
+
+      let layerConstructor;
+      if (OSM.isDark("map")) {
+        layerConstructor = L.OSM[leafletOsmDarkId] ?? L.OSM[leafletOsmId] ?? L.OSM.TileLayer;
+        layerOptions.url = layerOptions.urlDark ?? layerOptions.url;
+      } else {
+        layerConstructor = L.OSM[leafletOsmId] ?? L.OSM.TileLayer;
+      }
+
+      layerOptions.url = layerOptions.url?.replace("{ratio}", "{r}");
 
       const layer = new layerConstructor(layerOptions);
       layer.on("add", () => {
         this.fire("baselayerchange", { layer: layer });
       });
+      layer.options.style = (OSM.isDark("map") && styleDark) || style;
       return layer;
     });
 
@@ -59,7 +66,7 @@ L.OSM.Map = L.Map.extend({
         }).prop("outerHTML")
       });
 
-      attribution += credit.donate ? " &hearts; " : ". ";
+      attribution += credit.donate ? " ♥️ " : ". ";
       attribution += makeCredit(credit);
       attribution += ". ";
 
@@ -77,19 +84,19 @@ L.OSM.Map = L.Map.extend({
         children[childId] = makeCredit(credit.children[childId]);
       }
       const text = OSM.i18n.t(`javascripts.map.${credit.id}`, children);
-      if (credit.href) {
-        const link = $("<a>", {
-          href: credit.href,
-          text: text
-        });
-        if (credit.donate) {
-          link.addClass("donate-attr");
-        } else {
-          link.attr("target", "_blank");
-        }
-        return link.prop("outerHTML");
+      if (!credit.href) {
+        return text;
       }
-      return text;
+      const link = $("<a>", {
+        href: credit.href,
+        text: text
+      });
+      if (credit.donate) {
+        link.addClass("donate-attr");
+      } else {
+        link.attr("target", "_blank");
+      }
+      return link.prop("outerHTML");
     }
   },
 
@@ -131,20 +138,19 @@ L.OSM.Map = L.Map.extend({
   },
 
   getUrl: function (marker) {
-    const params = {};
+    const search = new URLSearchParams();
 
     if (marker && this.hasLayer(marker)) {
-      [params.mlat, params.mlon] = OSM.cropLocation(marker.getLatLng(), this.getZoom());
+      const { lat, lng } = OSM.cropLocation(marker.getLatLng(), this.getZoom());
+      search.set("mlat", lat);
+      search.set("mlon", lng);
     }
 
-    let url = location.protocol + "//" + OSM.SERVER_URL + "/";
-    const query = new URLSearchParams(params),
-          hash = OSM.formatHash(this);
-
-    if (query) url += "?" + query;
-    if (hash) url += hash;
-
-    return url;
+    return {
+      pathname: "/",
+      search,
+      hash: OSM.formatHash(this)
+    };
   },
 
   getShortUrl: function (marker) {
@@ -158,17 +164,17 @@ L.OSM.Map = L.Map.extend({
           // and drops the last 4 bits of the full 64 bit Morton code.
           c1 = interlace(x >>> 17, y >>> 17),
           c2 = interlace((x >>> 2) & 0x7fff, (y >>> 2) & 0x7fff);
-    let str = location.protocol + "//" + location.hostname.replace(/^www\.openstreetmap\.org/i, "osm.org") + "/go/";
+    let pathname = "/go/";
 
     for (let i = 0; i < Math.ceil((zoom + 8) / 3.0) && i < 5; ++i) {
       const digit = (c1 >> (24 - (6 * i))) & 0x3f;
-      str += char_array.charAt(digit);
+      pathname += char_array[digit];
     }
     for (let i = 5; i < Math.ceil((zoom + 8) / 3.0); ++i) {
       const digit = (c2 >> (24 - (6 * (i - 5)))) & 0x3f;
-      str += char_array.charAt(digit);
+      pathname += char_array[digit];
     }
-    for (let i = 0; i < ((zoom + 8) % 3); ++i) str += "-";
+    for (let i = 0; i < ((zoom + 8) % 3); ++i) pathname += "-";
 
     // Called to interlace the bits in x and y, making a Morton code.
     function interlace(x, y) {
@@ -185,27 +191,41 @@ L.OSM.Map = L.Map.extend({
       return (interlaced_x << 1) | interlaced_y;
     }
 
-    const params = new URLSearchParams();
+    const search = new URLSearchParams();
     const layers = this.getLayersCode().replace("M", "");
 
     if (layers) {
-      params.set("layers", layers);
+      search.set("layers", layers);
     }
 
     if (marker && this.hasLayer(marker)) {
-      params.set("m", "");
+      search.set("m", "");
     }
 
     if (this._object) {
-      params.set(this._object.type, this._object.id);
+      search.set(this._object.type, this._object.id);
     }
 
-    const query = params.toString();
-    if (query) {
-      str += "?" + query;
+    return {
+      pathname,
+      search
+    };
+  },
+
+  getEmbedUrl: function (marker) {
+    const search = new URLSearchParams({
+      bbox: this.getBounds().toBBoxString(),
+      layer: this.getMapBaseLayerId()
+    });
+
+    if (this.hasLayer(marker)) {
+      const latLng = marker.getLatLng().wrap();
+      search.set("marker", latLng.lat + "," + latLng.lng);
     }
 
-    return str;
+    return {
+      search
+    };
   },
 
   getGeoUri: function (marker) {
@@ -216,7 +236,8 @@ L.OSM.Map = L.Map.extend({
       latLng = marker.getLatLng();
     }
 
-    return `geo:${OSM.cropLocation(latLng, zoom).join(",")}?z=${zoom}`;
+    const { lat, lng } = OSM.cropLocation(latLng, zoom);
+    return `geo:${lat},${lng}?z=${zoom}`;
   },
 
   addObject: function (object, callback) {
@@ -294,8 +315,8 @@ L.OSM.Map = L.Map.extend({
             throw new ElementGoneError();
           }
 
-          const status = response.statusText || response.status;
-          if (response.status !== 400 && response.status !== 509) {
+          const status = `HTTP Error ${response.status} ${response.statusText}`;
+          if (response.status !== 400 && response.status !== 429 && response.status !== 509) {
             throw new Error(status);
           }
 
@@ -390,14 +411,6 @@ L.OSM.Map = L.Map.extend({
   }
 });
 
-OSM.isDarkMap = function () {
-  const mapTheme = $("body").attr("data-map-theme");
-  if (mapTheme) return mapTheme === "dark";
-  const siteTheme = $("html").attr("data-bs-theme");
-  if (siteTheme) return siteTheme === "dark";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches;
-};
-
 OSM.getMarker = function ({ icon = "dot", color = "var(--marker-red)", ...options }) {
   const html = `<svg viewBox="0 0 25 40" class="pe-none" overflow="visible"><use href="#pin-shadow" /><use href="#pin-${icon}" color="${color}" class="pe-auto" /></svg>`;
   return L.divIcon({
@@ -412,5 +425,5 @@ OSM.getMarker = function ({ icon = "dot", color = "var(--marker-red)", ...option
 OSM.noteMarkers = {
   "closed": OSM.getMarker({ icon: "tick", color: "var(--marker-green)" }),
   "new": OSM.getMarker({ icon: "plus", color: "var(--marker-blue)" }),
-  "open": OSM.getMarker({ icon: "cross", color: "var(--marker-red)" })
+  "open": OSM.getMarker({ icon: "exclam", color: "var(--marker-red)" })
 };

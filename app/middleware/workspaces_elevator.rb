@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "apartment/elevators/generic"
 
 class WorkspacesElevator < Apartment::Elevators::Generic

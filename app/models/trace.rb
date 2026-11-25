@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: gpx_files
@@ -12,12 +14,11 @@
 #  timestamp   :datetime         not null
 #  description :string           default(""), not null
 #  inserted    :boolean          not null
-#  visibility  :enum             default("public"), not null
+#  visibility  :enum             default("trackable"), not null
 #
 # Indexes
 #
 #  gpx_files_timestamp_idx            (timestamp)
-#  gpx_files_user_id_idx              (user_id)
 #  gpx_files_visible_visibility_idx   (visible,visibility)
 #  index_gpx_files_on_user_id_and_id  (user_id,id)
 #
@@ -27,8 +28,6 @@
 #
 
 class Trace < ApplicationRecord
-  require "open3"
-
   self.table_name = "gpx_files"
 
   belongs_to :user, :counter_cache => true
@@ -45,33 +44,65 @@ class Trace < ApplicationRecord
   has_one_attached :image, :service => Settings.trace_image_storage
   has_one_attached :icon, :service => Settings.trace_icon_storage
 
+  # Visibility values for new uploads, and the old ones kept for existing traces.
+  VISIBILITIES = %w[trackable identifiable].freeze
+  LEGACY_VISIBILITIES = %w[private public].freeze
+
   validates :user, :associated => true
   validates :name, :presence => true, :length => 1..255, :characters => true
-  validates :description, :presence => { :on => :create }, :length => 1..255, :characters => true
+  # Some old traces have no description, so only require one for new traces
+  # and for traces that already have one
+  validates :description, :presence => true, :if => -> { new_record? || description_in_database.present? }
+  validates :description, :length => ..255, :characters => true
   validates :timestamp, :presence => true
-  validates :visibility, :inclusion => %w[private public trackable identifiable]
+  validates :visibility, :inclusion => VISIBILITIES + LEGACY_VISIBILITIES
+  validates :visibility, :inclusion => { :in => VISIBILITIES }, :on => :create
+  validate :visibility_not_changed_to_legacy, :on => :update
+  validate :validate_tags
 
   after_save :set_filename
+
+  # True if a new upload can use this visibility.
+  def self.valid_visibility?(visibility)
+    VISIBILITIES.include?(visibility)
+  end
+
+  # True if this is an old visibility (private or public) that new uploads no longer use.
+  def self.legacy_visibility?(visibility)
+    LEGACY_VISIBILITIES.include?(visibility)
+  end
+
+  # Visibility for new uploads when the user has no preference.
+  def self.default_visibility
+    "trackable"
+  end
+
+  # Visibilities this trace can use, including its legacy one if it has one.
+  def selectable_visibilities
+    if Trace.legacy_visibility?(visibility)
+      [visibility] + VISIBILITIES
+    else
+      VISIBILITIES
+    end
+  end
 
   def tagstring
     tags.collect(&:tag).join(", ")
   end
 
   def tagstring=(s)
-    self.tags = if s.include? ","
-                  s.split(",").map(&:strip).reject(&:empty?).collect do |tag|
-                    tt = Tracetag.new
-                    tt.tag = tag
-                    tt
-                  end
-                else
-                  # do as before for backwards compatibility:
-                  s.split.collect do |tag|
-                    tt = Tracetag.new
-                    tt.tag = tag
-                    tt
-                  end
-                end
+    names = if s.include? ","
+              s.split(",").map(&:strip).reject(&:empty?)
+            else
+              # do as before for backwards compatibility:
+              s.split
+            end
+
+    tags.clear
+
+    names.each do |name|
+      tags.build(:tag => name)
+    end
   end
 
   def file=(attachable)
@@ -161,8 +192,10 @@ class Trace < ApplicationRecord
 
     self.description = description.content
 
-    self.tags = pt.find("tag").collect do |tag|
-      Tracetag.new(:tag => tag.content)
+    tags.clear
+
+    pt.find("tag").each do |tag|
+      tags.build(:tag => tag.content)
     end
   end
 
@@ -298,5 +331,21 @@ class Trace < ApplicationRecord
 
   def set_filename
     file.blob.update(:filename => "#{id}#{extension_name}") if file.attached?
+  end
+
+  # Prevent an existing trace from changing its visibility from a current value back to a legacy one.
+  def visibility_not_changed_to_legacy
+    return unless visibility_changed?
+    return unless Trace.legacy_visibility?(visibility) && Trace.valid_visibility?(visibility_was)
+
+    errors.add(:visibility, :cannot_change_to_legacy)
+  end
+
+  # Report problems with new tags against the tag string, so that they
+  # are shown next to the tags field when uploading or editing a trace
+  def validate_tags
+    tags.select(&:new_record?).reject(&:valid?).each do |tag|
+      tag.errors.each { |error| errors.import(error, :attribute => :tagstring) }
+    end
   end
 end

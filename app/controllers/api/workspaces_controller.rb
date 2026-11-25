@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TODO: this controller needs special auth with the workspaces backend
 module Api
   class WorkspacesController < ApiController
@@ -37,7 +39,7 @@ module Api
       Apartment::Tenant.drop("workspace-#{params[:id]}")
     end
 
-    def bbox
+    def bbox # rubocop:disable Rails/SpecificActionNames -- Workspaces API route
       workspace_schema = "workspace-#{params[:id]}"
       Apartment::Tenant.switch!(workspace_schema)
 
@@ -58,8 +60,4 @@ module Api
       end
     end
   end
-end
-
-# TODO: stub
-class Workspace
 end

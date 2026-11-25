@@ -1,0 +1,116 @@
+# frozen_string_literal: true
+
+class ModerationZonesController < ApplicationController
+  layout :site_layout
+
+  before_action :authorize_web
+  before_action :set_locale
+
+  authorize_resource
+
+  before_action :check_database_readable
+  before_action :check_database_writable, :except => [:index]
+  before_action :set_moderation_zone, :only => [:edit, :update]
+
+  def index
+    @moderation_zones = ModerationZone.preload(:creator, :revoker).all
+  end
+
+  def new
+    @moderation_zone = ModerationZone.new
+  end
+
+  def edit; end
+
+  def create
+    @moderation_zone = ModerationZone.new(moderation_zone_params)
+    @moderation_zone.creator = current_user
+
+    if @moderation_zone.save
+      redirect_to moderation_zones_url, :notice => t(".success")
+    else
+      render :new, :status => :unprocessable_content
+    end
+  end
+
+  def update
+    check_revocation(@moderation_zone, moderation_zone_params)
+
+    if cannot?(:update, @moderation_zone)
+      flash[:error] = @moderation_zone.revoker ? t(".only_creator_or_revoker_can_edit") : t(".only_creator_can_edit")
+      redirect_to moderation_zones_url
+    elsif current_user != @moderation_zone.creator && updating_without_revoking?(@moderation_zone, moderation_zone_params)
+      flash[:error] = t(".only_creator_can_edit_without_revoking")
+      redirect_to moderation_zones_url
+    elsif reactivating?(@moderation_zone, moderation_zone_params)
+      flash[:error] = t(".no_reactivation")
+      redirect_to moderation_zones_url
+    elsif @moderation_zone.update(sanitised_params(@moderation_zone, moderation_zone_params))
+      redirect_to moderation_zones_url, :notice => t(".success"), :status => :see_other
+    else
+      render :edit, :status => :unprocessable_content
+    end
+  end
+
+  private
+
+  def set_moderation_zone
+    @moderation_zone = ModerationZone.preload(:creator, :revoker).find(params.expect(:id))
+  end
+
+  def moderation_zone_params
+    param! :moderation_zone, Hash do |mz|
+      mz.param! :name, String
+      mz.param! :reason, String
+      mz.param! :zone, String
+      mz.param! :expiry_type, String, :in => %w[relative absolute], :required => true
+    end
+
+    if params.dig(:moderation_zone, :expiry_type) == "absolute"
+      param! :moderation_zone, Hash do |mz|
+        mz.param! :ends_at, String, :required => true
+      end
+    else
+      param! :moderation_zone, Hash do |mz|
+        mz.param! :period, Integer, :min => 0, :required => true
+      end
+    end
+
+    params.expect(:moderation_zone => [:name, :reason, :zone, :period, :expiry_type, :ends_at]).tap do |safe_params|
+      expiry_type = safe_params.delete(:expiry_type)
+      period = safe_params.delete(:period)
+
+      safe_params[:ends_at] = if expiry_type == "absolute"
+                                Time.zone.parse(safe_params[:ends_at])&.utc&.beginning_of_minute
+                              else
+                                period.to_i.hours.from_now
+                              end
+    end
+  end
+
+  def check_revocation(original, changes)
+    original.revoker = current_user if original.active? && !projected_record(original, changes).active?
+  end
+
+  def updating_without_revoking?(original, changes)
+    original.active? && projected_record(original, changes).active?
+  end
+
+  def reactivating?(original, changes)
+    !original.active? && projected_record(original, changes).active?
+  end
+
+  def projected_record(original, changes)
+    original.dup.tap do |duplicate|
+      duplicate.assign_attributes(changes)
+    end
+  end
+
+  def sanitised_params(original, changes)
+    if original.active?
+      changes
+    else
+      changes.except("ends_at")
+    end
+  end
+end

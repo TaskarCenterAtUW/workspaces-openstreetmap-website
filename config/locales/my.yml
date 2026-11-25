@@ -10,9 +10,6 @@
 # Author: သူထွန်း
 ---
 my:
-  date:
-    formats:
-      heatmap: '%B %-d'
   time:
     formats:
       friendly: |-
@@ -97,8 +94,10 @@ my:
         active: လက်ရှိအသုံးပြုနေသည်
         display_name: ဖော်ပြမည့်အမည်
         description: ပရိုဖိုင် ဖော်ပြချက်
+        company: ကုမ္ပဏီ
         home_lat: လတ္တီကျု
         home_lon: လောင်ဂျီကျု
+        home_location_name: အိမ်တည်နေရာအမည်
         languages: နှစ်သက်သော ဘာသာစကားများ
         pass_crypt: စကားဝှက်
   datetime:
@@ -154,7 +153,11 @@ my:
   accounts:
     show:
       title: အကောင့်ကို ပြင်ဆင်ရန်
+      my_account: မိမိ၏ အကောင့်
       current email address: လက်ရှိ အီးမေးလ်လိပ်စာ
+      external auth: ပြင်ပအထောက်အထားစိစစ်ခြင်း
+      contributor_terms:
+        heading: ပံ့ပိုးကူညီသူ စည်းကမ်းချက်များ
       save changes button: ပြောင်းလဲမှုများကို သိမ်းရန်
     deletions:
       show:
@@ -527,24 +530,25 @@ my:
         note:
           other_label: အခြား
   layouts:
-    home: အိမ်တည်နေရာသို့ သွားရန်
-    logout: ထွက်ရန်
-    log_in: အကောင့်ဝင်ရန်
-    sign_up: မှတ်ပုံတင်ရန်
     start_mapping: မြေပုံ စတင်ရေးဆွဲရန်
-    edit: ပြင်ဆင်
-    history: ရာဇဝင်
-    export: တင်ပို့ရန်
-    gps_traces: ဂျီပီအက်စ်ခြေရာများ
-    user_diaries: အသုံးပြုသူများ၏ နေ့စဉ်မှတ်တမ်းများ
-    edit_with: '%{editor} ဖြင့် ပြင်ဆင်ရန်'
     intro_header: OpenStreetMap မှ ကြိုဆိုပါ၏
     tou: အသုံးပြုခြင်းဆိုင်ရာ သတ်မှတ်ချက်များ
-    help: အ​ကူ​အ​ညီ​
-    about: အကြောင်း
-    copyright: မူပိုင်ခွင့်
     learn_more: ပိုမို လေ့လာရန်
-    more: ပို၍
+    header:
+      about: အကြောင်း
+      copyright: မူပိုင်ခွင့်
+      edit: ပြင်ဆင်
+      edit_with: '%{editor} ဖြင့် ပြင်ဆင်ရန်'
+      export: တင်ပို့ရန်
+      gps_traces: ဂျီပီအက်စ်ခြေရာများ
+      help: အ​ကူ​အ​ညီ​
+      history: ရာဇဝင်
+      home: အိမ်တည်နေရာသို့ သွားရန်
+      log_out: ထွက်ရန်
+      log_in: အကောင့်ဝင်ရန်
+      more: ပို၍
+      sign_up: မှတ်ပုံတင်ရန်
+      user_diaries: အသုံးပြုသူများ၏ နေ့စဉ်မှတ်တမ်းများ
   user_mailer:
     diary_comment_notification:
       hi: ဟိုင်း %{to_user}၊
@@ -663,17 +667,6 @@ my:
     destroy:
       title: အကောင့်မှပြန်ထွက်
       logout_button: အကောင့်မှပြန်ထွက်
-  shared:
-    markdown_help:
-      text: စာသား
-      image: ရုပ်ပုံ
-    richtext_field:
-      edit: ပြင်ဆင်ရန်
-      preview: ကြိုတင်အစမ်းကြည့်ရှုရန်
-    pagination:
-      diary_comments:
-        older: ပိုဟောင်းသော မှတ်ချက်များ
-        newer: ပိုသစ်သော မှတ်ချက်များ
   site:
     about_section:
       local_knowledge_title: ဒေသန္တရ ဗဟုသုတ
@@ -770,6 +763,14 @@ my:
       wikipedia:
         title: ဝီကီပီးဒီးယားဖြင့် အကောင့်ထဲဝင်ရန်
         alt: ဝီကီပီးဒီးယားအကောင့်ဖြင့် အကောင့်ထဲဝင်ရန်
+    markdown_help:
+      text: စာသား
+      image: ရုပ်ပုံ
+    richtext_field:
+      preview: ကြိုတင်အစမ်းကြည့်ရှုရန်
+    pagination:
+      diary_comments:
+        older: ပိုဟောင်းသော မှတ်ချက်များ
   users:
     new:
       title: မှတ်ပုံတင်ရန်
@@ -789,6 +790,8 @@ my:
       change_image: ရုပ်ပုံ ပြောင်းလဲရန်
       edit_company: ကုမ္ပဏီ ကို ပြင်ဆင်ရန်
       edit_location: တည်နေရာ ပြင်ဆင်ရန်
+      title:
+        administrator: ဤအသုံးပြုသူသည် အက်ဒမိန်တစ်ဦးဖြစ်သည်
     sidebar_section:
       company: ကုမ္ပဏီ
     lists:
@@ -798,9 +801,6 @@ my:
     changeset_comments:
       page:
         comment: မှတ်ချက်
-    role_icons:
-      title:
-        administrator: ဤအသုံးပြုသူသည် အက်ဒမိန်တစ်ဦးဖြစ်သည်
   user_blocks:
     helper:
       block_duration:

@@ -73,9 +73,6 @@ dsb:
       way_node: Puśowy suk
       way_tag: Puśowy atribut
     attributes:
-      client_application:
-        callback_url: URL slědkwołanja
-        support_url: URL pódpěry
       diary_comment:
         body: Tekst
       diary_entry:
@@ -818,27 +815,28 @@ dsb:
   layouts:
     logo:
       alt_text: Logo OpenStreetMap
-    home: K domacnemu městnoju
-    logout: Wótzjawiś
-    log_in: Pśizjawiś
-    sign_up: Registrěrowaś
     start_mapping: Kartěrowanje zachopiś
-    edit: Wobźěłaś
-    history: Historija
-    export: Eksport
-    gps_traces: GPS-slědy
-    user_diaries: Dnjowniki
-    edit_with: Z %{editor} wobźěłaś
     intro_header: Witaj k OpenStreetMap!
     intro_text: OpenStreetMap jó kórta swěta, napórana wót luźi ako ty a dajo se licho
       pód wótwórjoneju licencu wužywaś.
     partners_partners: partnerow
-    help: Pomoc
-    about: Wó
-    copyright: Awtorske pšawo
-    communities: Zgromadnosći
     learn_more: Dalšne informacije
-    more: Wěcej
+    header:
+      about: Wó
+      communities: Zgromadnosći
+      copyright: Awtorske pšawo
+      edit: Wobźěłaś
+      edit_with: Z %{editor} wobźěłaś
+      export: Eksport
+      gps_traces: GPS-slědy
+      help: Pomoc
+      history: Historija
+      home: K domacnemu městnoju
+      log_out: Wótzjawiś
+      log_in: Pśizjawiś
+      more: Wěcej
+      sign_up: Registrěrowaś
+      user_diaries: Dnjowniki
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} jo twój zapisk dnjownika komentěrował.'
@@ -1046,8 +1044,6 @@ dsb:
         keep image: Aktualny wobraz wobchowaś
         delete image: Aktualny wobraz wótpóraś
         replace image: Aktualny wobraz wuměniś
-        image size hint: (kwadratiske wobraze z nanejmjenjej 100x100 funkcioněruju
-          nejlěpjej)
     locations:
       show:
         no home location: Njejsy swóje bydlišćo zapódał.
@@ -1065,17 +1061,6 @@ dsb:
       title: Wótzjawiś se
       heading: Z OpenStreetMap se wótzjawiś
       logout_button: Wótzjawjenje
-  shared:
-    pagination:
-      diary_comments:
-        older: Starše komentary
-        newer: Nowše komentary
-      diary_entries:
-        older: Starše zapiski
-        newer: Nowše zapiski
-      traces:
-        older: Starše slědy
-        newer: Nowše slědy
   site:
     about:
       used_by_html: '%{name} staja kórtowe daty za sta websedłow, mobilne nałoženja
@@ -1383,6 +1368,13 @@ dsb:
       need_to_see_terms: Twój pśistup na API jo nachylu wusajźony. Pšosym pśizjaw
         se k webpówjerchoju, aby se wužywarske wuměnjenja woglědał. Njetrjebaš zwóliś
         do nich, musyš se je jano woglědaś.
+    pagination:
+      diary_comments:
+        older: Starše komentary
+      diary_entries:
+        newer: Nowše zapiski
+      traces:
+        newer: Nowše slědy
   users:
     new:
       title: Registrěrowaś
@@ -1428,10 +1420,18 @@ dsb:
       create_block: toś togo wužywarja blokěrowaś
       activate_user: toś togo wužywarja aktiwěrowaś
       confirm_user: toś togo wužywarja wobkšuśiś
-      hide_user: toś togo wužywarja schowaś
-      unhide_user: toś togo wužiwarja pokazaś
-      delete_user: toś togo wužywarja lašowaś
       confirm: Wobkšuśiś
+      title:
+        administrator: Toś ten wužywaŕ jo administrator
+        moderator: Toś ten wužywaŕ jo moderator
+      grant:
+        administrator: Pšawo administratora rozdaś
+        moderator: Pšawo moderatora rozdaś
+        are_you_sure: Coš napšawdu wužywarjeju "%{name}" rolu "%{role}" daś?
+      revoke:
+        administrator: Pšawo administratora zajmjeś
+        moderator: Pšawo moderatora zajmjeś
+        are_you_sure: Coš napšawdu wužywarjeju "%{name}" rolu "%{role}" zajmjeś?
     go_public:
       flash success: Wše twóje změny su něnto zjawne, a ty móžoš je něnto wobźěłaś.
     issued_blocks:
@@ -1450,7 +1450,6 @@ dsb:
         heading: Wužywarje
       page:
         confirm: Wubranych wužywarjow wobkšuśiś
-        hide: Wubranych wužywarjow schowaś
         empty: Žedne wótpowědujuce wužywarje namakane
       user:
         summary_html: '%{name} wót %{ip_address} dnja %{date} napórany'
@@ -1465,18 +1464,6 @@ dsb:
     suspended:
       title: Konto wupowěźone
       heading: Konto wupowěźone
-    role_icons:
-      title:
-        administrator: Toś ten wužywaŕ jo administrator
-        moderator: Toś ten wužywaŕ jo moderator
-      grant:
-        administrator: Pšawo administratora rozdaś
-        moderator: Pšawo moderatora rozdaś
-        are_you_sure: Coš napšawdu wužywarjeju "%{name}" rolu "%{role}" daś?
-      revoke:
-        administrator: Pšawo administratora zajmjeś
-        moderator: Pšawo moderatora zajmjeś
-        are_you_sure: Coš napšawdu wužywarjeju "%{name}" rolu "%{role}" zajmjeś?
   user_role:
     filter:
       not_a_role: Znamuškowy rjeśazk "%{role}" njejo płaśiwa rola.
@@ -1577,11 +1564,11 @@ dsb:
       tooltip: Legenda
       tooltip_disabled: Legenda stoj jano za standardnu rowninu k dispoziciji
     map:
-      zoom:
-        in: Pówětšyś
-        out: Pómjeńšyś
-      locate:
-        title: Aktualne městno pokazaś
+      NavigationControl:
+        ZoomIn: Pówětšyś
+        ZoomOut: Pómjeńšyś
+      GeolocateControl:
+        FindMyLocation: Aktualne městno pokazaś
       base:
         standard: Standard
         cycle_map: Kórta za kolesowarjow

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: current_relations
@@ -18,8 +20,6 @@
 #
 
 class Relation < ApplicationRecord
-  require "xml/libxml"
-
   include ConsistencyValidations
   include NotRedactable
 
@@ -122,9 +122,7 @@ class Relation < ApplicationRecord
 
   # FIXME: is this really needed?
   def members
-    @members ||= relation_members.map do |member|
-      [member.member_type, member.member_id, member.member_role]
-    end
+    @members ||= relation_members.pluck(:member_type, :member_id, :member_role)
   end
 
   def tags
@@ -209,7 +207,7 @@ class Relation < ApplicationRecord
   def preconditions_ok?(good_members = [])
     raise OSM::APITooManyRelationMembersError.new(id, members.length, Settings.max_number_of_relation_members) if members.length > Settings.max_number_of_relation_members
 
-    # These are hastables that store an id in the index of all
+    # These are hashtables that store an id in the index of all
     # the nodes/way/relations that have already been added.
     # If the member is valid and visible then we add it to the
     # relevant hash table, with the value true as a cache.

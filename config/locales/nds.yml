@@ -371,14 +371,15 @@ nds:
   layouts:
     logo:
       alt_text: OpenStreetMap-Logo
-    logout: afmellen
-    log_in: anmellen
-    sign_up: Nee Brukerkonto opstellen
-    edit: Ännern
-    history: Geschicht
-    export: Export
-    user_diaries: Bruker-Dagböker
-    help: Hülp
+    header:
+      edit: Ännern
+      export: Export
+      help: Hülp
+      history: Geschicht
+      log_out: afmellen
+      log_in: anmellen
+      sign_up: Nee Brukerkonto opstellen
+      user_diaries: Bruker-Dagböker
   user_mailer:
     diary_comment_notification:
       hi: Moin %{to_user},
@@ -447,11 +448,6 @@ nds:
       password: 'Passwoord:'
       lost password link: Passwoord vergeten?
       login_button: Anmellen
-  shared:
-    pagination:
-      diary_entries:
-        older: Öller Indrääg
-        newer: Jünger Indrääg
   site:
     copyright:
       native:
@@ -535,6 +531,10 @@ nds:
       edit_map: Koort ännern
       public: APEN
       private: PRIVAAT
+  application:
+    pagination:
+      diary_entries:
+        newer: Jünger Indrääg
   users:
     new:
       title: Brukerkonto opstellen

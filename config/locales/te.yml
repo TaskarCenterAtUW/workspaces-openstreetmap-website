@@ -82,18 +82,6 @@ te:
       way_node: దారి గమనిక
       way_tag: దారి ట్యాగు
     attributes:
-      client_application:
-        name: పేరు (ఆవశ్యకం)
-        url: ప్రధాన అనువర్తనం URL (ఆవశ్యకం)
-        callback_url: కాల్‌బ్యాక్ URL
-        support_url: సపోర్ట్ URL
-        allow_read_prefs: వారి వాడుకరి అభిరుచులను చదవండి
-        allow_write_prefs: వారి వాడుకరి అభిరుచులను మార్చు
-        allow_write_diary: డైరీ ఎంట్రీలు, వ్యాఖ్యలు సృష్టించండి, మిత్రులను చేసుకోండి
-        allow_write_api: మ్యాపును సవరించండి
-        allow_read_gpx: వారు గోప్య GPS అనుసరణలను చదవండి
-        allow_write_gpx: GPS అనుసరణలను ఎక్కించండి
-        allow_write_notes: గమనికలను సవరించు
       diary_comment:
         body: వివరణ
       diary_entry:
@@ -1339,14 +1327,13 @@ te:
       other_issues_against_this_user: ఈ వాడుకరికి వ్యతిరేకంగా ఉన్న ఇతర అంశాలు
       no_other_issues: ఈ వాడుకరిపై ఇక వేరే అంశాలేమీ లేవు.
       comments_on_this_issue: ఈ అంశంపై వ్యాఖ్యలు
+      comment_from_html: '%{comment_created_at} %{user_link} చేసిన వ్యాఖ్య'
     resolve:
       resolved: అంశం స్థితిని 'పరిష్కారమైంది' అని మార్చాం
     ignore:
       ignored: అంశం స్థితిని 'విస్మరించాం' అని మార్చాం
     reopen:
       reopened: అంశం స్థితిని 'తెరిచి ఉన్న' అని పెట్టాం
-    comments:
-      comment_from_html: '%{comment_created_at} %{user_link} చేసిన వ్యాఖ్య'
     reports:
       reported_by_html: '%{user} %{updated_at} న %{category} అని ఫిర్యాదు చేసారు'
     helper:
@@ -1393,28 +1380,29 @@ te:
   layouts:
     logo:
       alt_text: ఓపెన్&zwnj;స్ట్రీట్&zwnj;మాప్ చిహ్నం
-    home: నివాస ప్రాంతానికి వెళ్ళు
-    logout: నిష్క్రమించండి
-    log_in: ప్రవేశించండి
-    sign_up: నమోదవ్వండి
     start_mapping: మ్యాపింగు మొదలుపెట్టండి
-    edit: మార్చు
-    history: చరిత్ర
-    export: ఎగుమతి
-    issues: అంశాలు
-    gps_traces: GPS జాడలు
-    user_diaries: వాడుకరి డైరీలు
-    edit_with: '%{editor} తో సవరించండి'
     intro_header: ఓపెన్‌స్ట్రీట్‌మ్యాప్‌కి స్వాగతం!
     intro_text: OpenStreetMap, ఓ ప్రపంచ మ్యాపు. మీలాంటి వారే దీన్ని తయారు చేసారు.
       స్వేచ్ఛా లైసెన్సు ద్వారా స్వేచ్ఛగా దీన్ని వాడుకోవచ్చు.
     partners_partners: భాగస్వాములు
     tou: వాడుక నియమాలు
-    help: సహాయం
-    about: గురించి
-    copyright: నకలుహక్కులు
     learn_more: మరింత తెలుసుకోండి
-    more: మరిన్ని
+    header:
+      about: గురించి
+      copyright: నకలుహక్కులు
+      edit: మార్చు
+      edit_with: '%{editor} తో సవరించండి'
+      export: ఎగుమతి
+      gps_traces: GPS జాడలు
+      help: సహాయం
+      history: చరిత్ర
+      home: నివాస ప్రాంతానికి వెళ్ళు
+      issues: అంశాలు
+      log_out: నిష్క్రమించండి
+      log_in: ప్రవేశించండి
+      more: మరిన్ని
+      sign_up: నమోదవ్వండి
+      user_diaries: వాడుకరి డైరీలు
   user_mailer:
     diary_comment_notification:
       subject: '[OpenStreetMap] %{user} ఒక డైరీ పద్దుపై వ్యాఖ్యానించారు'
@@ -1674,7 +1662,6 @@ te:
         keep image: ప్రస్తుత చిత్రాన్ని ఉంచు
         delete image: ప్రస్తుత చిత్రాన్ని తొలగించు
         replace image: ప్రస్తుత చిత్రాన్ని మార్చు
-        image size hint: (కనీసం 100x100 ఉండే చదరపు చిత్రం అయితే మేలు)
     locations:
       show:
         no home location: మీరు మీ నివాస ప్రాంతాన్ని పేర్కొనలేదు.
@@ -1693,33 +1680,6 @@ te:
       title: నిష్క్రమించు
       heading: ఓపెన్‌స్ట్రీట్‌మ్యాప్‌ నుండి నిష్క్రమించండి
       logout_button: నిష్క్రమించు
-  shared:
-    markdown_help:
-      headings: శీర్షికలు
-      heading: శీర్షిక
-      subheading: ఉప శీర్షిక
-      unordered: క్రమం లేని జాబితా
-      ordered: సక్రమ జాబితా
-      first: మొదటి అంశం
-      second: రెండవ అంశం
-      link: లంకె
-      text: పాఠ్యం
-      image: బొమ్మ
-      alt: ప్రత్యామ్నాయ పాఠ్యం
-      url: చిరునామా
-    richtext_field:
-      edit: మార్చు
-      preview: మునుజూపు
-    pagination:
-      diary_comments:
-        older: పాత వ్యాఖ్యలు
-        newer: కొత్త వ్యాఖ్యలు
-      diary_entries:
-        older: పాత పద్దులు
-        newer: కొత్త పద్దులు
-      traces:
-        older: పాత ట్రేసులు
-        newer: కొత్త ట్రేసులు
   site:
     about:
       used_by_html: '%{name} వేలాది వెబ్‌సైట్లకు, మొబైలు యాప్‌లకు, హార్డ్‌వేరు డివైసులకూ
@@ -2065,6 +2025,26 @@ te:
       wikipedia:
         title: వికీపీడియాతో లాగినవండి
         alt: వికీపీడియా ఖాతాతో లాగినవండి
+    markdown_help:
+      headings: శీర్షికలు
+      heading: శీర్షిక
+      subheading: ఉప శీర్షిక
+      unordered: క్రమం లేని జాబితా
+      first: మొదటి అంశం
+      second: రెండవ అంశం
+      link: లంకె
+      text: పాఠ్యం
+      image: బొమ్మ
+      url: చిరునామా
+    richtext_field:
+      preview: మునుజూపు
+    pagination:
+      diary_comments:
+        older: పాత వ్యాఖ్యలు
+      diary_entries:
+        newer: కొత్త పద్దులు
+      traces:
+        newer: కొత్త ట్రేసులు
   oauth:
     scopes:
       read_prefs: వాడుకరి అభీష్టాలను చదువు
@@ -2121,11 +2101,19 @@ te:
       confirm_user: ఈ వాడుకరిని ధ్రువీకరించు
       unconfirm_user: ఈ వాడుకరి ధ్రువీకరణను రద్దుచెయ్యి
       unsuspend_user: ఈ వాడుకరి సస్పెన్షన్ను రద్దుచెయ్యి
-      hide_user: ఈ వాడుకరిని దాచు
-      unhide_user: ఈ వాడుకరిని చూపు
-      delete_user: ఈ వాడుకరిని తొలగించు
       confirm: నిర్ధారించు
       report: ఈ వాడుకరిపై ఫిర్యాదు చెయ్యి
+      title:
+        administrator: ఈ వాడుకరి ఒక నిర్వాహకులు
+        moderator: ఈ వాడుకరి ఒక మోడరేటరు
+      grant:
+        administrator: నిర్వాహక హోదాను ఇవ్వండి
+        moderator: నిర్వాహక హోదాను ఇవ్వండి
+        are_you_sure: వాడుకరి `%{name}' కి `%{role}' పాత్ర ఇవ్వాలని మీరు నిశ్చయించుకున్నారా?
+      revoke:
+        administrator: నిర్వాహక హోదాను తీసెయ్యండి
+        moderator: నిర్వాహక హోదాను తీసెయ్యండి
+        are_you_sure: వాడుకరి `%{name}' నుండి `%{role}' ను ఉపసంహరించాలని మీరు నిశ్చయించుకున్నారా?
     go_public:
       flash success: ఇప్పుడు మీ మార్పుచేర్పులన్నీ బహిరంగం, మీరు ఇక నుండి దిద్దుబాట్లు
         చేయవచ్చు.
@@ -2145,7 +2133,6 @@ te:
         heading: వాడుకరులు
       page:
         confirm: ఎంచుకున్న వాడూకరులను ధ్రువీకరించు
-        hide: ఎంచుకున్న వాడుకరులను దాచు
         empty: సరిపోలే వాడుకరులు కనబడలేదు
       user:
         summary_html: '%{name}, %{date} న %{ip_address} నుండి సృష్టించారు'
@@ -2174,18 +2161,6 @@ te:
       option_1: మీరు OpenStreetMap కు కొత్తైతే, కింది ఫారమును వాడి కొత్త ఖాతాను సృష్టించుకోండి.
       option_2: మీకి ఈసరికే ఖాతా ఉంటే, మీ వాడుకరిపేరు, సంకేతపదాలను వాడి దాన్లోకి లాగినవండి.
         ఆ తరువాత ఆ ఖాతాను మీ ID తో అనుబంధించండి.
-    role_icons:
-      title:
-        administrator: ఈ వాడుకరి ఒక నిర్వాహకులు
-        moderator: ఈ వాడుకరి ఒక మోడరేటరు
-      grant:
-        administrator: నిర్వాహక హోదాను ఇవ్వండి
-        moderator: నిర్వాహక హోదాను ఇవ్వండి
-        are_you_sure: వాడుకరి `%{name}' కి `%{role}' పాత్ర ఇవ్వాలని మీరు నిశ్చయించుకున్నారా?
-      revoke:
-        administrator: నిర్వాహక హోదాను తీసెయ్యండి
-        moderator: నిర్వాహక హోదాను తీసెయ్యండి
-        are_you_sure: వాడుకరి `%{name}' నుండి `%{role}' ను ఉపసంహరించాలని మీరు నిశ్చయించుకున్నారా?
   user_role:
     filter:
       not_a_role: '`%{role}'' అనేది సరైన పాత్ర కాదు.'
@@ -2301,11 +2276,11 @@ te:
       title: పటం సూచిక
       tooltip: పటం సూచిక
     map:
-      zoom:
-        in: జూమ్ ఇన్
-        out: జూమ్ ఔట్
-      locate:
-        title: నేనున్న ప్రాంతాన్ని చూపించు
+      NavigationControl:
+        ZoomIn: జూమ్ ఇన్
+        ZoomOut: జూమ్ ఔట్
+      GeolocateControl:
+        FindMyLocation: నేనున్న ప్రాంతాన్ని చూపించు
         metersPopup:
           one: మీరు ఈ బిందువు నుండి ఒక మీటరు దూరం లోపే ఉన్నారు
           other: మీరు ఈ బిందువు నుండి %{count} మీటర్ల దూరం లోపే ఉన్నారు

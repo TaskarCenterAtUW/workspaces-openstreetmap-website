@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Api
@@ -202,6 +204,18 @@ module Api
       assert_response :bad_request
     end
 
+    def test_create_anonymous_in_moderation_zone
+      point = coordinates_inside_seville_cathedral
+      create(:moderation_zone, :seville_cathedral)
+      assert_no_difference "Note.count" do
+        assert_no_difference "NoteComment.count" do
+          post api_notes_path(:lat => point.lat, :lon => point.lon, :text => "Down with this sort of thing")
+        end
+      end
+      assert_response :forbidden
+      assert_equal "You don't have permissions to make changes here. Please either sign in or create an OpenStreetMap account", response.headers["Error"]
+    end
+
     def test_create_success
       user = create(:user)
       auth_header = bearer_authorization_header user
@@ -228,6 +242,21 @@ module Api
       subscription = NoteSubscription.last
       assert_equal user, subscription.user
       assert_equal note, subscription.note
+    end
+
+    def test_create_success_in_moderation_zone
+      point = coordinates_inside_seville_cathedral
+      create(:moderation_zone, :seville_cathedral)
+      user = create(:user)
+      auth_header = bearer_authorization_header user
+      assert_difference "Note.count", 1 do
+        assert_difference "NoteComment.count", 1 do
+          assert_difference "NoteSubscription.count", 1 do
+            post api_notes_path(:lat => point.lat, :lon => point.lon, :text => "This is a comment", :format => "json"), :headers => auth_header
+          end
+        end
+      end
+      assert_response :success
     end
 
     def test_create_no_scope_fail
@@ -371,16 +400,8 @@ module Api
       assert_equal third_user, subscription.user
       assert_equal note_with_comments_by_users, subscription.note
 
-      email = ActionMailer::Base.deliveries.find { |e| e.to.first == first_user.email }
-      assert_not_nil email
-      assert_equal 1, email.to.length
-      assert_equal "[OpenStreetMap] #{third_user.display_name} has commented on one of your notes", email.subject
-      assert_equal first_user.email, email.to.first
-
-      email = ActionMailer::Base.deliveries.find { |e| e.to.first == second_user.email }
-      assert_not_nil email
-      assert_equal 1, email.to.length
-      assert_equal "[OpenStreetMap] #{third_user.display_name} has commented on a note you are interested in", email.subject
+      assert_email_received first_user.email, "[OpenStreetMap] #{third_user.display_name} has commented on one of your notes"
+      assert_email_received second_user.email, "[OpenStreetMap] #{third_user.display_name} has commented on a note you are interested in"
 
       get api_note_path(note_with_comments_by_users, :format => "json")
       assert_response :success
@@ -480,7 +501,8 @@ module Api
     end
 
     def test_close_success
-      open_note_with_comment = create(:note_with_comments)
+      open_note_with_comment = create(:note_with_comments, :author => create(:user))
+      create(:note_comment, :note => open_note_with_comment, :author => create(:user))
       user = create(:user)
 
       post close_api_note_path(open_note_with_comment, :text => "This is a close comment", :format => "json")
@@ -497,7 +519,7 @@ module Api
       assert_equal "Feature", js["type"]
       assert_equal open_note_with_comment.id, js["properties"]["id"]
       assert_equal "closed", js["properties"]["status"]
-      assert_equal 2, js["properties"]["comments"].count
+      assert_equal 3, js["properties"]["comments"].count
       assert_equal "closed", js["properties"]["comments"].last["action"]
       assert_equal "This is a close comment", js["properties"]["comments"].last["text"]
       assert_equal user.display_name, js["properties"]["comments"].last["user"]
@@ -513,7 +535,7 @@ module Api
       assert_equal "Feature", js["type"]
       assert_equal open_note_with_comment.id, js["properties"]["id"]
       assert_equal "closed", js["properties"]["status"]
-      assert_equal 2, js["properties"]["comments"].count
+      assert_equal 3, js["properties"]["comments"].count
       assert_equal "closed", js["properties"]["comments"].last["action"]
       assert_equal "This is a close comment", js["properties"]["comments"].last["text"]
       assert_equal user.display_name, js["properties"]["comments"].last["user"]
@@ -540,7 +562,7 @@ module Api
     end
 
     def test_reopen_success
-      closed_note_with_comment = create(:note_with_comments, :closed)
+      closed_note_with_comment = create(:note_with_comments, :closed, :author => create(:user), :closed_by => create(:user))
       user = create(:user)
 
       post reopen_api_note_path(closed_note_with_comment, :text => "This is a reopen comment", :format => "json")
@@ -600,7 +622,9 @@ module Api
     end
 
     def test_show_success
-      open_note = create(:note_with_comments)
+      open_note = create(:note_with_comments, :author => create(:user))
+      create(:note_comment, :note => open_note, :author => create(:user))
+      create(:note_comment, :note => open_note, :author => create(:user))
 
       get api_note_path(open_note, :format => "xml")
       assert_response :success
@@ -614,7 +638,7 @@ module Api
           assert_select "date_created", open_note.created_at.to_s
           assert_select "status", open_note.status
           assert_select "comments", :count => 1 do
-            assert_select "comment", :count => 1
+            assert_select "comment", :count => 3
           end
         end
       end
@@ -697,7 +721,8 @@ module Api
     end
 
     def test_destroy_success
-      open_note_with_comment = create(:note_with_comments)
+      open_note_with_comment = create(:note_with_comments, :author => create(:user))
+      create(:note_comment, :note => open_note_with_comment, :author => create(:user))
       user = create(:user)
       moderator_user = create(:moderator_user)
 
@@ -718,7 +743,7 @@ module Api
       assert_equal "Feature", js["type"]
       assert_equal open_note_with_comment.id, js["properties"]["id"]
       assert_equal "hidden", js["properties"]["status"]
-      assert_equal 2, js["properties"]["comments"].count
+      assert_equal 3, js["properties"]["comments"].count
       assert_equal "hidden", js["properties"]["comments"].last["action"]
       assert_equal "This is a hide comment", js["properties"]["comments"].last["text"]
       assert_equal moderator_user.display_name, js["properties"]["comments"].last["user"]
@@ -757,8 +782,9 @@ module Api
 
     def test_index_success
       position = (1.1 * GeoRecord::SCALE).to_i
-      create(:note_with_comments, :latitude => position, :longitude => position)
-      create(:note_with_comments, :latitude => position, :longitude => position)
+      create(:note_with_comments, :author => create(:user), :latitude => position, :longitude => position)
+      create(:note_with_comments, :author => create(:user), :latitude => position, :longitude => position)
+      create(:note_with_comments, :author => create(:user), :latitude => position, :longitude => position)
 
       get api_notes_path(:bbox => "1,1,1.2,1.2", :format => "rss")
       assert_response :success
@@ -766,7 +792,7 @@ module Api
       assert_select "rss", :count => 1 do
         assert_select "channel", :count => 1 do
           assert_select "description", :text => /1\.2/, :count => 1
-          assert_select "item", :count => 2
+          assert_select "item", :count => 3
         end
       end
 
@@ -776,20 +802,20 @@ module Api
       js = ActiveSupport::JSON.decode(@response.body)
       assert_not_nil js
       assert_equal "FeatureCollection", js["type"]
-      assert_equal 2, js["features"].count
+      assert_equal 3, js["features"].count
 
       get api_notes_path(:bbox => "1,1,1.2,1.2", :format => "xml")
       assert_response :success
       assert_equal "application/xml", @response.media_type
       assert_select "osm", :count => 1 do
-        assert_select "note", :count => 2
+        assert_select "note", :count => 3
       end
 
       get api_notes_path(:bbox => "1,1,1.2,1.2", :format => "gpx")
       assert_response :success
       assert_equal "application/gpx+xml", @response.media_type
       assert_select "gpx", :count => 1 do
-        assert_select "wpt", :count => 2
+        assert_select "wpt", :count => 3
       end
     end
 
@@ -949,13 +975,15 @@ module Api
     end
 
     def test_search_success
-      create(:note_with_comments)
+      create(:note_with_comments, :author => create(:user))
+      create(:note_with_comments, :author => create(:user))
+      create(:note_with_comments, :author => create(:user))
 
       get search_api_notes_path(:q => "note comment", :format => "xml")
       assert_response :success
       assert_equal "application/xml", @response.media_type
       assert_select "osm", :count => 1 do
-        assert_select "note", :count => 1
+        assert_select "note", :count => 3
       end
 
       get search_api_notes_path(:q => "note comment", :format => "json")
@@ -964,14 +992,14 @@ module Api
       js = ActiveSupport::JSON.decode(@response.body)
       assert_not_nil js
       assert_equal "FeatureCollection", js["type"]
-      assert_equal 1, js["features"].count
+      assert_equal 3, js["features"].count
 
       get search_api_notes_path(:q => "note comment", :format => "rss")
       assert_response :success
       assert_equal "application/rss+xml", @response.media_type
       assert_select "rss", :count => 1 do
         assert_select "channel", :count => 1 do
-          assert_select "item", :count => 1
+          assert_select "item", :count => 3
         end
       end
 
@@ -979,7 +1007,7 @@ module Api
       assert_response :success
       assert_equal "application/gpx+xml", @response.media_type
       assert_select "gpx", :count => 1 do
-        assert_select "wpt", :count => 1
+        assert_select "wpt", :count => 3
       end
 
       get search_api_notes_path(:q => "note comment", :limit => Settings.max_note_query_limit, :format => "xml")
@@ -1259,6 +1287,10 @@ module Api
       notes.each_with_index do |note, index|
         assert_select "osm>note:nth-child(#{index + 1})>id", :text => note.id.to_s, :count => 1
       end
+    end
+
+    def coordinates_inside_seville_cathedral
+      Struct.new(:lat, :lon).new(37.385972, -5.993149)
     end
   end
 end

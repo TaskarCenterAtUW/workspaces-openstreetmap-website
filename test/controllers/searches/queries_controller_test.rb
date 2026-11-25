@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Searches
@@ -18,6 +20,16 @@ module Searches
             attrs = result.collect { |k, v| "[data-#{k}='#{v}']" }.join
             assert_select "li.search_results_entry a.set_position#{attrs}", result[:name]
           end
+        end
+      end
+    end
+
+    def json_results_check(*results)
+      js = ActiveSupport::JSON.decode(@response.body)
+      assert_not_nil js
+      results.zip(js) do |expected, actual|
+        expected.each do |k, v|
+          assert_equal v.to_s, actual[k.to_s]
         end
       end
     end
